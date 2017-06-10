@@ -54,14 +54,14 @@ var quill;
         function LoginPage() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        LoginPage.prototype.projectPage = function () {
-            return ("\n                Login\n            ");
+        LoginPage.prototype.loginPage = function () {
+            return ("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"Login\" icon=\"key\" active>\n                    <Text label=\"E-Mail\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" autofocus></Text>\n                    <Text label=\"Password\" type=\"password\" icon=\"lock\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary\">Login</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Sign up\" icon=\"pencil-square-o\">\n                    <Text label=\"First name\" type=\"text\" icon=\"user-o\"></Text>\n                    <Text label=\"Last name\" type=\"text\" icon=\"user-o\"></Text>\n                    <Text label=\"E-Mail\" placeholder=\"john@freemail.com\" icon=\"envelope-o\"></Text>\n                    <Text label=\"Password\" type=\"text\" icon=\"lock\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary\">Sign up</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Unlock\" icon=\"unlock\">\n                    <p>\n                        If you have forgotten your password fill in your e-mail below\n                        and we will send you further instructions. If you need\n                        additional help, feel free to contact us at <a href=\"mailto:help@json.services\">help@json.services</a>.\n                    </p>\n                    <Text label=\"Send instrictions to\" placeholder=\"your e-mail\" icon=\"envelope-o\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary\">Request</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
         };
         return LoginPage;
     }(Widget));
     __decorate([
         Template()
-    ], LoginPage.prototype, "projectPage", null);
+    ], LoginPage.prototype, "loginPage", null);
     quill.LoginPage = LoginPage;
 })(quill || (quill = {}));
 var quill;
