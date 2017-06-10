@@ -41,11 +41,7 @@ trait ApiController extends Controller with I18nSupport {
     implicit val apiRequest = ApiRequest(request)
     val futureApiResult: Future[ApiResult] = apiRequest.apiKeyOpt match {
       case None => errorApiKeyNotFound
-      case Some(apiKey) => apiRequest.dateOptTry match {
-        case None => errorDateNotFound
-        case Some(Failure(_)) => errorDateMalformed
-        case Some(Success(date)) => action(apiRequest, apiKey, date)
-      }
+      case Some(apiKey) => action(apiRequest, apiKey, DateTime.now())
     }
     futureApiResult.map {
       case error: ApiError => error.saveLog.toResult

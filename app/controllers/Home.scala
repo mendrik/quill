@@ -11,4 +11,8 @@ class Home @Inject() (val messagesApi: MessagesApi) extends api.ApiController {
     Ok(views.html.index())
   }
 
+  def project(id: String) = Action { implicit request =>
+    Ok(views.html.index())
+  }
+
 }

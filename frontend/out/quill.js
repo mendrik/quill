@@ -25,7 +25,6 @@ var quill;
             animals.push(cats, dogs, birds, fish);
             cars.push(merc, porsche, bmw, audi);
             this.nodes.push(animals, cars);
-            this.render();
         };
         ProjectPage.prototype.nodeSelected = function (node) {
             this.triggerDown('deselect-other-nodes', node);
@@ -55,9 +54,6 @@ var quill;
         function LoginPage() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        LoginPage.prototype.init = function () {
-            this.render();
-        };
         LoginPage.prototype.projectPage = function () {
             return ("\n                Login\n            ");
         };
@@ -168,7 +164,6 @@ var quill;
         }
         QuillApplication.prototype.init = function () {
             this.render();
-            this.checkLogin();
         };
         QuillApplication.prototype.checkLogin = function (resp) {
             var code = resp.code;
@@ -196,6 +191,9 @@ var quill;
         QuillApplication.prototype.loginPage = function () {
             this.pages.splice(0, 1, new quill.LoginPage());
         };
+        QuillApplication.prototype.homePage = function () {
+            this.checkLogin();
+        };
         QuillApplication.prototype.applicationHTML = function () {
             return ("<panel class=\"fullscreen v-flex\" {{pages}}></panel>");
         };
@@ -219,6 +217,9 @@ var quill;
     __decorate([
         Route('/login')
     ], QuillApplication.prototype, "loginPage", null);
+    __decorate([
+        Route('/')
+    ], QuillApplication.prototype, "homePage", null);
     __decorate([
         Template()
     ], QuillApplication.prototype, "applicationHTML", null);

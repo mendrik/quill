@@ -23,7 +23,6 @@ module quill {
 
         init() {
             this.render()
-            this.checkLogin()
         }
 
         @Rest({url: '/account', headers: QuillApplication.Headers})
@@ -58,6 +57,11 @@ module quill {
         @Route('/login')
         loginPage() {
             this.pages.splice(0, 1, new LoginPage())
+        }
+
+        @Route('/')
+        homePage() {
+            this.checkLogin()
         }
 
         @Template()

@@ -1,5 +1,8 @@
 # TEST PAGE
 GET			/                   controllers.Home.index
+GET			/login              controllers.Home.index
+GET			/project/:id        controllers.Home.project(id)
+
 GET			/test								controllers.Application.test
 
 # AUTHENTICATION

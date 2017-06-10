@@ -48,7 +48,6 @@ module quill {
             animals.push(cats, dogs, birds, fish)
             cars.push(merc, porsche, bmw, audi)
             this.nodes.push(animals, cars)
-            this.render()
         }
 
         @Subscribe('node-selected')

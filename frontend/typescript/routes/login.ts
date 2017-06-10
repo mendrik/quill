@@ -9,10 +9,6 @@ module quill {
 
     export class LoginPage extends Widget {
 
-        init() {
-            this.render()
-        }
-
         @Template()
         projectPage() {
             return (`
