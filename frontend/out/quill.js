@@ -202,8 +202,7 @@ var quill;
         return QuillApplication;
     }(Widget));
     QuillApplication.Headers = {
-        'X-Api-Key': undefined,
-        'Date': function () { return new Date().toString(); }
+        'X-Api-Key': undefined
     };
     __decorate([
         Bind()

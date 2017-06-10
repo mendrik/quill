@@ -15,8 +15,7 @@ module quill {
     export class QuillApplication extends Widget {
 
         static Headers: TypedMap<string|StringFactory>  = {
-            'X-Api-Key': undefined,
-            'Date': () => new Date().toString()
+            'X-Api-Key': undefined
         }
 
         @Bind() pages: Array<Widget> = []
