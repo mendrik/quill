@@ -1,0 +1,37 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "pretty": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "noImplicitAny": false,
+        "declaration": false,
+        "noEmitOnError": false,
+        "noEmitHelpers": true,
+        "moduleResolution": "node",
+        "removeComments": true,
+        "experimentalDecorators": true,
+        "target": "es5",
+        "sourceRoot": "./typescript",
+        "rootDir": "./",
+        "out": "./out/quill.js",
+        "types": [
+            "es6-shim",
+            "node",
+            "feather-ts"
+        ],
+        "typeRoots": [
+            "node_modules/@types"
+        ]
+    },
+    "files": [
+        "feather-components/feather-components.d.ts",
+        "typescript/types.ts",
+        "typescript/routes/project.ts",
+        "typescript/routes/login.ts",
+        "typescript/modules/navigation.ts",
+        "typescript/modules/content.ts",
+        "typescript/quill-app.ts",
+        "typescript/start.ts"
+    ]
+}

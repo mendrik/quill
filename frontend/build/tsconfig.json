@@ -1,0 +1,27 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "pretty": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "noImplicitAny": false,
+        "declaration": false,
+        "noEmitOnError": false,
+        "noEmitHelpers": true,
+        "moduleResolution": "node",
+        "removeComments": true,
+        "experimentalDecorators": true,
+        "target": "es5",
+        "sourceRoot": "./",
+        "rootDir": "../",
+        "types": [
+            "node"
+        ],
+        "typeRoots": [
+            "node_modules/@types"
+        ]
+    },
+    "files": [
+        "build.ts"
+    ]
+}

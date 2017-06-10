@@ -39,7 +39,7 @@ trait ApiResult {
 	* If needed, it envelopes the resulting JSON in case the API client couldn't access to the headers
 	*/
   def toResult[R <: RequestHeader](implicit request: R, lang: Lang): Result = {
-    val envelope = request.getQueryString("envelope") == Some("true")
+    val envelope = request.getQueryString("envelope").contains("true")
     toResult(envelope)
   }
   def toResult(envelope: Boolean = false)(implicit lang: Lang): Result = {

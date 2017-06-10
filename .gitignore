@@ -35,8 +35,6 @@ activator*
 # Ignore Play Modules within Modules #
 modules/*/modules
 
-
-
 # Compiled source #
 ###################
 *.com
@@ -72,6 +70,7 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
+/public/dev
 
 # general
 *~
