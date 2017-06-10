@@ -8,15 +8,9 @@ module quill {
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
     import Rest = feather.xhr.Rest
-    import TypedMap = feather.types.TypedMap
-    import StringFactory = feather.xhr.StringFactory
 
     @Construct({selector: 'body.quill-app'})
     export class QuillApplication extends Widget {
-
-        static Headers: TypedMap<string|StringFactory>  = {
-            'X-Api-Key': undefined
-        }
 
         @Bind() pages: Array<Widget> = []
         user: User
@@ -25,7 +19,7 @@ module quill {
             this.render()
         }
 
-        @Rest({url: '/account', headers: QuillApplication.Headers})
+        @Rest({url: '/account', headers: quill.headers})
         checkLogin(resp?: User|ApiError) {
             let code = (resp as ApiError).code;
             if (code) {

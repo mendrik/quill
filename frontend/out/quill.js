@@ -1,5 +1,23 @@
 var quill;
 (function (quill) {
+    quill.headers = {
+        'X-Api-Key': undefined,
+        'Content-Type': 'application/json'
+    };
+})(quill || (quill = {}));
+var _this = this;
+if (window['Element'] && !Element.prototype.closest) {
+    Element.prototype.closest = function (s) {
+        var matches = (_this.document || _this.ownerDocument).querySelectorAll(s), i, el = _this;
+        do {
+            i = matches.length;
+            while (--i >= 0 && matches.item(i) !== el) { }
+        } while ((i < 0) && (el = el.parentElement));
+        return el;
+    };
+}
+var quill;
+(function (quill) {
     var Widget = feather.core.Widget;
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
@@ -47,18 +65,58 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
-    var Widget = feather.core.Widget;
     var Template = feather.annotations.Template;
+    var On = feather.event.On;
+    var Rest = feather.xhr.Rest;
+    var Method = feather.xhr.Method;
+    var GestureWidget = feather.ui.events.GestureWidget;
+    var setDeepValue = feather.objects.setDeepValue;
     var LoginPage = (function (_super) {
         __extends(LoginPage, _super);
         function LoginPage() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.credentials = {
+                email: 'user1@mail.com',
+                password: '123456'
+            };
+            _this.signup = {};
+            _this.forgotPassword = {};
+            return _this;
         }
+        LoginPage.prototype.loginClicked = function () {
+            this.doLogin();
+        };
+        LoginPage.prototype.doLogin = function (resp) {
+            console.log(resp);
+        };
+        LoginPage.prototype.signupClicked = function () {
+        };
+        LoginPage.prototype.forgotPasswordClicked = function () {
+        };
+        LoginPage.prototype.textChanged = function (ev, el) {
+            var bindTo = ev.target.closest('[bind]').getAttribute('bind');
+            setDeepValue(this, bindTo, el.value);
+        };
         LoginPage.prototype.loginPage = function () {
-            return ("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"Login\" icon=\"key\" active>\n                    <Text label=\"E-Mail\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" autofocus></Text>\n                    <Text label=\"Password\" type=\"password\" icon=\"lock\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary\">Login</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Sign up\" icon=\"pencil-square-o\">\n                    <Text label=\"First name\" type=\"text\" icon=\"user-o\"></Text>\n                    <Text label=\"Last name\" type=\"text\" icon=\"user-o\"></Text>\n                    <Text label=\"E-Mail\" placeholder=\"john@freemail.com\" icon=\"envelope-o\"></Text>\n                    <Text label=\"Password\" type=\"text\" icon=\"lock\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary\">Sign up</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Unlock\" icon=\"unlock\">\n                    <p>\n                        If you have forgotten your password fill in your e-mail below\n                        and we will send you further instructions. If you need\n                        additional help, feel free to contact us at <a href=\"mailto:help@json.services\">help@json.services</a>.\n                    </p>\n                    <Text label=\"Send instrictions to\" placeholder=\"your e-mail\" icon=\"envelope-o\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary\">Request</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
+            return ("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"Login\" icon=\"key\" active>\n                    <Text label=\"E-Mail\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" value=\"user1@mail.com\" autofocus bind=\"credentials.email\"></Text>\n                    <Text label=\"Password\" type=\"password\" icon=\"lock\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">Login</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Sign up\" icon=\"pencil-square-o\">\n                    <Text label=\"First name\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"Last name\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"E-Mail\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"Password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">Sign up</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Unlock\" icon=\"unlock\">\n                    <p>\n                        If you have forgotten your password fill in your e-mail below\n                        and we will send you further instructions. If you need\n                        additional help, feel free to contact us at <a href=\"mailto:help@json.services\">help@json.services</a>.\n                    </p>\n                    <Text label=\"Send instrictions to\" placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgotpassword-action\">Request</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
         };
         return LoginPage;
-    }(Widget));
+    }(GestureWidget));
+    __decorate([
+        On({ event: 'tap', selector: '.login-action' })
+    ], LoginPage.prototype, "loginClicked", null);
+    __decorate([
+        Rest({ url: '/signin', method: Method.POST, body: 'credentials', headers: quill.headers })
+    ], LoginPage.prototype, "doLogin", null);
+    __decorate([
+        On({ event: 'tap', selector: '.signup-action' })
+    ], LoginPage.prototype, "signupClicked", null);
+    __decorate([
+        On({ event: 'tap', selector: '.forgotpassword-action' })
+    ], LoginPage.prototype, "forgotPasswordClicked", null);
+    __decorate([
+        On({ event: 'textchange', selector: 'input' })
+    ], LoginPage.prototype, "textChanged", null);
     __decorate([
         Template()
     ], LoginPage.prototype, "loginPage", null);
@@ -155,7 +213,7 @@ var quill;
     var Route = feather.routing.Route;
     var Subscribe = feather.hub.Subscribe;
     var Rest = feather.xhr.Rest;
-    var QuillApplication = QuillApplication_1 = (function (_super) {
+    var QuillApplication = (function (_super) {
         __extends(QuillApplication, _super);
         function QuillApplication() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -199,14 +257,11 @@ var quill;
         };
         return QuillApplication;
     }(Widget));
-    QuillApplication.Headers = {
-        'X-Api-Key': undefined
-    };
     __decorate([
         Bind()
     ], QuillApplication.prototype, "pages", void 0);
     __decorate([
-        Rest({ url: '/account', headers: QuillApplication_1.Headers })
+        Rest({ url: '/account', headers: quill.headers })
     ], QuillApplication.prototype, "checkLogin", null);
     __decorate([
         Subscribe('xhr-failure')
@@ -223,11 +278,10 @@ var quill;
     __decorate([
         Template()
     ], QuillApplication.prototype, "applicationHTML", null);
-    QuillApplication = QuillApplication_1 = __decorate([
+    QuillApplication = __decorate([
         Construct({ selector: 'body.quill-app' })
     ], QuillApplication);
     quill.QuillApplication = QuillApplication;
-    var QuillApplication_1;
 })(quill || (quill = {}));
 feather.start();
 //# sourceMappingURL=quill.js.map
