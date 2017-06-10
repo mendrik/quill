@@ -8,25 +8,47 @@ module quill {
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
     import Rest = feather.xhr.Rest
+    import TypedMap = feather.types.TypedMap
+    import StringFactory = feather.xhr.StringFactory
 
     @Construct({selector: 'body.quill-app'})
     export class QuillApplication extends Widget {
 
+        static Headers: TypedMap<string|StringFactory>  = {
+            'X-Api-Key': undefined,
+            'Date': () => new Date().toString()
+        }
+
         @Bind() pages: Array<Widget> = []
+        user: User
 
         init() {
             this.render()
             this.checkLogin()
         }
 
-        @Rest({url: '/whoami'})
-        checkLogin(user?: User) {
-            this.route("/project")
+        @Rest({url: '/account', headers: QuillApplication.Headers})
+        checkLogin(resp?: User|ApiError) {
+            let code = (resp as ApiError).code;
+            if (code) {
+                this.route('/login')
+            } else {
+                this.user = resp as User
+                this.route('/project')
+            }
         }
 
         @Subscribe('xhr-failure')
-        loginFailed(err: string, xhr: XMLHttpRequest) {
-            this.route("/project/1")
+        xhrFailure(err: string, xhr: XMLHttpRequest) {
+            if (xhr.status === 401) {
+                this.route('/login')
+            } else {
+                this.genericFetchError(err, xhr)
+            }
+        }
+
+        genericFetchError(err: string, xhr: XMLHttpRequest) {
+            // todo
         }
 
         @Route('/project/:id')

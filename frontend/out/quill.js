@@ -159,7 +159,7 @@ var quill;
     var Route = feather.routing.Route;
     var Subscribe = feather.hub.Subscribe;
     var Rest = feather.xhr.Rest;
-    var QuillApplication = (function (_super) {
+    var QuillApplication = QuillApplication_1 = (function (_super) {
         __extends(QuillApplication, _super);
         function QuillApplication() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -170,11 +170,25 @@ var quill;
             this.render();
             this.checkLogin();
         };
-        QuillApplication.prototype.checkLogin = function (user) {
-            this.route("/project");
+        QuillApplication.prototype.checkLogin = function (resp) {
+            var code = resp.code;
+            if (code) {
+                this.route('/login');
+            }
+            else {
+                this.user = resp;
+                this.route('/project');
+            }
         };
-        QuillApplication.prototype.loginFailed = function (err, xhr) {
-            this.route("/project/1");
+        QuillApplication.prototype.xhrFailure = function (err, xhr) {
+            if (xhr.status === 401) {
+                this.route('/login');
+            }
+            else {
+                this.genericFetchError(err, xhr);
+            }
+        };
+        QuillApplication.prototype.genericFetchError = function (err, xhr) {
         };
         QuillApplication.prototype.projectPage = function (params) {
             this.pages.splice(0, 1, new quill.ProjectPage(params.id));
@@ -187,15 +201,19 @@ var quill;
         };
         return QuillApplication;
     }(Widget));
+    QuillApplication.Headers = {
+        'X-Api-Key': undefined,
+        'Date': function () { return new Date().toString(); }
+    };
     __decorate([
         Bind()
     ], QuillApplication.prototype, "pages", void 0);
     __decorate([
-        Rest({ url: '/whoami' })
+        Rest({ url: '/account', headers: QuillApplication_1.Headers })
     ], QuillApplication.prototype, "checkLogin", null);
     __decorate([
         Subscribe('xhr-failure')
-    ], QuillApplication.prototype, "loginFailed", null);
+    ], QuillApplication.prototype, "xhrFailure", null);
     __decorate([
         Route('/project/:id')
     ], QuillApplication.prototype, "projectPage", null);
@@ -205,10 +223,11 @@ var quill;
     __decorate([
         Template()
     ], QuillApplication.prototype, "applicationHTML", null);
-    QuillApplication = __decorate([
+    QuillApplication = QuillApplication_1 = __decorate([
         Construct({ selector: 'body.quill-app' })
     ], QuillApplication);
     quill.QuillApplication = QuillApplication;
+    var QuillApplication_1;
 })(quill || (quill = {}));
 feather.start();
 //# sourceMappingURL=quill.js.map
