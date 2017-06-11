@@ -154,6 +154,7 @@ var quill;
     var Bind = feather.observe.Bind;
     var On = feather.event.On;
     var GestureWidget = feather.ui.events.GestureWidget;
+    var Subscribe = feather.hub.Subscribe;
     var addMultipleEventListeners = feather.ui.events.addMultipleEventListeners;
     var removeMultipleEventListeners = feather.ui.events.removeMultipleEventListeners;
     var tapEvents = feather.ui.events.tapEvents;
@@ -198,6 +199,10 @@ var quill;
             quill.removeToken();
             this.route('/login');
         };
+        Navigation.prototype.logoutFailed = function () {
+            quill.removeToken();
+            this.route('/login');
+        };
         Navigation.prototype.markup = function () {
             return ("\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    Quill\n                </a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout ({{userName}})</a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <Icon name=\"search\" align-right=\"right\"></Icon>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ");
         };
@@ -215,6 +220,9 @@ var quill;
     __decorate([
         Rest({ url: '/signout', method: Method.POST, body: 'credentials', headers: quill.headers })
     ], Navigation.prototype, "doLogout", null);
+    __decorate([
+        Subscribe('xhr-failure')
+    ], Navigation.prototype, "logoutFailed", null);
     __decorate([
         Template()
     ], Navigation.prototype, "markup", null);

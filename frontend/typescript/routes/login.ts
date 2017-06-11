@@ -17,7 +17,6 @@ module quill {
     }
 
     export interface Token {
-        minutes: number,
         token: string
     }
 

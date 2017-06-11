@@ -63,6 +63,12 @@ module quill {
             this.route('/login')
         }
 
+        @Subscribe('xhr-failure')
+        logoutFailed() {
+            removeToken()
+            this.route('/login')
+        }
+
         @Template()
         markup() {
             return (`

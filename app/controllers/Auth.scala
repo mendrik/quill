@@ -1,18 +1,20 @@
 package controllers
 
+import javax.inject.Inject
+
+import akka.actor.ActorSystem
+import api.Api.HEADER_AUTH_TOKEN
 import api.ApiError._
 import api.JsonCombinators._
-import models.{ User, ApiToken }
-import play.api.mvc._
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-import play.api.Play.current
-import akka.actor.ActorSystem
-import scala.concurrent.duration._
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import javax.inject.Inject
+import models.{ ApiToken, User }
 import play.api.i18n.MessagesApi
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import play.api.mvc._
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 
 class Auth @Inject() (val messagesApi: MessagesApi, system: ActorSystem) extends api.ApiController {
 
@@ -32,8 +34,7 @@ class Auth @Inject() (val messagesApi: MessagesApi, system: ActorSystem) extends
             else if (!user.active) errorUserInactive
             else ApiToken.create(request.apiKeyOpt.get, user.id).flatMap { token =>
               ok(Json.obj(
-                "token" -> token,
-                "minutes" -> 10
+                "token" -> token
               ))
             }
           }
@@ -41,10 +42,9 @@ class Auth @Inject() (val messagesApi: MessagesApi, system: ActorSystem) extends
     }
   }
 
-  def signOut = SecuredApiAction { implicit request =>
-    ApiToken.delete(request.token).flatMap { _ =>
-      noContent()
-    }
+  def signOut = Action.async { request =>
+    val token = request.headers.get(HEADER_AUTH_TOKEN) getOrElse ""
+    ApiToken.delete(token).map(_ => Ok(""))
   }
 
   implicit val signUpInfoReads: Reads[Tuple3[String, String, User]] = (
@@ -72,5 +72,4 @@ class Auth @Inject() (val messagesApi: MessagesApi, system: ActorSystem) extends
         }
     }
   }
-
 }
