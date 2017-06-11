@@ -8,6 +8,9 @@ module quill {
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
     import Rest = feather.xhr.Rest
+    import ToastManager = feather.ui.toast.ToastManager;
+    import Toast = feather.ui.toast.Toast;
+    import Theme = feather.ui.toast.Theme;
 
     @Construct({selector: 'body.quill-app'})
     export class QuillApplication extends Widget {
@@ -26,7 +29,8 @@ module quill {
                 this.route('/login')
             } else {
                 this.user = resp as User
-                this.route('/project')
+                // this.route(`/project/${this.user.lastProject}`)
+                this.route(`/project/1`)
             }
         }
 
@@ -40,7 +44,7 @@ module quill {
         }
 
         genericFetchError(err: string, xhr: XMLHttpRequest) {
-            // todo
+            ToastManager.showToast(new Toast('API request has failed', err, Theme.Error))
         }
 
         @Route('/project/:id')

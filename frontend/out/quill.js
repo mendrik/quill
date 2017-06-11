@@ -1,9 +1,21 @@
 var quill;
 (function (quill) {
-    quill.headers = {
-        'X-Api-Key': undefined,
-        'Content-Type': 'application/json'
+    var AUTH_HEADER = 'X-Auth-Token';
+    quill.headers = (_a = {
+            'X-Api-Key': 'AbCdEfGhIjK1',
+            'Content-Type': 'application/json'
+        },
+        _a[AUTH_HEADER] = localStorage.getItem(AUTH_HEADER),
+        _a);
+    quill.setToken = function (token) {
+        localStorage.setItem(AUTH_HEADER, token.token);
+        quill.headers[AUTH_HEADER] = token.token;
     };
+    quill.removeToken = function () {
+        localStorage.removeItem(AUTH_HEADER);
+        quill.headers[AUTH_HEADER] = undefined;
+    };
+    var _a;
 })(quill || (quill = {}));
 var _this = this;
 if (window['Element'] && !Element.prototype.closest) {
@@ -86,8 +98,9 @@ var quill;
         LoginPage.prototype.loginClicked = function () {
             this.doLogin();
         };
-        LoginPage.prototype.doLogin = function (resp) {
-            console.log(resp);
+        LoginPage.prototype.doLogin = function (token) {
+            quill.setToken(token);
+            this.route('/');
         };
         LoginPage.prototype.signupClicked = function () {
         };
@@ -213,6 +226,9 @@ var quill;
     var Route = feather.routing.Route;
     var Subscribe = feather.hub.Subscribe;
     var Rest = feather.xhr.Rest;
+    var ToastManager = feather.ui.toast.ToastManager;
+    var Toast = feather.ui.toast.Toast;
+    var Theme = feather.ui.toast.Theme;
     var QuillApplication = (function (_super) {
         __extends(QuillApplication, _super);
         function QuillApplication() {
@@ -230,7 +246,7 @@ var quill;
             }
             else {
                 this.user = resp;
-                this.route('/project');
+                this.route("/project/1");
             }
         };
         QuillApplication.prototype.xhrFailure = function (err, xhr) {
@@ -242,6 +258,7 @@ var quill;
             }
         };
         QuillApplication.prototype.genericFetchError = function (err, xhr) {
+            ToastManager.showToast(new Toast('API request has failed', err, Theme.Error));
         };
         QuillApplication.prototype.projectPage = function (params) {
             this.pages.splice(0, 1, new quill.ProjectPage(params.id));

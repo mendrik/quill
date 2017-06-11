@@ -16,6 +16,11 @@ module quill {
         password?: string
     }
 
+    export interface Token {
+        minutes: number,
+        token: string
+    }
+
     interface Signup {
         email?: string,
         password?: string
@@ -42,8 +47,9 @@ module quill {
         }
 
         @Rest({url: '/signin', method: Method.POST, body: 'credentials', headers: quill.headers})
-        doLogin(resp?: any) {
-            console.log(resp)
+        doLogin(token?: Token) {
+            setToken(token)
+            this.route('/')
         }
 
         @On({event: 'tap', selector: '.signup-action'})
