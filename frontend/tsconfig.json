@@ -27,6 +27,7 @@
     "files": [
         "feather-components/feather-components.d.ts",
         "typescript/types.ts",
+        "typescript/common/utils.ts",
         "typescript/common/headers.ts",
         "typescript/common/polyfill.ts",
         "typescript/routes/project.ts",

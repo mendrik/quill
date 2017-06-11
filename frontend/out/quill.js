@@ -1,5 +1,17 @@
 var quill;
 (function (quill) {
+    quill.findParentValue = function (widget, key) {
+        var parent = widget, val;
+        while (typeof (parent = parent.parentWidget) !== 'undefined') {
+            val = parent[key];
+            if (typeof val !== 'undefined') {
+                return val;
+            }
+        }
+    };
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
     var AUTH_HEADER = 'X-Auth-Token';
     quill.headers = (_a = {
             'X-Api-Key': 'AbCdEfGhIjK1',
@@ -139,6 +151,7 @@ var quill;
 (function (quill) {
     var Construct = feather.annotations.Construct;
     var Template = feather.annotations.Template;
+    var Bind = feather.observe.Bind;
     var On = feather.event.On;
     var GestureWidget = feather.ui.events.GestureWidget;
     var addMultipleEventListeners = feather.ui.events.addMultipleEventListeners;
@@ -154,6 +167,7 @@ var quill;
             return _this;
         }
         Navigation.prototype.init = function () {
+            this.userName = quill.findParentValue(this, 'user').name;
             this.render();
         };
         Navigation.prototype.toggle = function (ev, el) {
@@ -185,10 +199,13 @@ var quill;
             this.route('/login');
         };
         Navigation.prototype.markup = function () {
-            return ("\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">Quill</a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout</a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <span class=\"icon is-right\">\n                        <i class=\"fa fa-search\"></i>\n                      </span>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ");
+            return ("\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">Quill</a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout ({{userName}})</a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <span class=\"icon is-right\">\n                        <i class=\"fa fa-search\"></i>\n                      </span>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ");
         };
         return Navigation;
     }(GestureWidget));
+    __decorate([
+        Bind()
+    ], Navigation.prototype, "userName", void 0);
     __decorate([
         On({ event: 'tap', selector: '.nav-toggle' })
     ], Navigation.prototype, "toggle", null);

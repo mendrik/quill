@@ -16,12 +16,15 @@ module quill {
     @Construct({selector: 'navigation'})
     export class Navigation extends GestureWidget {
 
+        @Bind() userName: string
+
         constructor() {
             super()
             this.closeHandler = this.closeHandler.bind(this)
         }
 
         init() {
+            this.userName = findParentValue<User>(this, 'user').name
             this.render()
         }
 
@@ -73,7 +76,7 @@ module quill {
                 <span></span>
               </span>
               <div class="nav-right nav-menu">
-                <a class="nav-item logout">Logout</a>
+                <a class="nav-item logout">Logout ({{userName}})</a>
                 <a class="nav-item">Documentation</a>
                 <div  class="nav-item">
                     <p class="control has-icons-right" id="search">
