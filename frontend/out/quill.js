@@ -276,7 +276,12 @@ var quill;
             ToastManager.showToast(new Toast('API request has failed', err, Theme.Error));
         };
         QuillApplication.prototype.projectPage = function (params) {
-            this.pages.splice(0, 1, new quill.ProjectPage(params.id));
+            if (!this.user) {
+                this.checkLogin();
+            }
+            else {
+                this.pages.splice(0, 1, new quill.ProjectPage(params.id));
+            }
         };
         QuillApplication.prototype.loginPage = function () {
             this.pages.splice(0, 1, new quill.LoginPage());

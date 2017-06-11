@@ -49,7 +49,11 @@ module quill {
 
         @Route('/project/:id')
         projectPage(params: IdParam) {
-            this.pages.splice(0, 1, new ProjectPage(params.id))
+            if (!this.user) {
+                this.checkLogin()
+            } else {
+                this.pages.splice(0, 1, new ProjectPage(params.id))
+            }
         }
 
         @Route('/login')
