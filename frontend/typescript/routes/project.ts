@@ -58,24 +58,26 @@ module quill {
         @Template()
         projectPage() {
             return (`
-              <navigation class="no-grow"></navigation>
-              <horizontal-split class="grow" id="app-split">
-                <sidebar class="v-flex">
-                  <tree-node-actions></tree-node-actions>
-                  <scroll-pane class="grow">
-                    <aside class="menu">
-                      <p class="menu-label">Structure</p>
-                      <ul class="tree-view is-marginless" {{nodes}}></ul>
-                      <p class="menu-label">Schemas</p>
-                    </aside>
-                  </scroll-pane>
-                </sidebar>
-                <section class="v-flex">
-                  <scroll-pane class="grow">
-                  </scroll-pane>
-                </section>
-              </horizontal-split>
-              <footer class="no-grow"/>
+              <panel class="fullscreen v-flex">  
+                  <navigation class="no-grow"></navigation>
+                  <horizontal-split class="grow" id="app-split">
+                    <sidebar class="v-flex">
+                      <tree-node-actions></tree-node-actions>
+                      <scroll-pane class="grow">
+                        <aside class="menu">
+                          <p class="menu-label">Structure</p>
+                          <ul class="tree-view is-marginless" {{nodes}}></ul>
+                          <p class="menu-label">Schemas</p>
+                        </aside>
+                      </scroll-pane>
+                    </sidebar>
+                    <section class="v-flex">
+                      <scroll-pane class="grow">
+                      </scroll-pane>
+                    </section>
+                  </horizontal-split>
+                  <footer class="no-grow"/>
+              </panel>
             `)
         }
     }
