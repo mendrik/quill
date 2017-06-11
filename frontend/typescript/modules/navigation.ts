@@ -10,6 +10,8 @@ module quill {
     import addMultipleEventListeners = feather.ui.events.addMultipleEventListeners
     import removeMultipleEventListeners = feather.ui.events.removeMultipleEventListeners
     import tapEvents = feather.ui.events.tapEvents
+    import Rest = feather.xhr.Rest
+    import Method = feather.xhr.Method
 
     @Construct({selector: 'navigation'})
     export class Navigation extends GestureWidget {
@@ -47,14 +49,23 @@ module quill {
             el.nextElementSibling.classList.toggle('is-active')
         }
 
+        @On({event: 'tap', selector: 'a.logout'})
+        logoutClicked() {
+            this.doLogout()
+        }
+
+        @Rest({url: '/signout', method: Method.POST, body: 'credentials', headers: quill.headers})
+        doLogout(resp?: any) {
+            removeToken()
+            this.route('/login')
+        }
+
         @Template()
         markup() {
             return (`
             <nav class="nav">
               <div class="nav-left">
-                <a class="nav-item" href="/" id="logo">
-                  Quill
-                </a>
+                <a class="nav-item" href="/" id="logo">Quill</a>
               </div>
               <span class="nav-toggle">
                 <span></span>
@@ -62,15 +73,8 @@ module quill {
                 <span></span>
               </span>
               <div class="nav-right nav-menu">
-                <a class="nav-item">
-                  Home
-                </a>
-                <a class="nav-item">
-                  Documentation
-                </a>
-                <a class="nav-item">
-                  Blog
-                </a>
+                <a class="nav-item logout">Logout</a>
+                <a class="nav-item">Documentation</a>
                 <div  class="nav-item">
                     <p class="control has-icons-right" id="search">
                       <input class="input" type="text" placeholder="Search...">
@@ -83,5 +87,6 @@ module quill {
             </nav>
             `)
         }
+
     }
 }
