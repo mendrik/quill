@@ -68,7 +68,10 @@ module quill {
             return (`
             <nav class="nav">
               <div class="nav-left">
-                <a class="nav-item" href="/" id="logo">Quill</a>
+                <a class="nav-item" href="/" id="logo">
+                    <img src="/assets/images/feather.svg" alt="Quill Logo">
+                    Quill
+                </a>
               </div>
               <span class="nav-toggle">
                 <span></span>
@@ -81,9 +84,7 @@ module quill {
                 <div  class="nav-item">
                     <p class="control has-icons-right" id="search">
                       <input class="input" type="text" placeholder="Search...">
-                      <span class="icon is-right">
-                        <i class="fa fa-search"></i>
-                      </span>
+                      <Icon name="search" align-right="right"></Icon>
                     </p>
                 </div>
               </div>

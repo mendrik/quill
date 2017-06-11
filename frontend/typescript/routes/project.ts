@@ -72,7 +72,6 @@ module quill {
                 </sidebar>
                 <section class="v-flex">
                   <scroll-pane class="grow">
-                    <content></content>
                   </scroll-pane>
                 </section>
               </horizontal-split>

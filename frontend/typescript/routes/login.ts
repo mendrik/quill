@@ -76,7 +76,7 @@ module quill {
                 <tabs>
                   <div class="form-components" title="Login" icon="key" active>
                     <Text label="E-Mail" placeholder="john@freemail.com" icon="envelope-o" value="user1@mail.com" autofocus bind="credentials.email"></Text>
-                    <Text label="Password" type="password" icon="lock" bind="credentials.password"></Text>
+                    <Text label="Password" type="password" icon="lock" value="123456" bind="credentials.password"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary login-action">Login</a>
                     </div>
