@@ -63,8 +63,10 @@ module quill {
 
         @On({event: 'textchange', selector: 'input'})
         textChanged(ev: TextEvent, el: HTMLInputElement) {
-            let bindTo = (ev.target as HTMLElement).closest('[bind]').getAttribute('bind')
-            setDeepValue(this, bindTo, el.value)
+            let closest = (ev.target as HTMLElement).closest('[bind]')
+            if (closest) {
+                setDeepValue(this, closest.getAttribute('bind'), el.value)
+            }
         }
 
         @Template()

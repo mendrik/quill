@@ -3,14 +3,11 @@ sidebar {
     .level {
         padding: 5px;
 
-        .level-left {
-            .button {
-                margin-right: 5px;
-            }
-        }
+        .level-left,
         .level-right {
-            .button {
-                margin-left: 5px;
+            > .button,
+            > .toggler {
+                margin-right: 5px;
             }
         }
     }
@@ -22,6 +19,10 @@ sidebar {
 
     .tree-view {
         padding: 0;
+    }
+
+    .create-node {
+        padding: 5px;
     }
 }
 

@@ -72,7 +72,7 @@ var quill;
             this.triggerDown('deselect-other-nodes', node);
         };
         ProjectPage.prototype.projectPage = function () {
-            return ("\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-node-actions></tree-node-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <p class=\"menu-label\">Structure</p>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <p class=\"menu-label\">Schemas</p>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ");
+            return ("\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-actions></tree-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <p class=\"menu-label\">Structure</p>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <p class=\"menu-label\">Schemas</p>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ");
         };
         return ProjectPage;
     }(Widget));
@@ -119,8 +119,10 @@ var quill;
         LoginPage.prototype.forgotPasswordClicked = function () {
         };
         LoginPage.prototype.textChanged = function (ev, el) {
-            var bindTo = ev.target.closest('[bind]').getAttribute('bind');
-            setDeepValue(this, bindTo, el.value);
+            var closest = ev.target.closest('[bind]');
+            if (closest) {
+                setDeepValue(this, closest.getAttribute('bind'), el.value);
+            }
         };
         LoginPage.prototype.loginPage = function () {
             return ("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"Login\" icon=\"key\" active>\n                    <Text label=\"E-Mail\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" value=\"user1@mail.com\" autofocus bind=\"credentials.email\"></Text>\n                    <Text label=\"Password\" type=\"password\" icon=\"lock\" value=\"123456\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">Login</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Sign up\" icon=\"pencil-square-o\">\n                    <Text label=\"First name\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"Last name\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"E-Mail\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"Password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">Sign up</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Unlock\" icon=\"unlock\">\n                    <p>\n                        If you have forgotten your password fill in your e-mail below\n                        and we will send you further instructions. If you need\n                        additional help, feel free to contact us at <a href=\"mailto:help@json.services\">help@json.services</a>.\n                    </p>\n                    <Text label=\"Send instrictions to\" placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgotpassword-action\">Request</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
@@ -147,6 +149,48 @@ var quill;
     ], LoginPage.prototype, "loginPage", null);
     quill.LoginPage = LoginPage;
 })(quill || (quill = {}));
+var feather;
+(function (feather) {
+    var ui;
+    (function (ui) {
+        var Widget = feather.core.Widget;
+        var Construct = feather.annotations.Construct;
+        var Template = feather.annotations.Template;
+        var Bind = feather.observe.Bind;
+        var Subscribe = feather.hub.Subscribe;
+        var TreeActions = (function (_super) {
+            __extends(TreeActions, _super);
+            function TreeActions() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.disabled = true;
+                return _this;
+            }
+            TreeActions.prototype.init = function () {
+                this.render();
+            };
+            TreeActions.prototype.nodeSelected = function (node) {
+                this.disabled = false;
+            };
+            TreeActions.prototype.markup = function () {
+                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <div class=\"inline toggler\">\n                      <a class=\"button is-small\"><Icon name=\"plus\"></Icon></a>\n                      <div class=\"block form-components create-node toggle open-in-view\">\n                         <Text label=\"Name\"></Text>\n                         <div class=\"block has-text-right\">\n                            <a class=\"button\">Cancel</a>\n                            <a class=\"button is-primary\">Create</a>\n                         </div>\n                      </div>\n                   </div>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"lock\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"cut\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"paste\"/></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
+            };
+            return TreeActions;
+        }(Widget));
+        __decorate([
+            Bind()
+        ], TreeActions.prototype, "disabled", void 0);
+        __decorate([
+            Subscribe('deselect-other-nodes')
+        ], TreeActions.prototype, "nodeSelected", null);
+        __decorate([
+            Template()
+        ], TreeActions.prototype, "markup", null);
+        TreeActions = __decorate([
+            Construct({ selector: 'tree-actions' })
+        ], TreeActions);
+        ui.TreeActions = TreeActions;
+    })(ui = feather.ui || (feather.ui = {}));
+})(feather || (feather = {}));
 var quill;
 (function (quill) {
     var Construct = feather.annotations.Construct;

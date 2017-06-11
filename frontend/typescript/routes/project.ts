@@ -62,7 +62,7 @@ module quill {
                   <navigation class="no-grow"></navigation>
                   <horizontal-split class="grow" id="app-split">
                     <sidebar class="v-flex">
-                      <tree-node-actions></tree-node-actions>
+                      <tree-actions></tree-actions>
                       <scroll-pane class="grow">
                         <aside class="menu">
                           <p class="menu-label">Structure</p>
