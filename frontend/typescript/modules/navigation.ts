@@ -69,7 +69,7 @@ module quill {
             <nav class="nav">
               <div class="nav-left">
                 <a class="nav-item" href="/" id="logo">
-                    <img src="/assets/images/feather.svg" alt="Quill Logo">
+                    <img src="/assets/images/quill.svg" alt="Quill Logo">
                     Quill
                 </a>
               </div>
@@ -91,6 +91,5 @@ module quill {
             </nav>
             `)
         }
-
     }
 }

@@ -939,6 +939,10 @@ navigation #search input{
 navigation #search .icon{
         margin-right:5px;
 }
+#logo{
+    font-weight:bold;
+    color:black;
+}
 #logo img{
         width:2rem;
         height:2rem;
