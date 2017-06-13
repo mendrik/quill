@@ -20,7 +20,6 @@ libraryDependencies ++= Seq(
     "mysql" % "mysql-connector-java" % "5.1.42",
     "org.scala-lang" % "scala-reflect" % "2.11.11",
     "com.typesafe.slick" %% "slick" % "3.2.0",
-    "com.typesafe.slick" %% "slick-codegen" % "3.2.0",
     "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0",
     "io.strongtyped" %% "active-slick" % "0.3.5",
     "com.github.tototoshi" %% "slick-joda-mapper" % "2.2.0",
