@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import play.api.mvc._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.ExecutionContext
 
 /**
  * Takes HTTP requests and produces JSON.
