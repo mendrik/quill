@@ -15,7 +15,7 @@ class ProjectController @Inject() (repo: ProjectRepo)(implicit ec: ExecutionCont
     request.body.validate[CreateProject].fold(
       error => InternalServerError("JSON did not validate."),
       project => {
-        repo.save(Project(None, project.name))
+     //   repo.save(Project(None, project.name))
         Ok("all good ")
       }
     )

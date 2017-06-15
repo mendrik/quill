@@ -115,6 +115,10 @@ var quill;
             this.route('/');
         };
         LoginPage.prototype.signupClicked = function () {
+            this.doSignup();
+        };
+        LoginPage.prototype.doSignup = function (resp) {
+            console.log(resp);
         };
         LoginPage.prototype.forgotPasswordClicked = function () {
         };
@@ -138,6 +142,9 @@ var quill;
     __decorate([
         On({ event: 'tap', selector: '.signup-action' })
     ], LoginPage.prototype, "signupClicked", null);
+    __decorate([
+        Rest({ url: '/signup', method: Method.POST, body: 'signup', headers: quill.headers })
+    ], LoginPage.prototype, "doSignup", null);
     __decorate([
         On({ event: 'tap', selector: '.forgotpassword-action' })
     ], LoginPage.prototype, "forgotPasswordClicked", null);

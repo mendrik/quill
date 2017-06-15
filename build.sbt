@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
     filters,
     javaJdbc,
     specs2 % Test,
-    "mysql" % "mysql-connector-java" % "5.1.42",
+    "mysql" % "mysql-connector-java" % "latest.release",
     "org.scala-lang" % "scala-reflect" % "2.11.11",
     "com.typesafe.play" %% "play-slick" % "2.1.0",
     "com.typesafe.slick" %% "slick" % "3.2.0",

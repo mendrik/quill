@@ -53,7 +53,12 @@ module quill {
 
         @On({event: 'tap', selector: '.signup-action'})
         signupClicked() {
+            this.doSignup()
+        }
 
+        @Rest({url: '/signup', method: Method.POST, body: 'signup', headers: quill.headers})
+        doSignup(resp?: Token) {
+            console.log(resp)
         }
 
         @On({event: 'tap', selector: '.forgotpassword-action'})

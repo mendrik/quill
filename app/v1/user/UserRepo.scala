@@ -1,10 +1,10 @@
 package v1.user
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 import database.UserTable
 import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.JdbcProfile
+import slick.jdbc.MySQLProfile
 import slick.jdbc.MySQLProfile.api._
 import slick.lifted.TableQuery
 
@@ -15,7 +15,7 @@ class UserRepo @Inject() (dcp: DatabaseConfigProvider) {
 
   def users = TableQuery[UserTable]
 
-  val dbConfig = dcp.get[JdbcProfile]
+  val dbConfig = dcp.get[MySQLProfile]
   val db = dbConfig.db
 
   def findByEmail(email: String) = db.run {
