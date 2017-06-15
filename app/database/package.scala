@@ -6,7 +6,7 @@ import v1.user.User
 
 package object types {
 
-  type Id = Int
+  type Id = Long
 
 }
 

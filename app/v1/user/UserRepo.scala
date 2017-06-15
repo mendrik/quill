@@ -1,36 +1,31 @@
 package v1.user
 
 import javax.inject.{ Inject, Singleton }
-import database.UserTable
-import io.strongtyped.active.slick.EntityActions
-import io.strongtyped.active.slick.JdbcProfileProvider.MySQLProfileProvider
-import io.strongtyped.active.slick.Lens._
-import slick.ast.BaseTypedType
-import slick.jdbc.JdbcProfile
-import play.api.db.slick.DatabaseConfigProvider
-import slick.lifted.{ Rep, TableQuery }
 
-import scala.concurrent.Future
-import scala.language.postfixOps
+import database.UserTable
+import play.api.db.slick.DatabaseConfigProvider
+import slick.jdbc.JdbcProfile
+import slick.jdbc.MySQLProfile.api._
+import slick.lifted.TableQuery
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class UserRepo @Inject() (dcp: DatabaseConfigProvider) extends EntityActions with MySQLProfileProvider {
+class UserRepo @Inject() (dcp: DatabaseConfigProvider) {
+
+  def users = TableQuery[UserTable]
 
   val dbConfig = dcp.get[JdbcProfile]
+  val db = dbConfig.db
 
-  val baseTypedType = implicitly[BaseTypedType[Id]]
+  def findByEmail(email: String) = db.run {
+    users.filter(_.email === email).result.headOption
+  }
 
-  type Id = Int
-  type EntityTable = UserTable
+  val insertQuery = users returning users.map(_.id) into ((user, id) => user.copy(id = Some(id)))
 
-  val tableQuery = TableQuery[UserTable]
-  def $id(table: UserTable): Rep[Id] = table.id
-  val idLens = lens { user: User => user.id } { (user, id) => user.copy(id = id) }
-  type Entity = User
-
-  def findByEmail(email: String): Future[Option[User]] = {
-    // db.run(tableQuery.filter(_.email === email))
-    Future.successful(None)
+  def createUser(user: User) = db.run {
+    insertQuery += user
   }
 
 }

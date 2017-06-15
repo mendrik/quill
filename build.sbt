@@ -9,11 +9,9 @@ scalaVersion := "2.11.11"
 autoScalaLibrary := true
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-resolvers += Resolver.typesafeRepo("releases")
 
 doc in Compile := target.map(_ / "none").value
 
-scalariformSettings
 
 libraryDependencies ++= Seq(
     filters,
@@ -24,7 +22,6 @@ libraryDependencies ++= Seq(
     "com.typesafe.play" %% "play-slick" % "2.1.0",
     "com.typesafe.slick" %% "slick" % "3.2.0",
     "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0",
-    "io.strongtyped" %% "active-slick" % "0.3.5",
     "joda-time" % "joda-time" % "2.9.6",
     "org.joda" % "joda-convert" % "1.7",
     "com.typesafe.play" %% "play-mailer" % "5.0.0",

@@ -1,23 +1,21 @@
 package v1.user
 
 import com.mohiva.play.silhouette.api.Identity
-import play.api.libs.json.{ Json, Reads }
+import database.types.Id
 
 case class User(
-    id: Option[Int],
-    email: String,
-    password: String,
-    firstname: String,
-    lastname: String
-) extends Identity {
-
-}
+  id: Option[Id],
+  email: String,
+  password: String,
+  firstName: String,
+  lastName: String
+) extends Identity
 
 case class SignUp(
   identifier: String,
   password: String,
-  firstName: Option[String],
-  lastName: Option[String]
+  firstName: String,
+  lastName: String
 )
 
 case class Credentials(
@@ -25,6 +23,3 @@ case class Credentials(
   password: String
 )
 
-object SignUp {
-  implicit val reads: Reads[SignUp] = Json.reads[SignUp]
-}
