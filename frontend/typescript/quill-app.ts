@@ -24,14 +24,17 @@ module quill {
 
         @Rest({url: '/account', headers: quill.headers})
         checkLogin(resp?: User|ApiError) {
+            this.route('/login')
+/*
             let code = (resp as ApiError).code;
-            if (code) {
+            if (!code) {
                 this.route('/login')
             } else {
                 this.user = resp as User
                 // this.route(`/project/${this.user.lastProject}`)
                 this.route(`/project/1`)
             }
+*/
         }
 
         @Subscribe('xhr-failure')

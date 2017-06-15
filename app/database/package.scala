@@ -1,23 +1,27 @@
+package database
+
+import database.types.Id
 import slick.jdbc.MySQLProfile.api._
 import v1.user.User
 
-package object database {
+package object types {
 
   type Id = Int
 
-  class UserTable(tag: Tag) extends Table[User](tag, "City") {
+}
 
-    def id = column[Id]("id", O.PrimaryKey, O.AutoInc)
+class UserTable(tag: Tag) extends Table[User](tag, "City") {
 
-    def email = column[String]("email")
+  def id = column[Id]("id", O.PrimaryKey, O.AutoInc)
 
-    def password = column[String]("password")
+  def email = column[String]("email")
 
-    def firstname = column[String]("firstname")
+  def password = column[String]("password")
 
-    def lastname = column[String]("lastname")
+  def firstname = column[String]("firstname")
 
-    def * = (id.?, email, password, firstname, lastname) <> (User.tupled, User.unapply)
+  def lastname = column[String]("lastname")
 
-  }
+  def * = (id.?, email, password, firstname, lastname) <> (User.tupled, User.unapply)
+
 }

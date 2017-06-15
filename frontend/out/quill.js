@@ -324,14 +324,7 @@ var quill;
             this.render();
         };
         QuillApplication.prototype.checkLogin = function (resp) {
-            var code = resp.code;
-            if (code) {
-                this.route('/login');
-            }
-            else {
-                this.user = resp;
-                this.route("/project/1");
-            }
+            this.route('/login');
         };
         QuillApplication.prototype.xhrFailure = function (err, xhr) {
             if (xhr.status === 401) {
