@@ -88,8 +88,8 @@ module quill {
                     </div>
                   </div>
                   <div class="form-components" title="Sign up" icon="pencil-square-o">
-                    <Text label="First name" placeholder="John" type="text" icon="user-o" bind="signup.firstname"></Text>
-                    <Text label="Last name" placeholder="Smith" type="text" icon="user-o" bind="signup.lastname"></Text>
+                    <Text label="First name" placeholder="John" type="text" icon="user-o" bind="signup.firstName"></Text>
+                    <Text label="Last name" placeholder="Smith" type="text" icon="user-o" bind="signup.lastName"></Text>
                     <Text label="E-Mail" placeholder="john@freemail.com" icon="envelope-o" bind="signup.email"></Text>
                     <Text label="Password" type="text" icon="lock" bind="signup.password"></Text>
                     <div class="block has-text-right">

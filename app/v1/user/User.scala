@@ -12,10 +12,10 @@ case class User(
 ) extends Identity
 
 case class SignUp(
-  identifier: String,
-  password: String,
-  firstName: String,
-  lastName: String
+    email: String,
+    password: String,
+    firstName: String,
+    lastName: String
 )
 
 case class Credentials(
