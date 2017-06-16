@@ -57,7 +57,7 @@ slickGenerate := {
     val jdbcDriver = "com.mysql.cj.jdbc.Driver"
     val slickDriver = "slick.jdbc.MySQLProfile"
     val targetPackageName = "database"
-    val outputDir = ((sourceManaged in Compile).value / "app").getPath // place generated files in sbt's managed sources folder
+    val outputDir = ((sourceManaged in Compile).value).getPath // place generated files in sbt's managed sources folder
     val fname = outputDir + s"/$targetPackageName/Tables.scala"
     println(s"\nauto-generating slick source for database schema at $url...")
     println(s"output source file file: file://$fname\n")
