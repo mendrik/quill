@@ -4,6 +4,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
     .enablePlugins(PlayScala)
+    .settings()
 
 scalaVersion := "2.11.11"
 autoScalaLibrary := true
@@ -11,7 +12,6 @@ autoScalaLibrary := true
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 doc in Compile := target.map(_ / "none").value
-
 
 libraryDependencies ++= Seq(
     filters,
@@ -22,6 +22,7 @@ libraryDependencies ++= Seq(
     "com.typesafe.play" %% "play-slick" % "2.1.0",
     "com.typesafe.slick" %% "slick" % "3.2.0",
     "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0",
+    "com.typesafe.slick" %% "slick-codegen" % "3.2.0",
     "joda-time" % "joda-time" % "2.9.6",
     "org.joda" % "joda-convert" % "1.7",
     "com.typesafe.play" %% "play-mailer" % "5.0.0",
@@ -45,3 +46,21 @@ scalacOptions ++= Seq(
     "-Ywarn-nullary-override", // Warn when non-nullary overrides nullary, e.g. def foo() over def foo.
     "-Ywarn-numeric-widen" // Warn when numerics are widened.
 )
+
+lazy val slickGenerate = taskKey[Seq[File]]("slick code generation")
+
+slickGenerate := {
+    val dbName = "quill"
+    val userName = "quill"
+    val password = "quill42"
+    val url = s"jdbc:mysql://localhost:3306/$dbName?autoReconnect=true&useSSL=false&nullNamePatternMatchesAll=true"
+    val jdbcDriver = "com.mysql.cj.jdbc.Driver"
+    val slickDriver = "slick.jdbc.MySQLProfile"
+    val targetPackageName = "database"
+    val outputDir = ((sourceManaged in Compile).value / "app").getPath // place generated files in sbt's managed sources folder
+    val fname = outputDir + s"/$targetPackageName/Tables.scala"
+    println(s"\nauto-generating slick source for database schema at $url...")
+    println(s"output source file file: file://$fname\n")
+    (runner in Compile).value.run("slick.codegen.SourceCodeGenerator", (dependencyClasspath in Compile).value.files, Array(slickDriver, jdbcDriver, url, outputDir, targetPackageName, userName, password), streams.value.log)
+    Seq(file(fname))
+}

@@ -1,10 +1,9 @@
 package v1.user
 
 import com.mohiva.play.silhouette.api.Identity
-import database.types.Id
 
 case class User(
-  id: Option[Id],
+  id: Option[Int],
   email: String,
   password: String,
   firstName: String,
