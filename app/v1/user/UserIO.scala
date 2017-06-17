@@ -1,8 +1,9 @@
-package v1.user
+package v1
 
-import play.api.libs.json._ // Combinator syntax
+import play.api.libs.json._
+import v1.user.{SignUp, User} // Combinator syntax
 
-package object ReadsAndWrites {
+package object UserIO {
 
   implicit val signupReads: Reads[SignUp] = Json.reads[SignUp]
 

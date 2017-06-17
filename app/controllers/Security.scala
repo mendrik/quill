@@ -6,7 +6,7 @@ import play.api.i18n.MessagesApi
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
 import v1.user.{SignUp, UserService}
-import v1.user.ReadsAndWrites._
+import v1.UserIO._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
