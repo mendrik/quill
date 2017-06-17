@@ -6,31 +6,41 @@ val scVersion = "2.11.11"
 name := """Quill"""
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file("."))
-    .enablePlugins(PlayScala)
-
 scalaVersion := scVersion
 autoScalaLibrary := true
-sourceGenerators in Compile += slickGenerate.taskValue
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-doc in Compile := target.map(_ / "none").value
+lazy val root = (project in file("."))
+    .enablePlugins(PlayScala)
+    .settings(sharedSettings)
+    .settings(sourceGenerators in Compile += slickGenerate.taskValue)
+    .dependsOn(codegen)
+
+lazy val codegen = project
+    .settings(sharedSettings)
+    .settings(libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % "3.1.1")
+
+lazy val sharedSettings = Seq(
+    scalaVersion := scVersion,
+    libraryDependencies ++= List(
+        "com.typesafe.play" %% "play-slick" % playSlickVersion,
+        "mysql" % "mysql-connector-java" % "latest.release",
+        "org.scala-lang" % "scala-reflect" % scVersion,
+        "com.typesafe.slick" %% "slick" % slickVersion,
+        "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
+        "com.typesafe.slick" %% "slick-codegen" % slickVersion,
+        "joda-time" % "joda-time" % "2.9.6",
+        "org.joda" % "joda-convert" % "1.7"
+    )
+)
 
 libraryDependencies ++= Seq(
     filters,
     javaJdbc,
     specs2 % Test,
-    "mysql" % "mysql-connector-java" % "latest.release",
-    "org.scala-lang" % "scala-reflect" % scVersion,
-    "com.typesafe.play" %% "play-slick" % playSlickVersion,
-    "com.typesafe.slick" %% "slick" % slickVersion,
-    "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
-    "com.typesafe.slick" %% "slick-codegen" % slickVersion,
-    "joda-time" % "joda-time" % "2.9.6",
-    "org.joda" % "joda-convert" % "1.7",
     "com.typesafe.play" %% "play-mailer" % "5.0.0",
     "com.mohiva" %% "play-silhouette" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion,
@@ -62,10 +72,21 @@ slickGenerate := {
     val jdbcDriver = "com.mysql.cj.jdbc.Driver"
     val slickDriver = "slick.jdbc.MySQLProfile"
     val targetPackageName = "database"
-    val outputDir = ((sourceManaged in Compile).value).getPath // place generated files in sbt's managed sources folder
+    val outputDir = (sourceManaged in Compile).value.getPath // place generated files in sbt's managed sources folder
     val fname = outputDir + s"/$targetPackageName/Tables.scala"
     println(s"\nauto-generating slick source for database schema at $url...")
     println(s"output source file file: file://$fname\n")
-    (runner in Compile).value.run("slick.codegen.SourceCodeGenerator", (dependencyClasspath in Compile).value.files, Array(slickDriver, jdbcDriver, url, outputDir, targetPackageName, userName, password), streams.value.log)
+    (runner in Compile).value.run("utils.CodeGenerator",
+        (dependencyClasspath in Compile).value.files,
+        Array(
+            slickDriver,
+            jdbcDriver,
+            url,
+            outputDir,
+            targetPackageName,
+            userName,
+            password
+        ),
+        streams.value.log)
     Seq(file(fname))
 }
