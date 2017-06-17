@@ -1,7 +1,6 @@
 package v1.user
 
 import com.mohiva.play.silhouette.api.Identity
-import database.Tables.UsersRow
 
 case class User(
   id: Long,

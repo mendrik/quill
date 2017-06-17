@@ -1,11 +1,15 @@
-name := """Quill"""
+val silhouetteVersion = "4.0.0"
+val slickVersion = "3.2.0"
+val playSlickVersion = "2.1.0"
+val scVersion = "2.11.11"
 
+name := """Quill"""
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
     .enablePlugins(PlayScala)
 
-scalaVersion := "2.11.11"
+scalaVersion := scVersion
 autoScalaLibrary := true
 sourceGenerators in Compile += slickGenerate.taskValue
 
@@ -19,21 +23,19 @@ libraryDependencies ++= Seq(
     filters,
     javaJdbc,
     specs2 % Test,
-    "com.chuusai" %% "shapeless" % "2.1.0",
     "mysql" % "mysql-connector-java" % "latest.release",
-    "org.scala-lang" % "scala-reflect" % "2.11.11",
-    "com.typesafe.play" %% "play-slick" % "2.1.0",
-    "com.typesafe.slick" %% "slick" % "3.2.0",
-    "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0",
-    "com.typesafe.slick" %% "slick-codegen" % "3.2.0",
+    "org.scala-lang" % "scala-reflect" % scVersion,
+    "com.typesafe.play" %% "play-slick" % playSlickVersion,
+    "com.typesafe.slick" %% "slick" % slickVersion,
+    "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
+    "com.typesafe.slick" %% "slick-codegen" % slickVersion,
     "joda-time" % "joda-time" % "2.9.6",
     "org.joda" % "joda-convert" % "1.7",
     "com.typesafe.play" %% "play-mailer" % "5.0.0",
-    "com.mohiva" %% "play-silhouette" % "4.0.0",
-    "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
-    "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
-    "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
-    "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test",
+    "com.mohiva" %% "play-silhouette" % silhouetteVersion,
+    "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion,
+    "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion,
+    "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion,
     "org.specs2" %% "specs2-matcher-extra" % "3.8.5" % Test
 )
 
