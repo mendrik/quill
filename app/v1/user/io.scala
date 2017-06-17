@@ -6,6 +6,6 @@ package object jsonio {
 
   implicit val signupReads: Reads[SignUp] = Json.reads[SignUp]
 
-  implicit val userWrites: Writes[User] = Json.writes[User]
+  implicit val userWrites: Writes[UserModel] = Json.writes[UserModel]
 
 }

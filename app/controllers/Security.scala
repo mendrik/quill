@@ -5,7 +5,7 @@ import javax.inject.Inject
 import play.api.i18n.MessagesApi
 import play.api.libs.json.{JsError, JsSuccess, Json, Writes}
 import play.api.mvc._
-import v1.user.{SignUp, User, UserService}
+import v1.user.{SignUp, UserModel, UserService}
 import v1.user.jsonio._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -27,7 +27,7 @@ class Security @Inject() (
   def signUp = Action.async(parse.json) { request =>
     request.body.validate[SignUp] match {
       case JsSuccess(signUp, _) =>
-        userService.createUser(User(
+        userService.createUser(UserModel(
           None,
           email = signUp.email,
           password = signUp.password,

@@ -10,8 +10,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UserService @Inject() (repo: UserRepo)(implicit ec: ExecutionContext) extends SecurityUserService {
 
-  override def retrieve(loginInfo: LoginInfo) = repo.findByEmail(loginInfo.providerKey).map(toOptionUser)
+  override def retrieve(loginInfo: LoginInfo) = repo.findByEmail(loginInfo.providerKey)
 
-  def createUser(user: User) = repo.createUser(user)
+  def createUser(user: UserModel) = repo.createUser(user)
 
 }
