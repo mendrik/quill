@@ -21,7 +21,7 @@ lazy val root = (project in file("."))
 
 lazy val codegen = project
     .settings(sharedSettings)
-    .settings(libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % "3.1.1")
+    .settings(libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % "3.2.0")
 
 lazy val sharedSettings = Seq(
     scalaVersion := scVersion,
@@ -76,7 +76,7 @@ slickGenerate := {
     val fname = outputDir + s"/$targetPackageName/Tables.scala"
     println(s"\nauto-generating slick source for database schema at $url...")
     println(s"output source file file: file://$fname\n")
-    (runner in Compile).value.run("utils.CodeGenerator",
+    (runner in Compile).value.run("utils.CustomizedCodeGenerator",
         (dependencyClasspath in Compile).value.files,
         Array(
             slickDriver,
