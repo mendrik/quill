@@ -34,7 +34,7 @@ class Security @Inject() (
           firstName = signUp.firstName,
           lastName = signUp.lastName
         ))
-          .map(u => Ok(Json.toJson(u)))
+        .map(u => Ok(Json.toJson(u)))
       case JsError(e) =>
         Future.successful(BadRequest(e.toString))
     }

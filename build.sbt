@@ -4,10 +4,10 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
     .enablePlugins(PlayScala)
-    .settings()
 
 scalaVersion := "2.11.11"
 autoScalaLibrary := true
+sourceGenerators in Compile += slickGenerate.taskValue
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
