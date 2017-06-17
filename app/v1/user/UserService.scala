@@ -4,7 +4,6 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import security.SecurityUserService
-import v1.user.conversions._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -12,6 +11,6 @@ class UserService @Inject() (repo: UserRepo)(implicit ec: ExecutionContext) exte
 
   override def retrieve(loginInfo: LoginInfo) = repo.findByEmail(loginInfo.providerKey)
 
-  def createUser(user: UserModel) = repo.createUser(user)
+  def createUser(signUp: SignUp) = repo.createUser(signUp)
 
 }

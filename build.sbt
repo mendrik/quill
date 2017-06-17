@@ -10,6 +10,8 @@ autoScalaLibrary := true
 sourceGenerators in Compile += slickGenerate.taskValue
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers += Resolver.sonatypeRepo("releases")
+resolvers += Resolver.sonatypeRepo("snapshots")
 
 doc in Compile := target.map(_ / "none").value
 
@@ -17,6 +19,7 @@ libraryDependencies ++= Seq(
     filters,
     javaJdbc,
     specs2 % Test,
+    "com.chuusai" %% "shapeless" % "2.1.0",
     "mysql" % "mysql-connector-java" % "latest.release",
     "org.scala-lang" % "scala-reflect" % "2.11.11",
     "com.typesafe.play" %% "play-slick" % "2.1.0",
