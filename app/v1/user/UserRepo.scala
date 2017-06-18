@@ -13,6 +13,7 @@ import scala.concurrent.Future
 class UserRepo @Inject()(dcp: DatabaseConfigProvider) {
 
     val dbConfig = dcp.get[MySQLProfile]
+
     val db = dbConfig.db
 
     def findByEmail(email: String): Future[Option[User]] = {

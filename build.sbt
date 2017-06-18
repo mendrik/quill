@@ -1,5 +1,5 @@
 val silhouetteVersion = "4.0.0"
-val slickVersion = "3.2.0"
+val slickVersion = "3.3.0-SNAPSHOT"
 val playSlickVersion = "2.1.0"
 val scVersion = "2.11.11"
 
@@ -21,7 +21,7 @@ lazy val root = (project in file("."))
 
 lazy val codegen = project
     .settings(sharedSettings)
-    .settings(libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % "3.2.0")
+    .settings(libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % slickVersion)
 
 lazy val sharedSettings = Seq(
     scalaVersion := scVersion,
@@ -31,7 +31,6 @@ lazy val sharedSettings = Seq(
         "org.scala-lang" % "scala-reflect" % scVersion,
         "com.typesafe.slick" %% "slick" % slickVersion,
         "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
-        "com.typesafe.slick" %% "slick-codegen" % slickVersion,
         "joda-time" % "joda-time" % "2.9.6",
         "org.joda" % "joda-convert" % "1.7"
     )
@@ -76,7 +75,7 @@ slickGenerate := {
     val fname = outputDir + s"/$targetPackageName/Tables.scala"
     println(s"\nauto-generating slick source for database schema at $url...")
     println(s"output source file file: file://$fname\n")
-    (runner in Compile).value.run("utils.CustomizedCodeGenerator",
+    (runner in Compile).value.run("slick.codegen.SourceCodeGenerator",
         (dependencyClasspath in Compile).value.files,
         Array(
             slickDriver,
@@ -85,7 +84,9 @@ slickGenerate := {
             outputDir,
             targetPackageName,
             userName,
-            password
+            password,
+            "true",
+            "utils.CodeGenerator"
         ),
         streams.value.log)
     Seq(file(fname))
