@@ -8,7 +8,7 @@ import slick.model.Model
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
 
-class CodeGenerator(model: slick.model.Model) extends SourceCodeGenerator(model) {
+class CodeGenerator(model: Model) extends SourceCodeGenerator(model) {
 
     override def Table = new Table(_) {
 
