@@ -1,2 +1,3 @@
 validation.email.exists=The provided email already exists
+error.path.missing={0} is missing
 joins.and=and

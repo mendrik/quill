@@ -4,10 +4,11 @@ import java.sql.SQLIntegrityConstraintViolationException
 import javax.inject._
 
 import play.api.http.{HttpErrorHandler, Status}
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{RequestHeader, Results}
 import utils.BodyParseException
+
 import scala.concurrent.Future
 
 @Singleton
@@ -31,16 +32,13 @@ class ErrorHandler @Inject()(
                     ValidationErrors(Seq(ValidationError("signup-email", "validation.email.exists")))))
             case e: BodyParseException =>
                 BadRequest(Json.toJson(
-                    ValidationErrors(e.errors.map { case (path, errs) => {
+                    ValidationErrors(e.errors.map { case (path, errs) =>
                         val and = messagesApi.translate("joins.and", Nil).getOrElse(", ")
-                        val message = errs.map(e => {
-                            println(e)
-                            e.messages.map(m =>
-                                messagesApi.translate(m, Nil).getOrElse(m)
-                            )
-                        }).mkString(and)
+                        val message = errs.map(_.messages.map(m =>
+                            messagesApi.translate(m, Nil).getOrElse(m))
+                        ).mkString(and)
                         ValidationError(e.prefix.getOrElse("") + path.path.head.toJsonString, message)
-                    }})
+                    })
                 ))
             case e: Throwable =>
                 InternalServerError(s"A server error[${e.getClass.getName}] occurred: " + exception.getMessage)
