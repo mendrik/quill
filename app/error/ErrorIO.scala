@@ -1,16 +1,17 @@
 package error
 
 import javax.inject._
-import play.api.i18n.Messages
+
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json._ // Combinator syntax
 
 @Singleton
-class ErrorIO @Inject()(messages: Messages) {
+class ErrorIO @Inject()(messagesApi: MessagesApi) {
 
     implicit val writeValidationError: Writes[ValidationError] = new Writes[ValidationError] {
         def writes(e: ValidationError) = Json.obj(
             "field" -> e.field,
-            "message" -> messages.translate(e.messageKey, Seq())
+            "message" -> messagesApi.translate(e.messageKey, Seq())
         )
     }
 
