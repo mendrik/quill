@@ -10,6 +10,9 @@ module quill {
     import Method = feather.xhr.Method
     import GestureWidget = feather.ui.events.GestureWidget
     import setDeepValue = feather.objects.setDeepValue
+    import ToastManager = feather.ui.toast.ToastManager;
+    import Toast = feather.ui.toast.Toast;
+    import Theme = feather.ui.toast.Theme;
 
     interface Credentials {
         email?: string,
@@ -53,12 +56,21 @@ module quill {
 
         @On({event: 'tap', selector: '.signup-action'})
         signupClicked() {
+            this.triggerDown('field-error-clear')
             this.doSignup()
         }
 
         @Rest({url: '/signup', method: Method.POST, body: 'signup', headers: quill.headers})
         doSignup(resp?: Token) {
             console.log(resp)
+        }
+
+        @Subscribe('xhr-failure-400')
+        requestFailed(err: Error, xhr) {
+            if (err.type === 'validation') {
+                this.triggerDown('field-error', err.field)
+                ToastManager.showToast(new Toast("Sign up failed", err.message, Theme.Warning))
+            }
         }
 
         @On({event: 'tap', selector: '.forgotpassword-action'})
@@ -81,17 +93,17 @@ module quill {
             <div class="login">
                 <tabs>
                   <div class="form-components" title="Login" icon="key" active>
-                    <Text label="E-Mail" placeholder="john@freemail.com" icon="envelope-o" value="user1@mail.com" autofocus bind="credentials.email"></Text>
-                    <Text label="Password" type="password" icon="lock" value="123456" bind="credentials.password"></Text>
+                    <Text label="E-Mail" name="login-email" placeholder="john@freemail.com" icon="envelope-o" value="user1@mail.com" autofocus bind="credentials.email"></Text>
+                    <Text label="Password" name="login-password" type="password" icon="lock" value="123456" bind="credentials.password"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary login-action">Login</a>
                     </div>
                   </div>
                   <div class="form-components" title="Sign up" icon="pencil-square-o">
-                    <Text label="First name" placeholder="John" type="text" icon="user-o" bind="signup.firstName"></Text>
-                    <Text label="Last name" placeholder="Smith" type="text" icon="user-o" bind="signup.lastName"></Text>
-                    <Text label="E-Mail" placeholder="john@freemail.com" icon="envelope-o" bind="signup.email"></Text>
-                    <Text label="Password" type="text" icon="lock" bind="signup.password"></Text>
+                    <Text label="First name" name="firstname" placeholder="John" type="text" icon="user-o" bind="signup.firstName"></Text>
+                    <Text label="Last name" name="lastname" placeholder="Smith" type="text" icon="user-o" bind="signup.lastName"></Text>
+                    <Text label="E-Mail" name="signup-email" placeholder="john@freemail.com" icon="envelope-o" bind="signup.email"></Text>
+                    <Text label="Password" name="signup-password" type="text" icon="lock" bind="signup.password"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary signup-action">Sign up</a>
                     </div>
@@ -102,7 +114,7 @@ module quill {
                         and we will send you further instructions. If you need
                         additional help, feel free to contact us at <a href="mailto:help@json.services">help@json.services</a>.
                     </p>
-                    <Text label="Send instrictions to" placeholder="your e-mail" icon="envelope-o" bind="forgotPassword.email"></Text>
+                    <Text label="Send instrictions to" name="forgot-password-email"  placeholder="your e-mail" icon="envelope-o" bind="forgotPassword.email"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary forgotpassword-action">Request</a>
                     </div>

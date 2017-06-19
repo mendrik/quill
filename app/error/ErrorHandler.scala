@@ -25,7 +25,7 @@ class ErrorHandler @Inject()(
     def onServerError(request: RequestHeader, exception: Throwable) = {
         Future.successful(exception match {
             case e: SQLIntegrityConstraintViolationException if e.getMessage.contains("users_email_uindex") =>
-                BadRequest(Json.toJson(ValidationError("email", "validation.email.exists")))
+                BadRequest(Json.toJson(ValidationError("signup-email", "validation.email.exists")))
             case _ =>
                 InternalServerError("A server error occurred: " + exception.getMessage)
         })

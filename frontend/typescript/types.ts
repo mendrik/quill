@@ -1,5 +1,13 @@
 module quill {
 
+    type ErrorType = 'validation'
+
+    export interface Error {
+        type: ErrorType,
+        field: string,
+        message: string
+    }
+
     export interface User {
         id: number,
         name: string,

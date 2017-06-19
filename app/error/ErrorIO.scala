@@ -10,6 +10,7 @@ class ErrorIO @Inject()(messagesApi: MessagesApi) {
 
     implicit val writeValidationError: Writes[ValidationError] = new Writes[ValidationError] {
         def writes(e: ValidationError) = Json.obj(
+            "type" -> "validation",
             "field" -> e.field,
             "message" -> messagesApi.translate(e.messageKey, Seq())
         )
