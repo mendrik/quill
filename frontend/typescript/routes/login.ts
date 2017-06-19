@@ -65,6 +65,11 @@ module quill {
             console.log(resp)
         }
 
+        @Subscribe('xhr-progress')
+        requestProgress(ev: ProgressEvent) {
+            console.log(ev.loaded, ev.total)
+        }
+
         @Subscribe('xhr-failure-400')
         requestFailed(err: Errors, xhr) {
             const messages = err.errors.map(e => {

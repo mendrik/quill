@@ -125,6 +125,9 @@ var quill;
         LoginPage.prototype.doSignup = function (resp) {
             console.log(resp);
         };
+        LoginPage.prototype.requestProgress = function (ev) {
+            console.log(ev.loaded, ev.total);
+        };
         LoginPage.prototype.requestFailed = function (err, xhr) {
             var _this = this;
             var messages = err.errors.map(function (e) {
@@ -160,6 +163,9 @@ var quill;
     __decorate([
         Rest({ url: '/signup', method: Method.POST, body: 'signup', headers: quill.headers })
     ], LoginPage.prototype, "doSignup", null);
+    __decorate([
+        Subscribe('xhr-progress')
+    ], LoginPage.prototype, "requestProgress", null);
     __decorate([
         Subscribe('xhr-failure-400')
     ], LoginPage.prototype, "requestFailed", null);

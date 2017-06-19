@@ -29,7 +29,7 @@ class ErrorHandler @Inject()(
         Future.successful(exception match {
             case e: SQLIntegrityConstraintViolationException if e.getMessage.contains("users_email_uindex") =>
                 BadRequest(Json.toJson(
-                    ValidationErrors(Seq(ValidationError("signup-email", "validation.email.exists")))))
+                    ValidationErrors(Seq(ValidationError("signup.email", "validation.email.exists")))))
             case e: BodyParseException =>
                 BadRequest(Json.toJson(
                     ValidationErrors(e.errors.map { case (path, errs) =>
