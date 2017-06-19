@@ -127,7 +127,7 @@ var quill;
         };
         LoginPage.prototype.requestFailed = function (err, xhr) {
             var _this = this;
-            var messages = err.map(function (e) {
+            var messages = err.errors.map(function (e) {
                 if (e.type === 'validation') {
                     _this.triggerDown('field-error', e.field);
                 }

@@ -66,8 +66,8 @@ module quill {
         }
 
         @Subscribe('xhr-failure-400')
-        requestFailed(err: Error[], xhr) {
-            const messages = err.map(e => {
+        requestFailed(err: Errors, xhr) {
+            const messages = err.errors.map(e => {
                 if (e.type === 'validation') {
                     this.triggerDown('field-error', e.field)
                 }

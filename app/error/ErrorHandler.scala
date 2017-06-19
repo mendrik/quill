@@ -4,16 +4,19 @@ import java.sql.SQLIntegrityConstraintViolationException
 import javax.inject._
 
 import play.api.http.{HttpErrorHandler, Status}
+import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.{RequestHeader, Results}
 import utils.BodyParseException
-
 import scala.concurrent.Future
 
 @Singleton
 class ErrorHandler @Inject()(
+    messagesApi: MessagesApi,
     error: ErrorIO
 ) extends HttpErrorHandler with Status with Results {
+
+    import error._
 
     def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
         Future.successful(
@@ -24,11 +27,21 @@ class ErrorHandler @Inject()(
     def onServerError(request: RequestHeader, exception: Throwable) = {
         Future.successful(exception match {
             case e: SQLIntegrityConstraintViolationException if e.getMessage.contains("users_email_uindex") =>
-                BadRequest(Json.toJson(List(ValidationError("signup-email", "validation.email.exists"))))
+                BadRequest(Json.toJson(
+                    ValidationErrors(Seq(ValidationError("signup-email", "validation.email.exists")))))
             case e: BodyParseException =>
-                BadRequest(Json.toJson(e.errors.map { case (path, errs) =>
-                    ValidationError(path.path.head.toJsonString, errs.toString())
-                }))
+                BadRequest(Json.toJson(
+                    ValidationErrors(e.errors.map { case (path, errs) => {
+                        val and = messagesApi.translate("joins.and", Nil).getOrElse(", ")
+                        val message = errs.map(e => {
+                            println(e)
+                            e.messages.map(m =>
+                                messagesApi.translate(m, Nil).getOrElse(m)
+                            )
+                        }).mkString(and)
+                        ValidationError(e.prefix.getOrElse("") + path.path.head.toJsonString, message)
+                    }})
+                ))
             case e: Throwable =>
                 InternalServerError(s"A server error[${e.getClass.getName}] occurred: " + exception.getMessage)
         })

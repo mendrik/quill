@@ -26,7 +26,7 @@ class Security @Inject() (
     Future.successful(Ok(""))
   }
 
-  def signUp = Actions.json[SignUp] { signup =>
+  def signUp = Actions.json[SignUp](Some("signup")) { signup =>
       userService.createUser(signup).map(u => Ok(Json.toJson(u)))
   }
 

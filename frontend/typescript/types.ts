@@ -8,6 +8,10 @@ module quill {
         message: string
     }
 
+    export interface Errors {
+        errors: Error[]
+    }
+
     export interface User {
         id: number,
         name: string,

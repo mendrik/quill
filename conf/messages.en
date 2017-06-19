@@ -1,1 +1,2 @@
-validation.email.exists = The provided email already exists
+validation.email.exists=The provided email already exists
+joins.and=and
