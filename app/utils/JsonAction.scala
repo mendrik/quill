@@ -3,15 +3,12 @@ package utils
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.mvc._
-import utils.Actions.Errors
 
 import scala.concurrent.Future
 
-case class BodyParseException(errors: Errors) extends Exception
+case class BodyParseException(errors: scala.Seq[(JsPath, scala.Seq[ValidationError])]) extends Exception
 
 object Actions extends Results {
-
-    type Errors = scala.Seq[(JsPath, scala.Seq[ValidationError])]
 
     case class JsonRequest[C, A](json: C, request: Request[A]) extends WrappedRequest(request)
 

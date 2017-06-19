@@ -1,11 +1,12 @@
 package error
 
 import java.sql.SQLIntegrityConstraintViolationException
+import javax.inject._
 
 import play.api.http.{HttpErrorHandler, Status}
 import play.api.libs.json.Json
 import play.api.mvc.{RequestHeader, Results}
-import javax.inject._
+import utils.BodyParseException
 
 import scala.concurrent.Future
 
@@ -13,8 +14,6 @@ import scala.concurrent.Future
 class ErrorHandler @Inject()(
     error: ErrorIO
 ) extends HttpErrorHandler with Status with Results {
-
-    import error._
 
     def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
         Future.successful(
@@ -25,9 +24,13 @@ class ErrorHandler @Inject()(
     def onServerError(request: RequestHeader, exception: Throwable) = {
         Future.successful(exception match {
             case e: SQLIntegrityConstraintViolationException if e.getMessage.contains("users_email_uindex") =>
-                BadRequest(Json.toJson(ValidationError("signup-email", "validation.email.exists")))
-            case _ =>
-                InternalServerError("A server error occurred: " + exception.getMessage)
+                BadRequest(Json.toJson(List(ValidationError("signup-email", "validation.email.exists"))))
+            case e: BodyParseException =>
+                BadRequest(Json.toJson(e.errors.map { case (path, errs) =>
+                    ValidationError(path.path.head.toJsonString, errs.toString())
+                }))
+            case e: Throwable =>
+                InternalServerError(s"A server error[${e.getClass.getName}] occurred: " + exception.getMessage)
         })
     }
 }
