@@ -1,12 +1,7 @@
 package utils
 
 import slick.codegen.SourceCodeGenerator
-import slick.codegen.SourceCodeGenerator.run
-import slick.jdbc.JdbcProfile
 import slick.model.Model
-
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext}
 
 class CodeGenerator(model: Model) extends SourceCodeGenerator(model) {
 

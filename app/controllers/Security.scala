@@ -3,10 +3,12 @@ package controllers
 import javax.inject.Inject
 
 import play.api.i18n.MessagesApi
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc._
-import v1.user.{SignUp, UserService}
+import utils.Actions
+import utils.Actions.JsonRequest
 import v1.UserIO._
+import v1.user.{SignUp, UserService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -24,14 +26,8 @@ class Security @Inject() (
     Future.successful(Ok(""))
   }
 
-  def signUp = Action.async(parse.json) { request =>
-    request.body.validate[SignUp] match {
-      case JsSuccess(signUp, _) =>
-        userService.createUser(signUp)
-        .map(u => Ok(Json.toJson(u)))
-      case JsError(e) =>
-        Future.successful(BadRequest(e.toString))
-    }
+  def signUp = Actions.json[SignUp] { signup =>
+      userService.createUser(signup).map(u => Ok(Json.toJson(u)))
   }
 
   def accountInfo = Action.async { request =>
