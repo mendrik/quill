@@ -30,5 +30,7 @@ module quill.components {
                 setDeepValue(this, closest.getAttribute('bind'), el.value)
             }
         }
+
+        translated = (key: string) => Translate.translations[key]
     }
 }

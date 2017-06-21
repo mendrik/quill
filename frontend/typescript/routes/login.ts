@@ -9,6 +9,7 @@ module quill {
     import Method = feather.xhr.Method
     import Theme = feather.ui.toast.Theme
     import AjaxForm = quill.components.AjaxForm
+    import Translate = quill.components.Translate;
 
     interface Credentials {
         email?: string,
@@ -70,31 +71,31 @@ module quill {
 
         @Template()
         loginPage() {
-            return (`
+            return Translate.translate(`
             <scroll-pane class="grow">
             <div class="login">
                 <tabs>
-                  <div class="form-components" title="Login" icon="key" active>
-                    <Text label="E-Mail" name="login.email" placeholder="john@freemail.com" icon="envelope-o" value="user1@mail.com" autofocus bind="credentials.email"></Text>
-                    <Text label="Password" name="login.password" type="password" icon="lock" value="123456" bind="credentials.password"></Text>
+                  <div class="form-components" title="•ui.login.tabs.login" icon="key" active>
+                    <Text label="•ui.login.email" name="login.email" placeholder="john@freemail.com" icon="envelope-o" value="user1@mail.com" autofocus bind="credentials.email"></Text>
+                    <Text label="•ui.login.password" name="login.password" type="password" icon="lock" value="123456" bind="credentials.password"></Text>
                     <div class="block has-text-right">
-                         <a class="button is-primary login-action">Login</a>
+                         <a class="button is-primary login-action">•ui.login.button</a>
                     </div>
                   </div>
-                  <div class="form-components" title="Sign up" icon="pencil-square-o">
-                    <Text label="First name" name="signup.firstname" placeholder="John" type="text" icon="user-o" bind="signup.firstName"></Text>
-                    <Text label="Last name" name="signup.lastname" placeholder="Smith" type="text" icon="user-o" bind="signup.lastName"></Text>
-                    <Text label="E-Mail" name="signup.email" placeholder="john@freemail.com" icon="envelope-o" bind="signup.email"></Text>
-                    <Text label="Password" name="signup.password" type="text" icon="lock" bind="signup.password"></Text>
+                  <div class="form-components" title="•ui.login.tabs.signup" icon="pencil-square-o">
+                    <Text label="•ui.signup.firstname" name="signup.firstname" placeholder="John" type="text" icon="user-o" bind="signup.firstName"></Text>
+                    <Text label="•ui.signup.lastname" name="signup.lastname" placeholder="Smith" type="text" icon="user-o" bind="signup.lastName"></Text>
+                    <Text label="•ui.signup.email" name="signup.email" placeholder="john@freemail.com" icon="envelope-o" bind="signup.email"></Text>
+                    <Text label="•ui.signup.password" name="signup.password" type="text" icon="lock" bind="signup.password"></Text>
                     <div class="block has-text-right">
-                         <a class="button is-primary signup-action">Sign up</a>
+                         <a class="button is-primary signup-action">•ui.signup.button</a>
                     </div>
                   </div>
-                  <div class="form-components" title="Unlock" icon="unlock">
+                  <div class="form-components" title="•ui.login.tabs.forgot-password" icon="unlock">
                     <p><Translate key="forgot-password.info"/></p>
-                    <Text label="Send instrictions to" name="forgot-password.email"  placeholder="your e-mail" icon="envelope-o" bind="forgotPassword.email"></Text>
+                    <Text label="•ui.forgot-password.email" name="forgot-password.email"  placeholder="your e-mail" icon="envelope-o" bind="forgotPassword.email"></Text>
                     <div class="block has-text-right">
-                         <a class="button is-primary forgotpassword-action">Request</a>
+                         <a class="button is-primary forgotpassword-action">•ui.forgot-password.button</a>
                     </div>
                   </div>
               </tabs>

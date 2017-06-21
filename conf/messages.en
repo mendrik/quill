@@ -16,3 +16,19 @@ additional help, feel free to contact us at \
 
 joins.and= and 
 
+ui.login.tabs.login=Login
+ui.login.tabs.signup=Sign up
+ui.login.tabs.forgot-password=Unlock
+
+ui.login.email=Email
+ui.login.password=Password
+ui.login.button=Login
+
+ui.signup.email=Email
+ui.signup.firstname=First name
+ui.signup.lastname=Last name
+ui.signup.password=Password
+ui.signup.button=Sign up
+
+ui.forgot-password.email=Send instructions to
+ui.forgot-password.button=Request

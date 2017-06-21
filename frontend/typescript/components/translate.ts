@@ -12,8 +12,8 @@ module quill.components {
 
         static translations: TypedMap<string>
 
-        @Bind() key: string
-        
+        @Bind({html: true}) key: string
+
         constructor(key: string) {
             super()
             this.key = key;
@@ -25,9 +25,14 @@ module quill.components {
 
         @Template()
         text() {
-            return '<span>{{key:translated}}<span>'
+            return '<span>{{key:translated}}</span>'
         }
 
         translated = (key: string) => Translate.translations[key]
+
+        static translate = (text: string) => text.replace(/•([A-Z\.\-_]+)/gi, (m, g) => {
+            let translations = Translate.translations || {};
+            return translations[g] || g
+        })
     }
 }
