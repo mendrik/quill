@@ -14,9 +14,12 @@ class Localization @Inject()(val messagesApi: MessagesApi) extends Controller {
 
     def translations = Action { request =>
         val lang = request.headers.get(LanguageHeader).map(_.split("_").head).getOrElse("en")
-        val messages = messagesApi.messages.getOrElse(lang, Map.empty).map {
-            case (key, value) => Message(key, value)
-        }.toList
+        val messages = messagesApi.messages.getOrElse(lang, Map.empty)
+            .filter(_._1.startsWith("ui."))
+            .map { case (key, value) =>
+                Message(key, value)
+            }
+            .toList
         Ok(Json.toJson(Messages(messages)))
     }
 
