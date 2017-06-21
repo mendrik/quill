@@ -7,6 +7,8 @@ module quill.components {
     import Toast = feather.ui.toast.Toast
     import Subscribe = feather.hub.Subscribe
     import On = feather.event.On
+    import TypedMap = feather.types.TypedMap
+    import Rest = feather.xhr.Rest
 
     export class AjaxForm extends GestureWidget {
 
@@ -16,9 +18,9 @@ module quill.components {
                 if (e.type === 'validation') {
                     this.triggerDown('field-error', e.field)
                 }
-                e.message
+                return e.message
             })
-            ToastManager.showToast(new Toast("Sign up failed", messages.join('<br>'), Theme.Warning))
+            ToastManager.showToast(new Toast("Sign up failed", messages, Theme.Warning))
         }
 
         @On({event: 'textchange', selector: 'input'})

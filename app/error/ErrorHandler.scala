@@ -29,10 +29,10 @@ class ErrorHandler @Inject()(
         Future.successful(exception match {
             case e: SQLIntegrityConstraintViolationException if e.getMessage.contains("users_email_uindex") =>
                 BadRequest(Json.toJson(
-                    ValidationErrors(Seq(ValidationError("signup.email", "validation.email.exists")))))
+                    ReadsErrors(Seq(ReadError("signup.email", "validation.email.exists")))))
             case e: BodyParseException =>
                 BadRequest(Json.toJson(
-                    ValidationErrors(e.errors(messagesApi))
+                    ReadsErrors(e.errors(messagesApi))
                 ))
             case e: Throwable =>
                 InternalServerError(s"A server error[${e.getClass.getName}] occurred: " + exception.getMessage)

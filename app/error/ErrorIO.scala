@@ -6,16 +6,16 @@ import play.api.i18n.MessagesApi
 import play.api.libs.json._
 
 @Singleton
-class ErrorIO @Inject()(messagesApi: MessagesApi) {
+class ErrorIO {
 
-    implicit val writeValidationError = new Writes[ValidationError] {
-        def writes(e: ValidationError) = Json.obj(
+    implicit val writeValidationError = new Writes[ReadError] {
+        def writes(e: ReadError) = Json.obj(
             "type" -> "validation",
             "field" -> e.field,
-            "message" -> messagesApi.translate(e.messageKey, Seq())
+            "message" -> e.message
         )
     }
 
-    implicit val writeValidationErrorList = Json.writes[ValidationErrors]
+    implicit val writeValidationErrorList = Json.writes[ReadsErrors]
 
 }

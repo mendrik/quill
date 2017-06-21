@@ -37,7 +37,8 @@ module quill {
             password: '123456'
         }
         signup: Signup = {}
-        forgotPassword: ForgotPassword = {}
+
+        @Bind() forgotPasswordInfo = 'forgot-password.info'
 
         @On({event: 'tap', selector: '.login-action'})
         loginClicked() {
@@ -90,11 +91,7 @@ module quill {
                     </div>
                   </div>
                   <div class="form-components" title="Unlock" icon="unlock">
-                    <p>
-                        If you have forgotten your password fill in your e-mail below
-                        and we will send you further instructions. If you need
-                        additional help, feel free to contact us at <a href="mailto:help@json.services">help@json.services</a>.
-                    </p>
+                    <p><Translate key="forgot-password.info"/></p>
                     <Text label="Send instrictions to" name="forgot-password.email"  placeholder="your e-mail" icon="envelope-o" bind="forgotPassword.email"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary forgotpassword-action">Request</a>

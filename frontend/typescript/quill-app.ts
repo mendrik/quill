@@ -8,9 +8,18 @@ module quill {
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
     import Rest = feather.xhr.Rest
-    import ToastManager = feather.ui.toast.ToastManager;
-    import Toast = feather.ui.toast.Toast;
-    import Theme = feather.ui.toast.Theme;
+    import ToastManager = feather.ui.toast.ToastManager
+    import Toast = feather.ui.toast.Toast
+    import Theme = feather.ui.toast.Theme
+
+    export interface Messages {
+        messages: Message[]
+    }
+
+    export interface Message {
+        key: string,
+        value: string
+    }
 
     @Construct({selector: 'body.quill-app'})
     export class QuillApplication extends Widget {
@@ -19,6 +28,12 @@ module quill {
         user: User
 
         init() {
+            this.fetchTranslations()
+        }
+
+        @Rest({url: '/translations', headers: quill.headers})
+        fetchTranslations(translations?: Messages) {
+            quill.components.Translate.translations = translations.messages.reduce((p, c) => ({...p, [c.key]: c.value}), {})
             this.render()
         }
 

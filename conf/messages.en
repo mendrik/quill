@@ -1,6 +1,18 @@
 validation.email.exists=The provided email already exists
-validation.required={0} is required
+errors.required={0} is required
 validation.email={0} is required and must be a valid email
 validation.password={0} is required and must have at least 6 characters
+
+signup.email=email
+signup.firstname=first name
+signup.lastname=last name
+signup.password=password
+
+forgot-password.info=\
+If you have forgotten your password fill in your e-mail below \
+and we will send you further instructions. If you need \
+additional help, feel free to contact us at \
+<a href="mailto:help@json.services">help@json.services</a>.
+
 joins.and= and 
 

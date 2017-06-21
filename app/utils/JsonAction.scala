@@ -1,5 +1,6 @@
 package utils
 
+import error.ReadError
 import play.api.data.validation.ValidationError
 import play.api.i18n.MessagesApi
 import play.api.libs.json._
@@ -8,10 +9,20 @@ import play.api.mvc._
 import scala.concurrent.Future
 
 case class BodyParseException(prefix: Option[String], jsErrors: scala.Seq[(JsPath, scala.Seq[ValidationError])]) extends Exception {
-    def errors(ma: MessagesApi): Seq[error.ValidationError] = jsErrors.map { case (path, e) =>
-        val field = prefix.map(_ + ".").getOrElse("") + path.toString.tail
-        val tranlatedField = ma.translate(field, Nil)
-        error.ValidationError(field, e.map(v => ma.translate(v.message, Seq(tranlatedField))).mkString(" and "))
+    def errors(ma: MessagesApi): Seq[ReadError] = jsErrors.map { case (path, e) =>
+        val fieldName = path.path.head match {
+            case p: KeyPathNode => p.key
+            case _ => "unknown"
+        }
+        val fieldWithPrefix = prefix.map(_ + ".").getOrElse("") + fieldName
+        val translatedFieldName = ma.translate(fieldWithPrefix, Nil).getOrElse(fieldWithPrefix)
+        val and = ma.translate("joins.and", Nil)
+        val errorMessage = e.map(v =>
+            v.messages.map(m =>
+                ma.translate(m, Seq(translatedFieldName)).getOrElse(m)
+            ).mkString(" and ")
+        ).mkString(" and ")
+        ReadError(fieldWithPrefix, errorMessage)
     }
 }
 

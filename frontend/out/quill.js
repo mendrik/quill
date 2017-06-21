@@ -45,6 +45,43 @@ var quill;
 (function (quill) {
     var components;
     (function (components) {
+        var Widget = feather.core.Widget;
+        var Construct = feather.annotations.Construct;
+        var Template = feather.annotations.Template;
+        var Bind = feather.observe.Bind;
+        var Translate = Translate_1 = (function (_super) {
+            __extends(Translate, _super);
+            function Translate(key) {
+                var _this = _super.call(this) || this;
+                _this.translated = function (key) { return Translate_1.translations[key]; };
+                _this.key = key;
+                return _this;
+            }
+            Translate.prototype.init = function () {
+                this.render();
+            };
+            Translate.prototype.text = function () {
+                return '<span>{{key:translated}}<span>';
+            };
+            return Translate;
+        }(Widget));
+        __decorate([
+            Bind()
+        ], Translate.prototype, "key", void 0);
+        __decorate([
+            Template()
+        ], Translate.prototype, "text", null);
+        Translate = Translate_1 = __decorate([
+            Construct({ selector: 'translate', attributes: ['key'] })
+        ], Translate);
+        components.Translate = Translate;
+        var Translate_1;
+    })(components = quill.components || (quill.components = {}));
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var components;
+    (function (components) {
         var GestureWidget = feather.ui.events.GestureWidget;
         var Theme = feather.ui.toast.Theme;
         var setDeepValue = feather.objects.setDeepValue;
@@ -63,9 +100,9 @@ var quill;
                     if (e.type === 'validation') {
                         _this.triggerDown('field-error', e.field);
                     }
-                    e.message;
+                    return e.message;
                 });
-                ToastManager.showToast(new Toast("Sign up failed", messages.join('<br>'), Theme.Warning));
+                ToastManager.showToast(new Toast("Sign up failed", messages, Theme.Warning));
             };
             AjaxForm.prototype.textChanged = function (ev, el) {
                 var closest = ev.target.closest('[bind]');
@@ -134,6 +171,7 @@ var quill;
 var quill;
 (function (quill) {
     var Template = feather.annotations.Template;
+    var Bind = feather.observe.Bind;
     var On = feather.event.On;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
@@ -147,7 +185,7 @@ var quill;
                 password: '123456'
             };
             _this.signup = {};
-            _this.forgotPassword = {};
+            _this.forgotPasswordInfo = 'forgot-password.info';
             return _this;
         }
         LoginPage.prototype.loginClicked = function () {
@@ -167,10 +205,13 @@ var quill;
         LoginPage.prototype.forgotPasswordClicked = function () {
         };
         LoginPage.prototype.loginPage = function () {
-            return ("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"Login\" icon=\"key\" active>\n                    <Text label=\"E-Mail\" name=\"login.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" value=\"user1@mail.com\" autofocus bind=\"credentials.email\"></Text>\n                    <Text label=\"Password\" name=\"login.password\" type=\"password\" icon=\"lock\" value=\"123456\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">Login</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Sign up\" icon=\"pencil-square-o\">\n                    <Text label=\"First name\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstName\"></Text>\n                    <Text label=\"Last name\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastName\"></Text>\n                    <Text label=\"E-Mail\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"Password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">Sign up</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Unlock\" icon=\"unlock\">\n                    <p>\n                        If you have forgotten your password fill in your e-mail below\n                        and we will send you further instructions. If you need\n                        additional help, feel free to contact us at <a href=\"mailto:help@json.services\">help@json.services</a>.\n                    </p>\n                    <Text label=\"Send instrictions to\" name=\"forgot-password.email\"  placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgotpassword-action\">Request</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
+            return ("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"Login\" icon=\"key\" active>\n                    <Text label=\"E-Mail\" name=\"login.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" value=\"user1@mail.com\" autofocus bind=\"credentials.email\"></Text>\n                    <Text label=\"Password\" name=\"login.password\" type=\"password\" icon=\"lock\" value=\"123456\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">Login</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Sign up\" icon=\"pencil-square-o\">\n                    <Text label=\"First name\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstName\"></Text>\n                    <Text label=\"Last name\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastName\"></Text>\n                    <Text label=\"E-Mail\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"Password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">Sign up</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Unlock\" icon=\"unlock\">\n                    <p><Translate key=\"forgot-password.info\"/></p>\n                    <Text label=\"Send instrictions to\" name=\"forgot-password.email\"  placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgotpassword-action\">Request</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
         };
         return LoginPage;
     }(AjaxForm));
+    __decorate([
+        Bind()
+    ], LoginPage.prototype, "forgotPasswordInfo", void 0);
     __decorate([
         On({ event: 'tap', selector: '.login-action' })
     ], LoginPage.prototype, "loginClicked", null);
@@ -363,6 +404,13 @@ var quill;
             return _this;
         }
         QuillApplication.prototype.init = function () {
+            this.fetchTranslations();
+        };
+        QuillApplication.prototype.fetchTranslations = function (translations) {
+            quill.components.Translate.translations = translations.messages.reduce(function (p, c) {
+                return (__assign({}, p, (_a = {}, _a[c.key] = c.value, _a)));
+                var _a;
+            }, {});
             this.render();
         };
         QuillApplication.prototype.checkLogin = function (resp) {
@@ -401,6 +449,9 @@ var quill;
     __decorate([
         Bind()
     ], QuillApplication.prototype, "pages", void 0);
+    __decorate([
+        Rest({ url: '/translations', headers: quill.headers })
+    ], QuillApplication.prototype, "fetchTranslations", null);
     __decorate([
         Rest({ url: '/account', headers: quill.headers })
     ], QuillApplication.prototype, "checkLogin", null);

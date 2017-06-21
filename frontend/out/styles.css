@@ -818,11 +818,9 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
         -webkit-animation-delay:8s;
                 animation-delay:8s;
 }
-@media (hover: hover){
-        .toasts > li[added]:hover{
-                -webkit-animation:none;
-                        animation:none;
-        }
+.toasts > li[added]:hover{
+        -webkit-animation:none;
+                animation:none;
 }
 .toasts > li.error .delete{
         background-color:#ff3860;
@@ -870,6 +868,33 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
             -ms-flex-positive:1;
                 flex-grow:1;
         padding-right:10px;
+}
+.toasts > li .toast-message > *:empty{
+        display:none;
+}
+.toasts > li .toast-message > ul{
+        margin-left:-5px;
+}
+.toasts > li .toast-message > ul > li{
+        position:relative;
+        display:-webkit-box;
+        display:-ms-flexbox;
+        display:flex;
+        -webkit-box-align:center;
+            -ms-flex-align:center;
+                align-items:center;
+        margin-top:5px;
+}
+.toasts > li .toast-message > ul > li .icon{
+        margin-right:auto;
+        color:#b5b5b5;
+}
+.toasts > li .toast-message > ul > li .icon + span{
+        color:black;
+        margin-left:5px;
+}
+.toasts > li .toast-message > ul > li:first-child{
+        margin-top:0;
 }
 .toasts > li .toast-message > .action-link{
         font-weight:bold;
