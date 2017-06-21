@@ -1,5 +1,6 @@
 validation.email.exists=The provided email already exists
 errors.required={0} is required
+error.minLength={0} has minimum length of {1}
 validation.email={0} is required and must be a valid email
 validation.password={0} is required and must have at least 6 characters
 

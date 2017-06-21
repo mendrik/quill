@@ -874,6 +874,7 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
 }
 .toasts > li .toast-message > ul{
         margin-left:-5px;
+        width:100%;
 }
 .toasts > li .toast-message > ul > li{
         position:relative;
@@ -886,12 +887,12 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
         margin-top:5px;
 }
 .toasts > li .toast-message > ul > li .icon{
-        margin-right:auto;
+        margin-right:5px;
         color:#b5b5b5;
 }
 .toasts > li .toast-message > ul > li .icon + span{
         color:black;
-        margin-left:5px;
+        margin-right:auto;
 }
 .toasts > li .toast-message > ul > li:first-child{
         margin-top:0;

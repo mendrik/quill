@@ -12,10 +12,10 @@ case class User(
 }
 
 case class SignUp(
-    email: String,
-    password: String,
     firstName: String,
-    lastName: String
+    lastName: String,
+    email: String,
+    password: String
 )
 
 case class Credentials(

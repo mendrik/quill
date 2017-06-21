@@ -28,14 +28,16 @@ class ErrorHandler @Inject()(
     def onServerError(request: RequestHeader, exception: Throwable) = {
         Future.successful(exception match {
             case e: SQLIntegrityConstraintViolationException if e.getMessage.contains("users_email_uindex") =>
+                val emailExistsMessage = messagesApi.translate("validation.email.exists", Nil).getOrElse("")
                 BadRequest(Json.toJson(
-                    ReadsErrors(Seq(ReadError("signup.email", "validation.email.exists")))))
+                    Errors(Seq(ReadError("signup.email", emailExistsMessage)))
+                ))
             case e: BodyParseException =>
                 BadRequest(Json.toJson(
-                    ReadsErrors(e.errors(messagesApi))
+                    Errors(e.errors(messagesApi))
                 ))
             case e: Throwable =>
-                InternalServerError(s"A server error[${e.getClass.getName}] occurred: " + exception.getMessage)
+                InternalServerError(Json.toJson(Errors(List(ServerError("Server Error", e.getMessage.capitalize)))))
         })
     }
 }

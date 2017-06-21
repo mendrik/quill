@@ -13,7 +13,7 @@ module quill.components {
     export class AjaxForm extends GestureWidget {
 
         @Subscribe('xhr-failure-400')
-        requestFailed(err: Errors, xhr) {
+        validationFailed(err: Errors, xhr) {
             const messages = err.errors.map(e => {
                 if (e.type === 'validation') {
                     this.triggerDown('field-error', e.field)
@@ -21,6 +21,11 @@ module quill.components {
                 return e.message
             })
             ToastManager.showToast(new Toast("Sign up failed", messages, Theme.Warning))
+        }
+
+        @Subscribe('xhr-failure-500')
+        requestFailed(err: Errors, xhr) {
+            ToastManager.showToast(new Toast("Something went wrong", err.errors[0].message, Theme.Error))
         }
 
         @On({event: 'textchange', selector: 'input'})

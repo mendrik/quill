@@ -100,7 +100,7 @@ var quill;
                 _this.translated = function (key) { return components.Translate.translations[key]; };
                 return _this;
             }
-            AjaxForm.prototype.requestFailed = function (err, xhr) {
+            AjaxForm.prototype.validationFailed = function (err, xhr) {
                 var _this = this;
                 var messages = err.errors.map(function (e) {
                     if (e.type === 'validation') {
@@ -109,6 +109,9 @@ var quill;
                     return e.message;
                 });
                 ToastManager.showToast(new Toast("Sign up failed", messages, Theme.Warning));
+            };
+            AjaxForm.prototype.requestFailed = function (err, xhr) {
+                ToastManager.showToast(new Toast("Something went wrong", err.errors[0].message, Theme.Error));
             };
             AjaxForm.prototype.textChanged = function (ev, el) {
                 var closest = ev.target.closest('[bind]');
@@ -120,6 +123,9 @@ var quill;
         }(GestureWidget));
         __decorate([
             Subscribe('xhr-failure-400')
+        ], AjaxForm.prototype, "validationFailed", null);
+        __decorate([
+            Subscribe('xhr-failure-500')
         ], AjaxForm.prototype, "requestFailed", null);
         __decorate([
             On({ event: 'textchange', selector: 'input' })
@@ -212,7 +218,7 @@ var quill;
         LoginPage.prototype.forgotPasswordClicked = function () {
         };
         LoginPage.prototype.loginPage = function () {
-            return Translate.translate("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.login\" icon=\"key\" active>\n                    <Text label=\"\u2022ui.login.email\" name=\"login.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" value=\"user1@mail.com\" autofocus bind=\"credentials.email\"></Text>\n                    <Text label=\"\u2022ui.login.password\" name=\"login.password\" type=\"password\" icon=\"lock\" value=\"123456\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">\u2022ui.login.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"\u2022ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstName\"></Text>\n                    <Text label=\"\u2022ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastName\"></Text>\n                    <Text label=\"\u2022ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"\u2022ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">\u2022ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"\u2022ui.forgot-password.email\" name=\"forgot-password.email\"  placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgotpassword-action\">\u2022ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
+            return Translate.translate("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.login\" icon=\"key\" active>\n                    <Text label=\"\u2022ui.login.email\" name=\"login.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" value=\"user1@mail.com\" autofocus bind=\"credentials.email\"></Text>\n                    <Text label=\"\u2022ui.login.password\" name=\"login.password\" type=\"password\" icon=\"lock\" value=\"123456\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">\u2022ui.login.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"\u2022ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"\u2022ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"\u2022ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"\u2022ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">\u2022ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"\u2022ui.forgot-password.email\" name=\"forgot-password.email\"  placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgotpassword-action\">\u2022ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
         };
         return LoginPage;
     }(AjaxForm));

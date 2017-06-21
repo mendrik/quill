@@ -83,8 +83,8 @@ module quill {
                     </div>
                   </div>
                   <div class="form-components" title="•ui.login.tabs.signup" icon="pencil-square-o">
-                    <Text label="•ui.signup.firstname" name="signup.firstname" placeholder="John" type="text" icon="user-o" bind="signup.firstName"></Text>
-                    <Text label="•ui.signup.lastname" name="signup.lastname" placeholder="Smith" type="text" icon="user-o" bind="signup.lastName"></Text>
+                    <Text label="•ui.signup.firstname" name="signup.firstname" placeholder="John" type="text" icon="user-o" bind="signup.firstname"></Text>
+                    <Text label="•ui.signup.lastname" name="signup.lastname" placeholder="Smith" type="text" icon="user-o" bind="signup.lastname"></Text>
                     <Text label="•ui.signup.email" name="signup.email" placeholder="john@freemail.com" icon="envelope-o" bind="signup.email"></Text>
                     <Text label="•ui.signup.password" name="signup.password" type="text" icon="lock" bind="signup.password"></Text>
                     <div class="block has-text-right">

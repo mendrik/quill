@@ -14,8 +14,8 @@ package object UserIO {
     implicit val signupReads: Reads[SignUp] = (
         (__ \ "firstname").nonEmpty ~
         (__ \ "lastname").nonEmpty ~
-        (__ \ "email").nonEmpty(email) ~
-        (__ \ "password").read[String](minLength[String](6))
+        (__ \ "email").read(email) ~
+        (__ \ "password").read(minLength[String](6))
     )(SignUp.apply _)
 
     implicit val userWrites: Writes[User] = Json.writes[User]
