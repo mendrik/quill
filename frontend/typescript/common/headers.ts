@@ -8,6 +8,7 @@ module quill {
     export const headers: TypedMap<string|StringFactory> = {
         'X-Api-Key': 'AbCdEfGhIjK1',
         'Content-Type': 'application/json',
+        'Accept-Language': 'en_IE.UTF-8',
         [AUTH_HEADER]: localStorage.getItem(AUTH_HEADER)
     }
 

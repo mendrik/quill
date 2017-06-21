@@ -4,15 +4,11 @@ module quill {
     import Template = feather.annotations.Template
     import Bind = feather.observe.Bind
     import Subscribe = feather.hub.Subscribe
-    import TreeNode = feather.ui.tree.TreeNode
     import On = feather.event.On
     import Rest = feather.xhr.Rest
     import Method = feather.xhr.Method
-    import GestureWidget = feather.ui.events.GestureWidget
-    import setDeepValue = feather.objects.setDeepValue
-    import ToastManager = feather.ui.toast.ToastManager
-    import Toast = feather.ui.toast.Toast
     import Theme = feather.ui.toast.Theme
+    import AjaxForm = quill.components.AjaxForm
 
     interface Credentials {
         email?: string,
@@ -34,7 +30,7 @@ module quill {
         email?: string
     }
 
-    export class LoginPage extends GestureWidget {
+    export class LoginPage extends AjaxForm {
 
         credentials: Credentials = {
             email: 'user1@mail.com',
@@ -65,33 +61,10 @@ module quill {
             console.log(resp)
         }
 
-        @Subscribe('xhr-progress')
-        requestProgress(ev: ProgressEvent) {
-            console.log(ev.loaded, ev.total)
-        }
-
-        @Subscribe('xhr-failure-400')
-        requestFailed(err: Errors, xhr) {
-            const messages = err.errors.map(e => {
-                if (e.type === 'validation') {
-                    this.triggerDown('field-error', e.field)
-                }
-                e.message
-            })
-            ToastManager.showToast(new Toast("Sign up failed", messages.join('<br>'), Theme.Warning))
-        }
 
         @On({event: 'tap', selector: '.forgotpassword-action'})
         forgotPasswordClicked() {
 
-        }
-
-        @On({event: 'textchange', selector: 'input'})
-        textChanged(ev: TextEvent, el: HTMLInputElement) {
-            let closest = (ev.target as HTMLElement).closest('[bind]')
-            if (closest) {
-                setDeepValue(this, closest.getAttribute('bind'), el.value)
-            }
         }
 
         @Template()

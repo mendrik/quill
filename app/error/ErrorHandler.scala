@@ -32,13 +32,7 @@ class ErrorHandler @Inject()(
                     ValidationErrors(Seq(ValidationError("signup.email", "validation.email.exists")))))
             case e: BodyParseException =>
                 BadRequest(Json.toJson(
-                    ValidationErrors(e.errors.map { case (path, errs) =>
-                        val and = messagesApi.translate("joins.and", Nil).getOrElse(", ")
-                        val message = errs.map(_.messages.map(m =>
-                            messagesApi.translate(m, Nil).getOrElse(m))
-                        ).mkString(and)
-                        ValidationError(e.prefix.getOrElse("") + path.path.head.toJsonString, message)
-                    })
+                    ValidationErrors(e.errors(messagesApi))
                 ))
             case e: Throwable =>
                 InternalServerError(s"A server error[${e.getClass.getName}] occurred: " + exception.getMessage)

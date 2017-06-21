@@ -999,6 +999,12 @@ footer{
     border-top:1px solid lightgray;
     background-color:#e3e3e3;
 }
+.input.is-warning, .textarea.is-warning{
+    border-color:#dbdbdb;
+}
+.input.is-warning + .icon i:before, .textarea.is-warning + .icon i:before{
+        color:#ff3860;
+}
 .inline{
     display:inline-block;
 }

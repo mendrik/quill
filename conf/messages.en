@@ -1,3 +1,6 @@
 validation.email.exists=The provided email already exists
-error.path.missing={0} is missing
-joins.and=and
+validation.required={0} is required
+validation.email={0} is required and must be a valid email
+validation.password={0} is required and must have at least 6 characters
+joins.and= and 
+

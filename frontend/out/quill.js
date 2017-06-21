@@ -15,7 +15,8 @@ var quill;
     var AUTH_HEADER = 'X-Auth-Token';
     quill.headers = (_a = {
             'X-Api-Key': 'AbCdEfGhIjK1',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept-Language': 'en_IE.UTF-8'
         },
         _a[AUTH_HEADER] = localStorage.getItem(AUTH_HEADER),
         _a);
@@ -40,6 +41,49 @@ if (window['Element'] && !Element.prototype.closest) {
         return el;
     };
 }
+var quill;
+(function (quill) {
+    var components;
+    (function (components) {
+        var GestureWidget = feather.ui.events.GestureWidget;
+        var Theme = feather.ui.toast.Theme;
+        var setDeepValue = feather.objects.setDeepValue;
+        var ToastManager = feather.ui.toast.ToastManager;
+        var Toast = feather.ui.toast.Toast;
+        var Subscribe = feather.hub.Subscribe;
+        var On = feather.event.On;
+        var AjaxForm = (function (_super) {
+            __extends(AjaxForm, _super);
+            function AjaxForm() {
+                return _super !== null && _super.apply(this, arguments) || this;
+            }
+            AjaxForm.prototype.requestFailed = function (err, xhr) {
+                var _this = this;
+                var messages = err.errors.map(function (e) {
+                    if (e.type === 'validation') {
+                        _this.triggerDown('field-error', e.field);
+                    }
+                    e.message;
+                });
+                ToastManager.showToast(new Toast("Sign up failed", messages.join('<br>'), Theme.Warning));
+            };
+            AjaxForm.prototype.textChanged = function (ev, el) {
+                var closest = ev.target.closest('[bind]');
+                if (closest) {
+                    setDeepValue(this, closest.getAttribute('bind'), el.value);
+                }
+            };
+            return AjaxForm;
+        }(GestureWidget));
+        __decorate([
+            Subscribe('xhr-failure-400')
+        ], AjaxForm.prototype, "requestFailed", null);
+        __decorate([
+            On({ event: 'textchange', selector: 'input' })
+        ], AjaxForm.prototype, "textChanged", null);
+        components.AjaxForm = AjaxForm;
+    })(components = quill.components || (quill.components = {}));
+})(quill || (quill = {}));
 var quill;
 (function (quill) {
     var Widget = feather.core.Widget;
@@ -90,15 +134,10 @@ var quill;
 var quill;
 (function (quill) {
     var Template = feather.annotations.Template;
-    var Subscribe = feather.hub.Subscribe;
     var On = feather.event.On;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
-    var GestureWidget = feather.ui.events.GestureWidget;
-    var setDeepValue = feather.objects.setDeepValue;
-    var ToastManager = feather.ui.toast.ToastManager;
-    var Toast = feather.ui.toast.Toast;
-    var Theme = feather.ui.toast.Theme;
+    var AjaxForm = quill.components.AjaxForm;
     var LoginPage = (function (_super) {
         __extends(LoginPage, _super);
         function LoginPage() {
@@ -125,32 +164,13 @@ var quill;
         LoginPage.prototype.doSignup = function (resp) {
             console.log(resp);
         };
-        LoginPage.prototype.requestProgress = function (ev) {
-            console.log(ev.loaded, ev.total);
-        };
-        LoginPage.prototype.requestFailed = function (err, xhr) {
-            var _this = this;
-            var messages = err.errors.map(function (e) {
-                if (e.type === 'validation') {
-                    _this.triggerDown('field-error', e.field);
-                }
-                e.message;
-            });
-            ToastManager.showToast(new Toast("Sign up failed", messages.join('<br>'), Theme.Warning));
-        };
         LoginPage.prototype.forgotPasswordClicked = function () {
-        };
-        LoginPage.prototype.textChanged = function (ev, el) {
-            var closest = ev.target.closest('[bind]');
-            if (closest) {
-                setDeepValue(this, closest.getAttribute('bind'), el.value);
-            }
         };
         LoginPage.prototype.loginPage = function () {
             return ("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"Login\" icon=\"key\" active>\n                    <Text label=\"E-Mail\" name=\"login.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" value=\"user1@mail.com\" autofocus bind=\"credentials.email\"></Text>\n                    <Text label=\"Password\" name=\"login.password\" type=\"password\" icon=\"lock\" value=\"123456\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">Login</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Sign up\" icon=\"pencil-square-o\">\n                    <Text label=\"First name\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstName\"></Text>\n                    <Text label=\"Last name\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastName\"></Text>\n                    <Text label=\"E-Mail\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"Password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">Sign up</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"Unlock\" icon=\"unlock\">\n                    <p>\n                        If you have forgotten your password fill in your e-mail below\n                        and we will send you further instructions. If you need\n                        additional help, feel free to contact us at <a href=\"mailto:help@json.services\">help@json.services</a>.\n                    </p>\n                    <Text label=\"Send instrictions to\" name=\"forgot-password.email\"  placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgotpassword-action\">Request</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
         };
         return LoginPage;
-    }(GestureWidget));
+    }(AjaxForm));
     __decorate([
         On({ event: 'tap', selector: '.login-action' })
     ], LoginPage.prototype, "loginClicked", null);
@@ -164,17 +184,8 @@ var quill;
         Rest({ url: '/signup', method: Method.POST, body: 'signup', headers: quill.headers })
     ], LoginPage.prototype, "doSignup", null);
     __decorate([
-        Subscribe('xhr-progress')
-    ], LoginPage.prototype, "requestProgress", null);
-    __decorate([
-        Subscribe('xhr-failure-400')
-    ], LoginPage.prototype, "requestFailed", null);
-    __decorate([
         On({ event: 'tap', selector: '.forgotpassword-action' })
     ], LoginPage.prototype, "forgotPasswordClicked", null);
-    __decorate([
-        On({ event: 'textchange', selector: 'input' })
-    ], LoginPage.prototype, "textChanged", null);
     __decorate([
         Template()
     ], LoginPage.prototype, "loginPage", null);
