@@ -22,7 +22,7 @@ package object json {
             readOrError[String]("errors.required")(reads)
 
         def nonEmpty()(implicit r: Reads[String]): Reads[String] =
-            p.readOrError[String]("errors.required")
+            p.readOrError[String]("errors.required").filter(ValidationError("errors.required"))(_.trim.nonEmpty)
 
     }
 
