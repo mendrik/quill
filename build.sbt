@@ -45,10 +45,12 @@ libraryDependencies ++= Seq(
     "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion,
+    "net.codingwell" %% "scala-guice" % "4.1.0",
     "org.specs2" %% "specs2-matcher-extra" % "3.8.5" % Test
 )
 
 scalacOptions ++= Seq(
+    "-language:implicitConversions",
     "-deprecation", // Emit warning and location for usages of deprecated APIs.
     "-feature", // Emit warning and location for usages of features that should be imported explicitly.
     "-unchecked", // Enable additional warnings where generated code depends on assumptions.

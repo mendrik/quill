@@ -5,10 +5,13 @@ import com.mohiva.play.silhouette.api.Identity
 case class User(
   id: Long,
   email: String,
+  confirmed: Boolean,
   password: String,
   firstName: String,
   lastName: String
 ) extends Identity {
+    def key = email
+    def fullName: String = firstName + " " + lastName
 }
 
 case class SignUp(

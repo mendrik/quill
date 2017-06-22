@@ -23,7 +23,6 @@ module quill.components {
             })
             if (err.errors.length) {
                 const errorType = err.errors[0].field.split(".").shift()
-                console.log(errorType, `ui.${errorType}.failed`)
                 ToastManager.showToast(new Toast(Translate.translations[`ui.${errorType}.failed`], messages, Theme.Warning))
             }
         }

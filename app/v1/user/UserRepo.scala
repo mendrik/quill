@@ -12,26 +12,35 @@ import scala.concurrent.Future
 @Singleton
 class UserRepo @Inject()(dcp: DatabaseConfigProvider) {
 
-    val dbConfig = dcp.get[MySQLProfile]
-    val db = dbConfig.db
+    private val dbConfig = dcp.get[MySQLProfile]
+    private val db = dbConfig.db
 
-    def findByEmail(email: String): Future[Option[User]] = {
+    def findByEmail(email: String): Future[Option[User]] =
         db.run(Users.filter(_.email === email).result.headOption.map(_.map(toUser)))
-    }
 
-    def findById(id: Long): Future[User] = {
+    def findById(id: Long): Future[User] =
         db.run(Users.filter(_.id === id).result.head.map(toUser))
-    }
 
-    def createUser(signUp: SignUp): Future[User] = {
-        db.run(Users returning Users.map(_.id) += toUsersRow(signUp)).flatMap(findById)
-    }
+    def createUser(signUp: SignUp): Future[User] =
+        db.run(Users returning Users.map(_.id) += signUp).flatMap(findById)
 
-    def toUser(userRow: UsersRow) =
-        User(userRow.id, userRow.email, userRow.password, userRow.firstname, userRow.lastname)
+    def update(user: User) =
+        Users.filter(_.id === user.id)
+            .map(u => (u.email, u.password, u.firstname, u.lastname, u.confirmed))
+            .update((user.email, user.password, user.firstName, user.lastname, user.confirmed))
 
-    def toUsersRow(signUp: SignUp) =
+    def remove(user: User) =
+        db.run(Users.filter(_.id === user.id).delete)
+
+    def toUser(userRow: UsersRow): User =
+        User(userRow.id, userRow.email, userRow.confirmed,
+            userRow.password, userRow.firstname, userRow.lastname)
+
+    implicit def toUsersRow(signUp: SignUp): UsersRow =
         UsersRow(0, signUp.email, signUp.password, signUp.firstName, signUp.lastName)
+
+    implicit def toUsersRow(user: User): UsersRow =
+        UsersRow(user.id, user.email, user.password, user.firstName, user.lastName, user.confirmed)
 
 }
 

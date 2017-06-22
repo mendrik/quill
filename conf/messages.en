@@ -10,6 +10,8 @@ signup.lastname=last name
 signin.identifier=email
 signin.password=password
 
+errors.unauthorized=Unauthorized access
+errors.unauthorized.message=You don't have sufficient rights to access this resource
 
 joins.and= and 
 

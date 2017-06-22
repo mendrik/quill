@@ -1,5 +1,6 @@
 package v1
 
+import com.mohiva.play.silhouette.api.util.PasswordInfo
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.libs.json.Reads._
@@ -17,6 +18,11 @@ package object UserIO {
         (__ \ "email").nonEmptyWith(email) ~
         (__ \ "password").nonEmptyWith(minLength(6))
     )(SignUp.apply _)
+
+    implicit val passwordInfoFormat = (
+        (__ \ "hasher").format[String] ~
+        (__ \ "password").format[String] ~
+        (__ \ "salt").formatNullable[String]) (PasswordInfo.apply, unlift(PasswordInfo.unapply))
 
     implicit val credentialsReads: Reads[Credentials] = (
         (__ \ "identifier").nonEmptyWith(email) ~

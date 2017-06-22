@@ -152,7 +152,6 @@ var quill;
                 });
                 if (err.errors.length) {
                     var errorType = err.errors[0].field.split(".").shift();
-                    console.log(errorType, "ui." + errorType + ".failed");
                     ToastManager.showToast(new Toast(components.Translate.translations["ui." + errorType + ".failed"], messages, Theme.Warning));
                 }
             };
