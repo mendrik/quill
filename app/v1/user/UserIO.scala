@@ -6,7 +6,7 @@ import play.api.libs.json._
 import play.api.libs.json.Reads._
 import json.JsPathExtra
 import play.api.libs.functional.syntax._
-import v1.user.{Credentials, SignUp, User}
+import v1.user.{PostedCredentials, SignUp, User}
 
 package object UserIO {
 
@@ -24,10 +24,10 @@ package object UserIO {
         (__ \ "password").format[String] ~
         (__ \ "salt").formatNullable[String]) (PasswordInfo.apply, unlift(PasswordInfo.unapply))
 
-    implicit val credentialsReads: Reads[Credentials] = (
+    implicit val credentialsReads: Reads[PostedCredentials] = (
         (__ \ "identifier").nonEmptyWith(email) ~
         (__ \ "password").nonEmpty
-    )(Credentials.apply _)
+    )(PostedCredentials.apply _)
 
     implicit val userWrites: Writes[User] = Json.writes[User]
 

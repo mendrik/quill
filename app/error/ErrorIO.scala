@@ -8,10 +8,10 @@ import play.api.libs.json._
 @Singleton
 class ErrorIO {
 
-    implicit val writeValidationError = new Writes[Error] {
+    implicit val writeError = new Writes[Error] {
         def writes(e: Error) = Json.obj(
             "type" -> e.errorType,
-            "field" -> e.title,
+            "title" -> e.title,
             "message" -> e.message
         )
     }

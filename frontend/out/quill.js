@@ -146,12 +146,12 @@ var quill;
                 quill.Progress.stop();
                 var messages = err.errors.map(function (e) {
                     if (e.type === 'validation') {
-                        _this.triggerDown('field-error', e.field);
+                        _this.triggerDown('field-error', e.title);
                     }
                     return e.message;
                 });
                 if (err.errors.length) {
-                    var errorType = err.errors[0].field.split(".").shift();
+                    var errorType = err.errors[0].title.split(".").shift();
                     ToastManager.showToast(new Toast(components.Translate.translations["ui." + errorType + ".failed"], messages, Theme.Warning));
                 }
             };
@@ -237,11 +237,15 @@ var quill;
 (function (quill) {
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
+    var Subscribe = feather.hub.Subscribe;
     var On = feather.event.On;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
+    var Theme = feather.ui.toast.Theme;
     var AjaxForm = quill.components.AjaxForm;
     var Translate = quill.components.Translate;
+    var Toast = feather.ui.toast.Toast;
+    var ToastManager = feather.ui.toast.ToastManager;
     var LoginPage = (function (_super) {
         __extends(LoginPage, _super);
         function LoginPage() {
@@ -259,6 +263,10 @@ var quill;
         LoginPage.prototype.doLogin = function (token) {
             this.route('/');
             quill.Progress.stop();
+        };
+        LoginPage.prototype.unauthorized = function (err, xhr) {
+            quill.Progress.stop();
+            ToastManager.showToast(new Toast(err.errors[0].title, err.errors[0].message, Theme.Error));
         };
         LoginPage.prototype.signupClicked = function () {
             this.triggerDown('field-error-clear');
@@ -284,6 +292,9 @@ var quill;
     __decorate([
         Rest({ url: '/signin', method: Method.POST, body: 'credentials', headers: quill.headers })
     ], LoginPage.prototype, "doLogin", null);
+    __decorate([
+        Subscribe('xhr-failure-401')
+    ], LoginPage.prototype, "unauthorized", null);
     __decorate([
         On({ event: 'tap', selector: '.signup-action' })
     ], LoginPage.prototype, "signupClicked", null);

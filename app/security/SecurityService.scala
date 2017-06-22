@@ -6,7 +6,6 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.repositories.AuthenticatorRepository
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
-import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import org.joda.time.DateTime
 import play.api.Configuration

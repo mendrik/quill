@@ -7,6 +7,8 @@ signup.password=password
 signup.firstname=first name
 signup.lastname=last name
 
+signin.failed=Login failed
+signin.error.notfound=User with the provided email doesn''t exist
 signin.identifier=email
 signin.password=password
 

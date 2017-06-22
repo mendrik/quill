@@ -21,7 +21,7 @@ case class SignUp(
     password: String
 )
 
-case class Credentials(
+case class PostedCredentials(
   identifier: String,
   password: String
 )

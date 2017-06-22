@@ -17,12 +17,12 @@ module quill.components {
             Progress.stop()
             const messages = err.errors.map(e => {
                 if (e.type === 'validation') {
-                    this.triggerDown('field-error', e.field)
+                    this.triggerDown('field-error', e.title)
                 }
                 return e.message
             })
             if (err.errors.length) {
-                const errorType = err.errors[0].field.split(".").shift()
+                const errorType = err.errors[0].title.split(".").shift()
                 ToastManager.showToast(new Toast(Translate.translations[`ui.${errorType}.failed`], messages, Theme.Warning))
             }
         }

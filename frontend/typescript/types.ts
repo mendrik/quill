@@ -4,7 +4,7 @@ module quill {
 
     export interface Error {
         type: ErrorType,
-        field: string,
+        title: string,
         message: string
     }
 

@@ -10,6 +10,8 @@ module quill {
     import Theme = feather.ui.toast.Theme
     import AjaxForm = quill.components.AjaxForm
     import Translate = quill.components.Translate
+    import Toast = feather.ui.toast.Toast
+    import ToastManager = feather.ui.toast.ToastManager
 
     interface Credentials {
         identifier?: string,
@@ -49,6 +51,12 @@ module quill {
         doLogin(token?: Token) {
             this.route('/')
             Progress.stop()
+        }
+
+        @Subscribe('xhr-failure-401')
+        unauthorized(err: Errors, xhr) {
+            Progress.stop()
+            ToastManager.showToast(new Toast(err.errors[0].title, err.errors[0].message, Theme.Error))
         }
 
         @On({event: 'tap', selector: '.signup-action'})

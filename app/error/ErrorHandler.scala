@@ -4,6 +4,7 @@ import java.sql.SQLIntegrityConstraintViolationException
 import javax.inject._
 
 import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
+import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import controllers.routes
 import play.api.http.{HttpErrorHandler, Status}
 import play.api.i18n.{Lang, MessagesApi}
@@ -50,7 +51,14 @@ class ErrorHandler @Inject()(
                 BadRequest(Json.toJson(
                     Errors(e.errors(messagesApi))
                 ))
+            case e: IdentityNotFoundException =>
+                val title = messagesApi.translate("signin.failed", Nil).getOrElse("")
+                val userNotFound = messagesApi.translate("signin.error.notfound", Nil).getOrElse("")
+                Unauthorized(Json.toJson(
+                    Errors(Seq(ServerError(title, userNotFound)))
+                ))
             case e: Throwable =>
+                println(e)
                 InternalServerError(Json.toJson(Errors(List(ServerError("Server Error", e.getMessage.capitalize)))))
         })
     }

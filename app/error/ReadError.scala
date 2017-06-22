@@ -15,4 +15,8 @@ case class ServerError(title: String, message: String) extends Exception with Er
     override def errorType = "error"
 }
 
+case class SecurityError(title: String, message: String) extends Exception with Error {
+    override def errorType = "security"
+}
+
 case class Errors(errors: Seq[Error])
