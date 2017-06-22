@@ -9,25 +9,27 @@ import play.api.mvc._
 import scala.concurrent.Future
 
 case class BodyParseException(prefix: Option[String], jsErrors: scala.Seq[(JsPath, scala.Seq[ValidationError])]) extends Exception {
-    def errors(ma: MessagesApi): Seq[ReadError] = jsErrors.map { case (path, e) =>
+    def errors(ma: MessagesApi): Seq[ReadError] = jsErrors.flatMap { case (path, e) =>
         val fieldName = path.path match {
             case p :: Nil => p match {
-                case p: KeyPathNode => p.key
-                case _ => "unknown"
+                case p: KeyPathNode => Some(p.key)
+                case _ => None
             }
-            case _ => "unknown"
+            case _ => None
         }
-        val fieldWithPrefix = prefix.map(_ + ".").getOrElse("") + fieldName
-        val translatedFieldName = ma.translate(fieldWithPrefix, Nil).getOrElse(fieldWithPrefix)
-        val and = ma.translate("joins.and", Nil)
-        val errorMessage = e.map(v =>
-            v.messages.map(m => {
-                val oldArgs = e.headOption.map(_.args).getOrElse(Nil).toList
-                ma.translate(m, List(translatedFieldName) ::: oldArgs).getOrElse(m)
-            }
+        fieldName.map { field =>
+            val fieldWithPrefix = prefix.map(_ + ".").getOrElse("") + field
+            val translatedFieldName = ma.translate(fieldWithPrefix, Nil).getOrElse(fieldWithPrefix)
+            val and = ma.translate("joins.and", Nil)
+            val errorMessage = e.map(v =>
+                v.messages.map(m => {
+                    val oldArgs = e.headOption.map(_.args).getOrElse(Nil).toList
+                    ma.translate(m, List(translatedFieldName) ::: oldArgs).getOrElse(m)
+                }
+                ).mkString(" and ")
             ).mkString(" and ")
-        ).mkString(" and ")
-        ReadError(fieldWithPrefix, errorMessage.capitalize)
+            ReadError(fieldWithPrefix, errorMessage.capitalize)
+        }
     }
 }
 
@@ -42,7 +44,6 @@ object Actions extends Results {
             case JsSuccess(json, _) =>
                 block(json)
             case JsError(errors) =>
-                println(errors)
                 throw BodyParseException(prefix, errors)
         }
     }
