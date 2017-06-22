@@ -1,9 +1,7 @@
 package security
 
-import com.google.inject.name.Named
 import com.google.inject.{AbstractModule, Provides}
-import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder}
-import com.mohiva.play.silhouette.api.repositories.{AuthInfoRepository, AuthenticatorRepository}
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
 import com.mohiva.play.silhouette.api.util._
 import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, SilhouetteProvider}
@@ -11,18 +9,18 @@ import com.mohiva.play.silhouette.impl.authenticators._
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, SecureRandomIDGenerator}
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
-import com.mohiva.play.silhouette.persistence.daos.{DelegableAuthInfoDAO, InMemoryAuthInfoDAO}
+import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
-import v1.user.{PasswordRepo, UserService}
+import v1.user.UserService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class Module extends AbstractModule with ScalaModule {
 
     def configure(): Unit = {
-        bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordRepo]
+        bind[DelegableAuthInfoDAO[PasswordInfo]].to[SecurityService]
         bind[Silhouette[QuillEnv]].to[SilhouetteProvider[QuillEnv]]
         bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
         bind[PasswordHasher].toInstance(new BCryptPasswordHasher)
@@ -47,14 +45,14 @@ class Module extends AbstractModule with ScalaModule {
 
     @Provides
     def provideAuthenticatorService(
-         userService: UserService,
+         securityService: SecurityService,
          idGenerator: IDGenerator,
          configuration: Configuration,
          clock: Clock): AuthenticatorService[BearerTokenAuthenticator] = {
 
         val config: BearerTokenAuthenticatorSettings = BearerTokenAuthenticatorSettings()
 
-        new BearerTokenAuthenticatorService(config, userService, idGenerator, clock)
+        new BearerTokenAuthenticatorService(config, securityService, idGenerator, clock)
     }
 
     @Provides
