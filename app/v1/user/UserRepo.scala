@@ -18,11 +18,11 @@ class UserRepo @Inject()(dcp: DatabaseConfigProvider) {
     def findByEmail(email: String): Future[Option[User]] =
         db.run(Users.filter(_.email === email).result.headOption.map(_.map(toUser)))
 
-    def findById(id: Long): Future[User] =
-        db.run(Users.filter(_.id === id).result.head.map(toUser))
+    def findById(id: Long): Future[Option[User]] =
+        db.run(Users.filter(_.id === id).result.headOption.map(_.map(toUser)))
 
     def createUser(signUp: SignUp): Future[User] =
-        db.run(Users returning Users.map(_.id) += signUp).flatMap(findById)
+        db.run(Users returning Users.map(_.id) += signUp).flatMap(findById).map(_.get)
 
     def update(user: User) =
         Users.filter(_.id === user.id)
