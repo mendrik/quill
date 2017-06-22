@@ -156,6 +156,10 @@ var quill;
                 quill.Progress.stop();
                 ToastManager.showToast(new Toast("Something went wrong", err.errors[0].message, Theme.Error));
             };
+            AjaxForm.prototype.timeout = function (err, xhr) {
+                quill.Progress.stop();
+                ToastManager.showToast(new Toast("Server request has timed out", "Try again later", Theme.Error));
+            };
             AjaxForm.prototype.textChanged = function (ev, el) {
                 var closest = ev.target.closest('[bind]');
                 if (closest) {
@@ -170,6 +174,9 @@ var quill;
         __decorate([
             Subscribe('xhr-failure-500')
         ], AjaxForm.prototype, "requestFailed", null);
+        __decorate([
+            Subscribe('xhr-failure-timeout')
+        ], AjaxForm.prototype, "timeout", null);
         __decorate([
             On({ event: 'textchange', selector: 'input' })
         ], AjaxForm.prototype, "textChanged", null);

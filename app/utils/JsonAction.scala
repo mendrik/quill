@@ -44,7 +44,6 @@ object Actions extends Results {
             case JsSuccess(json, _) =>
                 block(json)
             case JsError(errors) =>
-                println(errors)
                 throw BodyParseException(prefix, errors)
         }
     }

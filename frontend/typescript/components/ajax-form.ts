@@ -30,6 +30,12 @@ module quill.components {
             ToastManager.showToast(new Toast("Something went wrong", err.errors[0].message, Theme.Error))
         }
 
+        @Subscribe('xhr-failure-timeout')
+        timeout(err: Errors, xhr) {
+            Progress.stop()
+            ToastManager.showToast(new Toast("Server request has timed out", "Try again later", Theme.Error))
+        }
+
         @On({event: 'textchange', selector: 'input'})
         textChanged(ev: TextEvent, el: HTMLInputElement) {
             let closest = (ev.target as HTMLElement).closest('[bind]')
