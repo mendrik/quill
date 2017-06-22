@@ -11,6 +11,9 @@ signup.password=password
 
 joins.and= and 
 
+ui.error.server=Something went wrong
+ui.error.timeout=Connection has timed out
+ui.error.timeout.message=Please try again later
 ui.login.tabs.login=Login
 ui.login.tabs.signup=Sign up
 ui.login.tabs.forgot-password=Unlock
@@ -18,6 +21,8 @@ ui.login.tabs.forgot-password=Unlock
 ui.login.email=Email
 ui.login.password=Password
 ui.login.button=Login
+
+ui.signup.failed=Signup has failed
 
 ui.signup.email=Email
 ui.signup.firstname=First name

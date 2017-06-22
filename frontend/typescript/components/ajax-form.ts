@@ -21,19 +21,23 @@ module quill.components {
                 }
                 return e.message
             })
-            ToastManager.showToast(new Toast("Sign up failed", messages, Theme.Warning))
+            if (err.errors.length) {
+                const errorType = err.errors[0].field.split(".").shift()
+                console.log(errorType, `ui.${errorType}.failed`)
+                ToastManager.showToast(new Toast(Translate.translations[`ui.${errorType}.failed`], messages, Theme.Warning))
+            }
         }
 
         @Subscribe('xhr-failure-500')
         requestFailed(err: Errors, xhr) {
             Progress.stop()
-            ToastManager.showToast(new Toast("Something went wrong", err.errors[0].message, Theme.Error))
+            ToastManager.showToast(new Toast(Translate.translations["ui.error.server"], err.errors[0].message, Theme.Error))
         }
 
         @Subscribe('xhr-failure-timeout')
         timeout(err: Errors, xhr) {
             Progress.stop()
-            ToastManager.showToast(new Toast("Server request has timed out", "Try again later", Theme.Error))
+            ToastManager.showToast(new Toast(Translate.translations["ui.error.timeout"], Translate.translations["ui.error.timeout.message"], Theme.Error))
         }
 
         @On({event: 'textchange', selector: 'input'})
