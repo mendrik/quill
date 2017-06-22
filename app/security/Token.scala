@@ -8,9 +8,7 @@ import scala.concurrent.duration.FiniteDuration
 case class Token(
     id: String,
     user: Long,
-    lastUsed: DateTime,
-    expires: DateTime,
-    idleTimeout: FiniteDuration
+    lastUsed: DateTime
 )
 
 object Token {

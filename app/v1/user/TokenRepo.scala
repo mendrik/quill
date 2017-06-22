@@ -1,6 +1,7 @@
 package v1.token
 
 import javax.inject.{Inject, Singleton}
+
 import database.Tables._
 import database._
 import play.api.db.slick.DatabaseConfigProvider
@@ -10,7 +11,6 @@ import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
 
 @Singleton
 class TokenRepo @Inject()(dcp: DatabaseConfigProvider) {
@@ -26,17 +26,17 @@ class TokenRepo @Inject()(dcp: DatabaseConfigProvider) {
 
     def update(token: Token) =
         Tokens.filter(_.id === token.id)
-            .map(u => (u.lastUsed, u.expires))
-            .update((token.lastUsed, token.expires))
+            .map(u => u.lastUsed)
+            .update(token.lastUsed)
 
     def remove(token: Token) =
         db.run(Tokens.filter(_.id === token.id).delete)
 
     def toToken(tokenRow: TokensRow): Token =
-        Token(tokenRow.id, tokenRow.user, tokenRow.lastUsed, tokenRow.expires, 30 days)
+        Token(tokenRow.id, tokenRow.user, tokenRow.lastUsed)
 
     implicit def toTokensRow(token: Token): TokensRow =
-        TokensRow(token.id, token.user, token.lastUsed, token.expires)
+        TokensRow(token.id, token.user, token.lastUsed)
 
 }
 
