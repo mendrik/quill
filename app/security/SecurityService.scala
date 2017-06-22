@@ -6,6 +6,7 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.repositories.AuthenticatorRepository
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import org.joda.time.DateTime
 import play.api.Configuration
@@ -22,8 +23,6 @@ class SecurityService @Inject()(
     tokenRepo: TokenRepo
 ) extends DelegableAuthInfoDAO[PasswordInfo]
   with AuthenticatorRepository[BearerTokenAuthenticator] {
-
-    def providerId = "quill-security"
 
     override def find(id: String): Future[Option[BearerTokenAuthenticator]] = {
         (for {
@@ -89,7 +88,7 @@ class SecurityService @Inject()(
 
     private def bearerToken(token: Token, user: User) = BearerTokenAuthenticator(
         token.id,
-        LoginInfo(providerId, user.email),
+        user.email,
         token.lastUsed,
         DateTime.now().plusMonths(3),
         None
