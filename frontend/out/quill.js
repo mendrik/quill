@@ -60,7 +60,7 @@ var quill;
             this.render();
         };
         Progress.prototype.markup = function () {
-            return '<div class="progress {{fetching:runningClass}}"></div>';
+            return '<div class="progress-runner {{fetching:runningClass}}"></div>';
         };
         Progress.start = function () {
             Progress_1.instance.fetching = true;

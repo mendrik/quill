@@ -17,31 +17,40 @@
 }
 
 progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    z-index: var(--z-notification);
-    border-top: 3px solid var(--light-gray);
 
-    .progress {
-        position: absolute;
-        height: 3px;
-        top: -3px;
+    .progress-runner {
+        position: fixed;
+        top: 0;
         left: 0;
-        background-color: var(--light-blue);
-        animation-name: progress-animation;
-        animation-duration: 3s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-        animation-delay: 0s;
-        opacity: 0;
-        transition: opacity 0.3s linear;
-        transition-delay: 0.3s;
+        right: 0;
+        bottom: 0;
+        z-index: var(--z-notification);
+        pointer-events: none;
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            opacity: 0;
+            transition: opacity 0.3s linear;
+            transition-delay: 0.3s;
+        }
 
         &.running {
-            opacity: 1;
+            pointer-events: initial;
+
+            &:after {
+                animation-name: progress-animation;
+                animation-duration: 3s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                animation-delay: 0s;
+                background-color: var(--light-blue);
+                opacity: 1;
+            }
         }
 
     }

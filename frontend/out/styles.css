@@ -1065,21 +1065,10 @@ footer{
         width:100%
     }
 }
-progress-bar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:3px;
-    z-index:256;
-    border-top:3px solid #e3e3e3;
+progress-bar .progress-runner.running{
+        pointer-events:initial;
 }
-progress-bar .progress{
-        position:absolute;
-        height:3px;
-        top:-3px;
-        left:0;
-        background-color:#7ebdf1;
+progress-bar .progress-runner.running:after{
         -webkit-animation-name:progress-animation;
                 animation-name:progress-animation;
         -webkit-animation-duration:3s;
@@ -1090,14 +1079,30 @@ progress-bar .progress{
                 animation-timing-function:linear;
         -webkit-animation-delay:0s;
                 animation-delay:0s;
+        background-color:#7ebdf1;
+        opacity:1;
+}
+progress-bar .progress-runner{
+        position:fixed;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index:256;
+        pointer-events:none
+}
+progress-bar .progress-runner:after{
+        content:'';
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        height:3px;
         opacity:0;
         -webkit-transition:opacity 0.3s linear;
         transition:opacity 0.3s linear;
         -webkit-transition-delay:0.3s;
-                transition-delay:0.3s
-}
-progress-bar .progress.running{
-        opacity:1;
+                transition-delay:0.3s;
 }
 .inline{
     display:inline-block;
