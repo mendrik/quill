@@ -1,4 +1,4 @@
-module quill.components {
+module quill {
 
     import Widget = feather.core.Widget
     import Construct = feather.annotations.Construct

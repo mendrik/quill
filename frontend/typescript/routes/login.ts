@@ -1,6 +1,5 @@
 module quill {
 
-    import Progress = quill.components.Progress
     import Construct = feather.annotations.Construct
     import Template = feather.annotations.Template
     import Bind = feather.observe.Bind

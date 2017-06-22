@@ -43,47 +43,44 @@ if (window['Element'] && !Element.prototype.closest) {
 }
 var quill;
 (function (quill) {
-    var components;
-    (function (components) {
-        var Widget = feather.core.Widget;
-        var Construct = feather.annotations.Construct;
-        var Bind = feather.observe.Bind;
-        var Template = feather.annotations.Template;
-        var Progress = Progress_1 = (function (_super) {
-            __extends(Progress, _super);
-            function Progress() {
-                var _this = _super.call(this) || this;
-                _this.fetching = false;
-                _this.runningClass = function (running) { return running ? 'running' : undefined; };
-                Progress_1.instance = _this;
-                return _this;
-            }
-            Progress.prototype.init = function () {
-                this.render();
-            };
-            Progress.prototype.markup = function () {
-                return '<div class="progress {{fetching:runningClass}}"></div>';
-            };
-            Progress.start = function () {
-                Progress_1.instance.fetching = true;
-            };
-            Progress.stop = function () {
-                Progress_1.instance.fetching = false;
-            };
-            return Progress;
-        }(Widget));
-        __decorate([
-            Bind()
-        ], Progress.prototype, "fetching", void 0);
-        __decorate([
-            Template()
-        ], Progress.prototype, "markup", null);
-        Progress = Progress_1 = __decorate([
-            Construct({ selector: 'progress-bar' })
-        ], Progress);
-        components.Progress = Progress;
-        var Progress_1;
-    })(components = quill.components || (quill.components = {}));
+    var Widget = feather.core.Widget;
+    var Construct = feather.annotations.Construct;
+    var Bind = feather.observe.Bind;
+    var Template = feather.annotations.Template;
+    var Progress = Progress_1 = (function (_super) {
+        __extends(Progress, _super);
+        function Progress() {
+            var _this = _super.call(this) || this;
+            _this.fetching = false;
+            _this.runningClass = function (running) { return running ? 'running' : undefined; };
+            Progress_1.instance = _this;
+            return _this;
+        }
+        Progress.prototype.init = function () {
+            this.render();
+        };
+        Progress.prototype.markup = function () {
+            return '<div class="progress {{fetching:runningClass}}"></div>';
+        };
+        Progress.start = function () {
+            Progress_1.instance.fetching = true;
+        };
+        Progress.stop = function () {
+            Progress_1.instance.fetching = false;
+        };
+        return Progress;
+    }(Widget));
+    __decorate([
+        Bind()
+    ], Progress.prototype, "fetching", void 0);
+    __decorate([
+        Template()
+    ], Progress.prototype, "markup", null);
+    Progress = Progress_1 = __decorate([
+        Construct({ selector: 'progress-bar' })
+    ], Progress);
+    quill.Progress = Progress;
+    var Progress_1;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
@@ -146,7 +143,7 @@ var quill;
             }
             AjaxForm.prototype.validationFailed = function (err, xhr) {
                 var _this = this;
-                components.Progress.stop();
+                quill.Progress.stop();
                 var messages = err.errors.map(function (e) {
                     if (e.type === 'validation') {
                         _this.triggerDown('field-error', e.field);
@@ -156,7 +153,7 @@ var quill;
                 ToastManager.showToast(new Toast("Sign up failed", messages, Theme.Warning));
             };
             AjaxForm.prototype.requestFailed = function (err, xhr) {
-                components.Progress.stop();
+                quill.Progress.stop();
                 ToastManager.showToast(new Toast("Something went wrong", err.errors[0].message, Theme.Error));
             };
             AjaxForm.prototype.textChanged = function (ev, el) {
@@ -228,7 +225,6 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
-    var Progress = quill.components.Progress;
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
     var On = feather.event.On;
@@ -255,11 +251,11 @@ var quill;
         };
         LoginPage.prototype.signupClicked = function () {
             this.triggerDown('field-error-clear');
-            Progress.start();
+            quill.Progress.start();
             this.doSignup();
         };
         LoginPage.prototype.doSignup = function (resp) {
-            Progress.stop();
+            quill.Progress.stop();
             console.log(resp);
         };
         LoginPage.prototype.forgotPasswordClicked = function () {
