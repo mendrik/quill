@@ -30,8 +30,9 @@ class TokenRepo @Inject()(dcp: DatabaseConfigProvider) {
             .map(u => u.lastUsed)
             .update(token.lastUsed)
 
-    def remove(token: Token) =
-        db.run(Tokens.filter(_.id === token.id).delete)
+    def remove(id: String) = {
+        db.run(Tokens.filter(_.id === id).delete).map(_ => ())
+    }
 
     def toToken(tokenRow: TokensRow): Token =
         Token(tokenRow.id, tokenRow.user, tokenRow.lastUsed)

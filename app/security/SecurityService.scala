@@ -8,16 +8,22 @@ import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import org.joda.time.DateTime
+import play.api.Configuration
 import v1.token.TokenRepo
 import v1.user.{User, UserRepo}
-import scalaz._, Scalaz._
+
+import scalaz._
+import Scalaz._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.Future
 
-class SecurityService @Inject()(userRepo: UserRepo, tokenRepo: TokenRepo)
-    extends DelegableAuthInfoDAO[PasswordInfo]
-    with AuthenticatorRepository[BearerTokenAuthenticator] {
+class SecurityService @Inject()(
+    config: Configuration,
+    userRepo: UserRepo,
+    tokenRepo: TokenRepo
+) extends DelegableAuthInfoDAO[PasswordInfo]
+  with AuthenticatorRepository[BearerTokenAuthenticator] {
 
     def providerId = "quill-security"
 
@@ -39,11 +45,23 @@ class SecurityService @Inject()(userRepo: UserRepo, tokenRepo: TokenRepo)
         }
     }
 
-    override def update(authenticator: BearerTokenAuthenticator): Future[BearerTokenAuthenticator] = ???
+    override def update(a: BearerTokenAuthenticator): Future[BearerTokenAuthenticator] = {
+        for {
+            Some(user) <- userRepo.findByEmail(a.loginInfo.providerKey)
+        } yield {
+            val token = Token(a.id, user.id, a.lastUsedDateTime)
+            tokenRepo.update(token)
+            bearerToken(token, user)
+        }
+    }
 
-    override def remove(id: String): Future[Unit] = ???
+    override def remove(id: String): Future[Unit] = tokenRepo.remove(id)
 
-    override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = ???
+    override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = {
+        for {
+            user <- userRepo.findByEmail(loginInfo.providerKey)
+        } yield user.map(passwordInfo)
+    }
 
     override def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
 
@@ -58,6 +76,13 @@ class SecurityService @Inject()(userRepo: UserRepo, tokenRepo: TokenRepo)
         LoginInfo(providerId, user.email),
         token.lastUsed,
         DateTime.now().plusMonths(3),
+        None
+    )
+
+    private def passwordInfo(user: User) = PasswordInfo(
+        config.getString("bta.authenticator.sharedSecret")
+            .getOrElse(throw new Exception("bta.authenticator.sharedSecret")),
+        user.password,
         None
     )
 }
