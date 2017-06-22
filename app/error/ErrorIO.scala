@@ -1,14 +1,10 @@
 package error
 
-import javax.inject._
-
-import play.api.i18n.MessagesApi
 import play.api.libs.json._
 
-@Singleton
-class ErrorIO {
+object ErrorIO {
 
-    implicit val writeError = new Writes[Error] {
+    implicit val writeError: Writes[Error] = new Writes[Error] {
         def writes(e: Error) = Json.obj(
             "type" -> e.errorType,
             "title" -> e.title,
@@ -16,6 +12,6 @@ class ErrorIO {
         )
     }
 
-    implicit val writeValidationErrorList = Json.writes[Errors]
+    implicit val writeErrors: Writes[Errors] = Json.writes[Errors]
 
 }

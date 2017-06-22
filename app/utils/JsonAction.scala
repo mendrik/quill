@@ -37,12 +37,12 @@ object Actions extends Results {
 
     case class JsonRequest[C, A](json: C, request: Request[A]) extends WrappedRequest(request)
 
-    def json[C](block: C => Future[Result])(implicit reads: Reads[C]): ((C) => Future[Result]) => Action[JsValue] = json[C](None)
-
-    def json[C](prefix: Option[String] = None)(block: C => Future[Result])(implicit reads: Reads[C]) = Action.async(BodyParsers.parse.json) { request =>
+    def json[C](prefix: Option[String] = None)
+               (block: (C, RequestHeader) => Future[Result])
+               (implicit reads: Reads[C]) = Action.async(BodyParsers.parse.json) { request =>
         request.body.validate[C] match {
             case JsSuccess(json, _) =>
-                block(json)
+                block(json, request)
             case JsError(errors) =>
                 throw BodyParseException(prefix, errors)
         }

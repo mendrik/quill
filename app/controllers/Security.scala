@@ -6,13 +6,13 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Credentials, PasswordHasher}
 import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent, Silhouette}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
-import error.{Errors, ReadError}
+import error.{Errors, SecurityError}
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
-import security.Implicits._
 import security.QuillEnv
 import utils.Actions
+import error.ErrorIO._
 import v1.UserIO._
 import v1.user.{PostedCredentials, SignUp, User, UserService}
 
@@ -29,9 +29,9 @@ class Security @Inject()(
 ) extends Controller {
 
     val emailExistsMessage = messagesApi.translate("validation.email.exists", Nil).getOrElse("")
-    val userExistsErrors = Errors(Seq(ReadError("signup.email", emailExistsMessage)))
+    val userExistsError = Errors(List(SecurityError("signup.email", emailExistsMessage)))
 
-    def signIn = Actions.json[PostedCredentials](Some("signin")) { pc =>
+    def signIn = Actions.json[PostedCredentials](Some("signin")) { (pc, r) =>
         val credentials = Credentials(pc.identifier, pc.password)
         println(passwordHasher.hash(pc.password))
         credentialsProvider.authenticate(credentials).map { loginInfo =>
@@ -43,21 +43,24 @@ class Security @Inject()(
         Future.successful(Ok(""))
     }
 
-    def signUp = Actions.json[SignUp](Some("signup")) { data =>
+    def signUp = Actions.json[SignUp](Some("signup")) { (data, r) =>
+        implicit val request = r
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
-        userService.retrieve(loginInfo).map {
+        val authService = silhouette.env.authenticatorService
+        val eventBus = silhouette.env.eventBus
+        userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
-                BadRequest(Json.toJson(userExistsErrors))
+                Future.successful(BadRequest(Json.toJson(userExistsError)))
             case None =>
                 val authInfo = passwordHasher.hash(data.password)
                 for {
-                    Some(user) <- userService.createUser(data)
+                    Some(user: User) <- userService.createUser(data)
                     authInfo <- authInfoRepository.add(loginInfo, authInfo)
-                    authenticator <- silhouette.env.authenticatorService.create(loginInfo)
-                    token <- silhouette.env.authenticatorService.init(authenticator)
+                    authenticator <- authService.create(loginInfo)
+                    token <- authService.init(authenticator)
                 } yield {
-                    // silhouette.env.eventBus.publish(SignUpEvent(user, request))
-                    // silhouette.env.eventBus.publish(LoginEvent(user, request))
+                    eventBus.publish(SignUpEvent(user, request))
+                    eventBus.publish(LoginEvent(user, request))
                     Ok(Json.obj("token" -> token))
                 }
         }

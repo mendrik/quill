@@ -11,6 +11,6 @@ class UserService @Inject()(repo: UserRepo) extends IdentityService[User] {
 
     def retrieve(loginInfo: LoginInfo): Future[Option[User]] = repo.findByEmail(loginInfo.providerKey)
 
-    def createUser(signUp: SignUp) = repo.createUser(signUp)
+    def createUser(signUp: SignUp): Future[Option[User]] = repo.createUser(signUp)
 
 }

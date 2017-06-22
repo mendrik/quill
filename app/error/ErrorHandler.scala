@@ -1,15 +1,14 @@
 package error
 
-import java.sql.SQLIntegrityConstraintViolationException
 import javax.inject._
 
 import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import controllers.routes
+import error.ErrorIO._
 import play.api.http.{HttpErrorHandler, Status}
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
-import play.api.mvc.Results.{Forbidden, Redirect}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.api.routing.Router
 import utils.BodyParseException
@@ -19,11 +18,8 @@ import scala.concurrent.Future
 @Singleton
 class ErrorHandler @Inject()(
     messagesApi: MessagesApi,
-    error: ErrorIO,
     router: Provider[Router]
 ) extends HttpErrorHandler with Status with Results with SecuredErrorHandler with UnsecuredErrorHandler {
-
-    import error._
 
     override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = Future.successful {
         Redirect(routes.Security.signIn())
