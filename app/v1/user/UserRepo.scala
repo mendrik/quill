@@ -21,8 +21,8 @@ class UserRepo @Inject()(dcp: DatabaseConfigProvider) {
     def findById(id: Long): Future[Option[User]] =
         db.run(Users.filter(_.id === id).result.headOption.map(_.map(toUser)))
 
-    def createUser(signUp: SignUp): Future[User] =
-        db.run(Users returning Users.map(_.id) += signUp).flatMap(findById).map(_.get)
+    def createUser(signUp: SignUp): Future[Option[User]] =
+        db.run(Users returning Users.map(_.id) += signUp).flatMap(findById)
 
     def update(user: User) =
         Users.filter(_.id === user.id)

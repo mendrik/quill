@@ -42,11 +42,6 @@ class ErrorHandler @Inject()(
 
     def onServerError(request: RequestHeader, exception: Throwable) = {
         Future.successful(exception match {
-            case e: SQLIntegrityConstraintViolationException if e.getMessage.contains("users_email_uindex") =>
-                val emailExistsMessage = messagesApi.translate("validation.email.exists", Nil).getOrElse("")
-                BadRequest(Json.toJson(
-                    Errors(Seq(ReadError("signup.email", emailExistsMessage)))
-                ))
             case e: BodyParseException =>
                 BadRequest(Json.toJson(
                     Errors(e.errors(messagesApi))

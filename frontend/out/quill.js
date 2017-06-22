@@ -1,5 +1,12 @@
 var quill;
 (function (quill) {
+    var Keys;
+    (function (Keys) {
+        Keys[Keys["ENTER"] = 13] = "ENTER";
+    })(Keys = quill.Keys || (quill.Keys = {}));
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
     quill.findParentValue = function (widget, key) {
         var parent = widget, val;
         while (typeof (parent = parent.parentWidget) !== 'undefined') {
@@ -246,6 +253,7 @@ var quill;
     var Translate = quill.components.Translate;
     var Toast = feather.ui.toast.Toast;
     var ToastManager = feather.ui.toast.ToastManager;
+    var Scope = feather.event.Scope;
     var LoginPage = (function (_super) {
         __extends(LoginPage, _super);
         function LoginPage() {
@@ -259,6 +267,12 @@ var quill;
         LoginPage.prototype.loginClicked = function () {
             quill.Progress.start();
             this.doLogin();
+        };
+        LoginPage.prototype.pressedEnter = function (ev) {
+            if (ev.keyCode === quill.Keys.ENTER) {
+                quill.Progress.start();
+                this.doLogin();
+            }
         };
         LoginPage.prototype.doLogin = function (token) {
             this.route('/');
@@ -289,6 +303,9 @@ var quill;
     __decorate([
         On({ event: 'tap', selector: '.login-action' })
     ], LoginPage.prototype, "loginClicked", null);
+    __decorate([
+        On({ event: 'keypress', selector: 'input[type="password"]', scope: Scope.Direct })
+    ], LoginPage.prototype, "pressedEnter", null);
     __decorate([
         Rest({ url: '/signin', method: Method.POST, body: 'credentials', headers: quill.headers })
     ], LoginPage.prototype, "doLogin", null);

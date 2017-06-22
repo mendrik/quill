@@ -2,6 +2,10 @@ module quill {
 
     type ErrorType = 'validation'
 
+    export enum Keys {
+        ENTER = 13
+    }
+
     export interface Error {
         type: ErrorType,
         title: string,

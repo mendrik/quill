@@ -12,6 +12,7 @@ module quill {
     import Translate = quill.components.Translate
     import Toast = feather.ui.toast.Toast
     import ToastManager = feather.ui.toast.ToastManager
+    import Scope = feather.event.Scope
 
     interface Credentials {
         identifier?: string,
@@ -45,6 +46,14 @@ module quill {
         loginClicked() {
             Progress.start()
             this.doLogin()
+        }
+
+        @On({event: 'keypress', selector: 'input[type="password"]', scope: Scope.Direct})
+        pressedEnter(ev: KeyboardEvent) {
+            if (ev.keyCode === Keys.ENTER) {
+                Progress.start()
+                this.doLogin()
+            }
         }
 
         @Rest({url: '/signin', method: Method.POST, body: 'credentials', headers: quill.headers})
