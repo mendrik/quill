@@ -12,7 +12,7 @@ module quill {
     import Translate = quill.components.Translate
 
     interface Credentials {
-        email?: string,
+        identifier?: string,
         password?: string
     }
 
@@ -41,13 +41,14 @@ module quill {
 
         @On({event: 'tap', selector: '.login-action'})
         loginClicked() {
+            Progress.start()
             this.doLogin()
         }
 
         @Rest({url: '/signin', method: Method.POST, body: 'credentials', headers: quill.headers})
         doLogin(token?: Token) {
-            setToken(token)
             this.route('/')
+            Progress.stop()
         }
 
         @On({event: 'tap', selector: '.signup-action'})
@@ -60,7 +61,6 @@ module quill {
         @Rest({url: '/signup', method: Method.POST, body: 'signup', headers: quill.headers})
         doSignup(resp?: Token) {
             Progress.stop()
-            console.log(resp)
         }
 
         @On({event: 'tap', selector: '.forgotpassword-action'})
@@ -75,10 +75,10 @@ module quill {
             <div class="login">
                 <tabs>
                   <div class="form-components" title="•ui.login.tabs.login" icon="key" active>
-                    <Text label="•ui.login.email" name="login.email" placeholder="john@freemail.com" icon="envelope-o" value="user1@mail.com" autofocus bind="credentials.email"></Text>
-                    <Text label="•ui.login.password" name="login.password" type="password" icon="lock" value="123456" bind="credentials.password"></Text>
+                    <Text label="•ui.signin.identifier" name="signin.identifier" placeholder="john@freemail.com" icon="envelope-o" autofocus bind="credentials.identifier"></Text>
+                    <Text label="•ui.signin.password" name="signin.password" type="password" icon="lock" bind="credentials.password"></Text>
                     <div class="block has-text-right">
-                         <a class="button is-primary login-action">•ui.login.button</a>
+                         <a class="button is-primary login-action">•ui.signin.button</a>
                     </div>
                   </div>
                   <div class="form-components" title="•ui.login.tabs.signup" icon="pencil-square-o">

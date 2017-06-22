@@ -1,13 +1,15 @@
 validation.email.exists=The provided email already exists
 errors.required={0} is required
 error.minLength={0} has minimum length of {1}
-validation.email={0} is required and must be a valid email
-validation.password={0} is required and must have at least 6 characters
 
 signup.email=email
+signup.password=password
 signup.firstname=first name
 signup.lastname=last name
-signup.password=password
+
+signin.identifier=email
+signin.password=password
+
 
 joins.and= and 
 
@@ -18,12 +20,12 @@ ui.login.tabs.login=Login
 ui.login.tabs.signup=Sign up
 ui.login.tabs.forgot-password=Unlock
 
-ui.login.email=Email
-ui.login.password=Password
-ui.login.button=Login
+ui.signin.failed=Login failed
+ui.signin.identifier=Email
+ui.signin.password=Password
+ui.signin.button=Login
 
 ui.signup.failed=Signup has failed
-
 ui.signup.email=Email
 ui.signup.firstname=First name
 ui.signup.lastname=Last name
