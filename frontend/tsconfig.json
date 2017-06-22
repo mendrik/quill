@@ -30,6 +30,7 @@
         "typescript/common/utils.ts",
         "typescript/common/headers.ts",
         "typescript/common/polyfill.ts",
+        "typescript/components/progress.ts",
         "typescript/components/translate.ts",
         "typescript/components/ajax-form.ts",
         "typescript/routes/project.ts",

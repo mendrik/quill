@@ -1,0 +1,48 @@
+@keyframes progress-animation {
+    0% {
+        width: 0;
+    }
+    49% {
+        width: 100%;
+        left: 0;
+    }
+    50% {
+        left: 100%;
+        width: 0;
+    }
+    100% {
+        left: 0;
+        width: 100%
+    }
+}
+
+progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: var(--z-notification);
+    border-top: 3px solid var(--light-gray);
+
+    .progress {
+        position: absolute;
+        height: 3px;
+        top: -3px;
+        left: 0;
+        background-color: var(--light-blue);
+        animation-name: progress-animation;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-delay: 0s;
+        opacity: 0;
+        transition: opacity 0.3s linear;
+        transition-delay: 0.3s;
+
+        &.running {
+            opacity: 1;
+        }
+
+    }
+}

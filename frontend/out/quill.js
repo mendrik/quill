@@ -47,6 +47,50 @@ var quill;
     (function (components) {
         var Widget = feather.core.Widget;
         var Construct = feather.annotations.Construct;
+        var Bind = feather.observe.Bind;
+        var Template = feather.annotations.Template;
+        var Progress = Progress_1 = (function (_super) {
+            __extends(Progress, _super);
+            function Progress() {
+                var _this = _super.call(this) || this;
+                _this.fetching = false;
+                _this.runningClass = function (running) { return running ? 'running' : undefined; };
+                Progress_1.instance = _this;
+                return _this;
+            }
+            Progress.prototype.init = function () {
+                this.render();
+            };
+            Progress.prototype.markup = function () {
+                return '<div class="progress {{fetching:runningClass}}"></div>';
+            };
+            Progress.start = function () {
+                Progress_1.instance.fetching = true;
+            };
+            Progress.stop = function () {
+                Progress_1.instance.fetching = false;
+            };
+            return Progress;
+        }(Widget));
+        __decorate([
+            Bind()
+        ], Progress.prototype, "fetching", void 0);
+        __decorate([
+            Template()
+        ], Progress.prototype, "markup", null);
+        Progress = Progress_1 = __decorate([
+            Construct({ selector: 'progress-bar' })
+        ], Progress);
+        components.Progress = Progress;
+        var Progress_1;
+    })(components = quill.components || (quill.components = {}));
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var components;
+    (function (components) {
+        var Widget = feather.core.Widget;
+        var Construct = feather.annotations.Construct;
         var Template = feather.annotations.Template;
         var Bind = feather.observe.Bind;
         var Translate = Translate_1 = (function (_super) {
@@ -102,6 +146,7 @@ var quill;
             }
             AjaxForm.prototype.validationFailed = function (err, xhr) {
                 var _this = this;
+                components.Progress.stop();
                 var messages = err.errors.map(function (e) {
                     if (e.type === 'validation') {
                         _this.triggerDown('field-error', e.field);
@@ -111,6 +156,7 @@ var quill;
                 ToastManager.showToast(new Toast("Sign up failed", messages, Theme.Warning));
             };
             AjaxForm.prototype.requestFailed = function (err, xhr) {
+                components.Progress.stop();
                 ToastManager.showToast(new Toast("Something went wrong", err.errors[0].message, Theme.Error));
             };
             AjaxForm.prototype.textChanged = function (ev, el) {
@@ -182,6 +228,7 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
+    var Progress = quill.components.Progress;
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
     var On = feather.event.On;
@@ -193,11 +240,9 @@ var quill;
         __extends(LoginPage, _super);
         function LoginPage() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.credentials = {
-                email: 'user1@mail.com',
-                password: '123456'
-            };
+            _this.credentials = {};
             _this.signup = {};
+            _this.forgotPassword = {};
             _this.forgotPasswordInfo = 'forgot-password.info';
             return _this;
         }
@@ -210,9 +255,11 @@ var quill;
         };
         LoginPage.prototype.signupClicked = function () {
             this.triggerDown('field-error-clear');
+            Progress.start();
             this.doSignup();
         };
         LoginPage.prototype.doSignup = function (resp) {
+            Progress.stop();
             console.log(resp);
         };
         LoginPage.prototype.forgotPasswordClicked = function () {
@@ -241,7 +288,7 @@ var quill;
         On({ event: 'tap', selector: '.forgotpassword-action' })
     ], LoginPage.prototype, "forgotPasswordClicked", null);
     __decorate([
-        Template()
+        Template('default', false)
     ], LoginPage.prototype, "loginPage", null);
     quill.LoginPage = LoginPage;
 })(quill || (quill = {}));
@@ -455,7 +502,7 @@ var quill;
             this.checkLogin();
         };
         QuillApplication.prototype.applicationHTML = function () {
-            return ("<panel class=\"fullscreen v-flex\" {{pages}}></panel>");
+            return ("<progress-bar></progress-bar><panel class=\"fullscreen v-flex\" {{pages}}></panel>");
         };
         return QuillApplication;
     }(Widget));

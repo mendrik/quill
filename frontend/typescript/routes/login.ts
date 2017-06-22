@@ -1,5 +1,6 @@
 module quill {
 
+    import Progress = quill.components.Progress
     import Construct = feather.annotations.Construct
     import Template = feather.annotations.Template
     import Bind = feather.observe.Bind
@@ -9,7 +10,7 @@ module quill {
     import Method = feather.xhr.Method
     import Theme = feather.ui.toast.Theme
     import AjaxForm = quill.components.AjaxForm
-    import Translate = quill.components.Translate;
+    import Translate = quill.components.Translate
 
     interface Credentials {
         email?: string,
@@ -33,11 +34,9 @@ module quill {
 
     export class LoginPage extends AjaxForm {
 
-        credentials: Credentials = {
-            email: 'user1@mail.com',
-            password: '123456'
-        }
+        credentials: Credentials = {}
         signup: Signup = {}
+        forgotPassword: ForgotPassword = {}
 
         @Bind() forgotPasswordInfo = 'forgot-password.info'
 
@@ -55,21 +54,22 @@ module quill {
         @On({event: 'tap', selector: '.signup-action'})
         signupClicked() {
             this.triggerDown('field-error-clear')
+            Progress.start()
             this.doSignup()
         }
 
         @Rest({url: '/signup', method: Method.POST, body: 'signup', headers: quill.headers})
         doSignup(resp?: Token) {
+            Progress.stop()
             console.log(resp)
         }
-
 
         @On({event: 'tap', selector: '.forgotpassword-action'})
         forgotPasswordClicked() {
 
         }
 
-        @Template()
+        @Template('default', false)
         loginPage() {
             return Translate.translate(`
             <scroll-pane class="grow">

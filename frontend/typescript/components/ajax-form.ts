@@ -14,6 +14,7 @@ module quill.components {
 
         @Subscribe('xhr-failure-400')
         validationFailed(err: Errors, xhr) {
+            Progress.stop()
             const messages = err.errors.map(e => {
                 if (e.type === 'validation') {
                     this.triggerDown('field-error', e.field)
@@ -25,6 +26,7 @@ module quill.components {
 
         @Subscribe('xhr-failure-500')
         requestFailed(err: Errors, xhr) {
+            Progress.stop()
             ToastManager.showToast(new Toast("Something went wrong", err.errors[0].message, Theme.Error))
         }
 
