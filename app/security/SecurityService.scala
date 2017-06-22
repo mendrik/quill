@@ -34,8 +34,8 @@ class SecurityService @Inject()(
 
     override def add(a: BearerTokenAuthenticator): Future[BearerTokenAuthenticator] = {
         for {
-            Some(user) <- userRepo.findByEmail(a.loginInfo.providerKey)
-            Some(token) <- tokenRepo.createToken(Token(a.id, user.id, a.lastUsedDateTime))
+            Some(user: User) <- userRepo.findByEmail(a.loginInfo.providerKey)
+            Some(token: Token) <- tokenRepo.createToken(Token(a.id, user.id, a.lastUsedDateTime))
         } yield {
             bearerToken(token, user)
         }

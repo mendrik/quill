@@ -22,8 +22,13 @@ class TokenRepo @Inject()(dcp: DatabaseConfigProvider) {
         db.run(Tokens.filter(_.id === id).result.map(_.headOption.map(toToken)))
     }
 
-    def createToken(token: Token): Future[Option[Token]] =
-        db.run(Tokens returning Tokens.map(_.id) += token).flatMap(findById)
+    def createToken(token: Token): Future[Option[Token]] = {
+        db.run(Tokens += token).flatMap(_ => findById(token.id))
+        .recover { case e: Exception =>
+            println(e)
+            None
+        }
+    }
 
     def update(token: Token) =
         Tokens.filter(_.id === token.id)
@@ -39,6 +44,7 @@ class TokenRepo @Inject()(dcp: DatabaseConfigProvider) {
 
     implicit def toTokensRow(token: Token): TokensRow =
         TokensRow(token.id, token.user, token.lastUsed)
+
 
 }
 

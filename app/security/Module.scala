@@ -23,7 +23,7 @@ class Module extends AbstractModule with ScalaModule {
         bind[DelegableAuthInfoDAO[PasswordInfo]].to[SecurityService]
         bind[Silhouette[QuillEnv]].to[SilhouetteProvider[QuillEnv]]
         bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
-        bind[PasswordHasher].toInstance(new BCryptPasswordHasher)
+        bind[PasswordHasher].toInstance(new BCryptPasswordHasher())
         bind[FingerprintGenerator].toInstance(new DefaultFingerprintGenerator(false))
         bind[EventBus].toInstance(EventBus())
         bind[Clock].toInstance(Clock())

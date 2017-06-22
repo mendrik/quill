@@ -868,6 +868,7 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
             -ms-flex-positive:1;
                 flex-grow:1;
         padding-right:10px;
+        word-break:break-all;
 }
 .toasts > li .toast-message > *:empty{
         display:none;

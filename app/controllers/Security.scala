@@ -13,6 +13,7 @@ import play.api.mvc._
 import security.QuillEnv
 import utils.Actions
 import error.ErrorIO._
+import security.Implicits._
 import v1.UserIO._
 import v1.user.{PostedCredentials, SignUp, User, UserService}
 
