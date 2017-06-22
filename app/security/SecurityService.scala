@@ -9,13 +9,11 @@ import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import org.joda.time.DateTime
 import play.api.Configuration
+import security.Implicits._
 import v1.token.TokenRepo
 import v1.user.{User, UserRepo}
 
-import scalaz._
-import Scalaz._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
 import scala.concurrent.Future
 
 class SecurityService @Inject()(
@@ -57,19 +55,37 @@ class SecurityService @Inject()(
 
     override def remove(id: String): Future[Unit] = tokenRepo.remove(id)
 
-    override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = {
+    def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] =
+        update(loginInfo, authInfo)
+
+    def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] =
+        userRepo.findByEmail(loginInfo.providerKey).map {
+            case Some(user) if user.confirmed => Some(user.password)
+            case _ => None
+        }
+
+    def remove(loginInfo: LoginInfo): Future[Unit] = {
         for {
-            user <- userRepo.findByEmail(loginInfo.providerKey)
-        } yield user.map(passwordInfo)
+            Some(user) <- userRepo.findByEmail(loginInfo.providerKey)
+        } yield {
+            userRepo.remove(user)
+        }
     }
 
-    override def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
+    def save(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] =
+        find(loginInfo).flatMap {
+            case Some(_) => update(loginInfo, authInfo)
+            case None => add(loginInfo, authInfo)
+        }
 
-    override def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
-
-    override def save(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
-
-    override def remove(loginInfo: LoginInfo): Future[Unit] = ???
+    def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] =
+        userRepo.findByEmail(loginInfo).map {
+            case Some(user) =>
+                userRepo.update(user.copy(password = authInfo))
+                authInfo
+            case _ =>
+                throw new Exception("PasswordInfoDAO - update : the user must exists to update its password")
+        }
 
     private def bearerToken(token: Token, user: User) = BearerTokenAuthenticator(
         token.id,
@@ -79,10 +95,4 @@ class SecurityService @Inject()(
         None
     )
 
-    private def passwordInfo(user: User) = PasswordInfo(
-        config.getString("bta.authenticator.sharedSecret")
-            .getOrElse(throw new Exception("bta.authenticator.sharedSecret")),
-        user.password,
-        None
-    )
 }
