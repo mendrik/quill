@@ -18,17 +18,11 @@ class TokenRepo @Inject()(dcp: DatabaseConfigProvider) {
     private val dbConfig = dcp.get[MySQLProfile]
     private val db = dbConfig.db
 
-    def findById(id: String): Future[Option[Token]] = {
+    def findById(id: String): Future[Option[Token]] = 
         db.run(Tokens.filter(_.id === id).result.map(_.headOption.map(toToken)))
-    }
 
-    def createToken(token: Token): Future[Option[Token]] = {
+    def createToken(token: Token): Future[Option[Token]] =
         db.run(Tokens += token).flatMap(_ => findById(token.id))
-        .recover { case e: Exception =>
-            println(e)
-            None
-        }
-    }
 
     def update(token: Token) =
         Tokens.filter(_.id === token.id)
