@@ -51,7 +51,6 @@ class Module extends AbstractModule with ScalaModule {
          clock: Clock): AuthenticatorService[BearerTokenAuthenticator] = {
 
         val config: BearerTokenAuthenticatorSettings = BearerTokenAuthenticatorSettings()
-
         new BearerTokenAuthenticatorService(config, securityService, idGenerator, clock)
     }
 

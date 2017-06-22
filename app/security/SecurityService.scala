@@ -22,4 +22,5 @@ class SecurityService @Inject()(userRepo: UserRepo) extends DelegableAuthInfoDAO
     override def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
     override def save(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
     override def remove(loginInfo: LoginInfo): Future[Unit] = ???
+
 }

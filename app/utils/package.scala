@@ -1,7 +1,9 @@
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import play.api.libs.json.{Reads, _}
+import java.sql.Timestamp
+
+import org.joda.time.DateTime
+import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads._
-import play.api.libs.functional.syntax._
+import play.api.libs.json.{Reads, _}
 
 package object json {
 
@@ -28,3 +30,11 @@ package object json {
 
 }
 
+package object database {
+
+    implicit def toDatetime(timestamp: Timestamp): DateTime =
+        new DateTime(timestamp.getTime)
+
+    implicit def toTimestamp(datetime: DateTime): Timestamp =
+        new Timestamp(datetime.getMillis)
+}

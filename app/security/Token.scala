@@ -1,19 +1,22 @@
 package security
 
 import org.joda.time.DateTime
-import play.api.libs.json.{JsString, JsValue, Json, Writes}
+import play.api.libs.json.{JsString, JsValue, Writes}
 
-case class Token(token: String, expiresOn: DateTime)
+import scala.concurrent.duration.FiniteDuration
 
-/**
-  * Companion object, contain format for Json
-  */
+case class Token(
+    id: String,
+    user: Long,
+    lastUsed: DateTime,
+    expires: DateTime,
+    idleTimeout: FiniteDuration
+)
+
 object Token {
 
     implicit val jodaDateWrites = new Writes[DateTime] {
         def writes(d: DateTime): JsValue = JsString(d.toString)
     }
-
-    implicit val restFormat = Json.format[Token]
 
 }
