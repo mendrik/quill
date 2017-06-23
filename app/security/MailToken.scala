@@ -1,5 +1,7 @@
 package security
 
+import java.util.UUID
+
 import org.joda.time.DateTime
 
 trait MailToken {
@@ -10,4 +12,9 @@ trait MailToken {
 }
 
 case class MailTokenUser(id: String, email: String, expirationTime: DateTime) extends MailToken
+
+object MailTokenUser {
+    def apply(email: String): MailTokenUser =
+        MailTokenUser(UUID.randomUUID().toString, email, DateTime.now().plusHours(24))
+}
 

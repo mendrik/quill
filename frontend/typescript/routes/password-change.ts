@@ -15,7 +15,7 @@ module quill {
     import Scope = feather.event.Scope
 
     interface NewPassword {
-        paddword?: string,
+        password?: string,
         passwordRepeat?: string
     }
 
@@ -31,13 +31,11 @@ module quill {
             this.doPasswordChange()
         }
 
-
-        @Rest({url: '/changepassword', method: Method.POST, body: 'signup', headers: quill.headers})
+        @Rest({url: '/account/password', method: Method.PUT, body: 'newPassword', headers: quill.headers})
         doPasswordChange() {
             Progress.stop()
             this.route('/')
         }
-
 
         @Template('default', false)
         loginPage() {
@@ -46,8 +44,16 @@ module quill {
                 <div class="change-password">
                   <p><Translate key="ui.change-password.info"/></p>
                   <div class="form-components">
-                    <Text label="•ui.change-password.password" name="change-password.password" placeholder="•ui.change-password.placeholder" icon="lock" autofocus bind="newPassword.password"></Text>
-                    <Text label="•ui.change-password.password-repeat" name="change-password.password-repeat" type="password" icon="lock" bind="newPassword.passwordRepeat"></Text>
+                    <Text label="•ui.change-password.password" 
+                          name="change-password.password" 
+                          placeholder="•ui.change-password.placeholder" 
+                          icon="lock" 
+                          autofocus 
+                          bind="newPassword.password"></Text>
+                    <Text label="•ui.change-password.password-repeat" 
+                          name="change-password.password-repeat" 
+                          type="password" icon="lock" 
+                          bind="newPassword.passwordRepeat"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary change-action">•ui.change-password.button</a>
                     </div>

@@ -367,7 +367,7 @@ var quill;
             this.route('/');
         };
         PassordChangePage.prototype.loginPage = function () {
-            return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"\u2022ui.change-password.password\" name=\"change-password.password\" placeholder=\"\u2022ui.change-password.placeholder\" icon=\"lock\" autofocus bind=\"newPassword.password\"></Text>\n                    <Text label=\"\u2022ui.change-password.password-repeat\" name=\"change-password.password-repeat\" type=\"password\" icon=\"lock\" bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\u2022ui.change-password.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
+            return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"\u2022ui.change-password.password\" \n                          name=\"change-password.password\" \n                          placeholder=\"\u2022ui.change-password.placeholder\" \n                          icon=\"lock\" \n                          autofocus \n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"\u2022ui.change-password.password-repeat\" \n                          name=\"change-password.password-repeat\" \n                          type=\"password\" icon=\"lock\" \n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\u2022ui.change-password.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
         };
         return PassordChangePage;
     }(AjaxForm));
@@ -378,7 +378,7 @@ var quill;
         On({ event: 'tap', selector: '.change-action' })
     ], PassordChangePage.prototype, "submitClicked", null);
     __decorate([
-        Rest({ url: '/changepassword', method: Method.POST, body: 'signup', headers: quill.headers })
+        Rest({ url: '/account/password', method: Method.PUT, body: 'newPassword', headers: quill.headers })
     ], PassordChangePage.prototype, "doPasswordChange", null);
     __decorate([
         Template('default', false)

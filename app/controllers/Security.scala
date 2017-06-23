@@ -12,13 +12,14 @@ import error.{Errors, SecurityError}
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
-import security.QuillEnv
+import security.{MailToken, MailTokenService, MailTokenUser, QuillEnv}
 import utils.Actions
 import error.ErrorIO._
 import play.api.Configuration
+import play.api.libs.mailer.MailerClient
 import security.Implicits._
 import v1.UserIO._
-import v1.user.{PostedCredentials, SignUp, User, UserService}
+import v1.user._
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,7 +33,9 @@ class Security @Inject()(
   val authInfoRepository: AuthInfoRepository,
   val credentialsProvider: CredentialsProvider,
   val configuration: Configuration,
-  clock: Clock
+  val mailTokenService: MailTokenService[MailToken],
+  val mailer: MailerClient,
+  val clock: Clock
 ) extends Controller {
 
     val emailExistsMessage = messagesApi.translate("validation.email.exists", Nil).getOrElse("")
@@ -93,8 +96,13 @@ class Security @Inject()(
         Future.successful(Ok(Json.toJson(request.identity)))
     }
 
-    def requestPasswordChange = Action.async { request =>
-        Future.successful(Ok(""))
+    def requestPasswordChange = Actions.json[RequestPasswordChange](Some("forgot-password")) { (rpc, r) =>
+        val token = MailTokenUser(rpc.identifier)
+        mailTokenService.create(token).map { _ =>
+            //mailer.forgotPassword(email, link = routes.Auth.resetPassword(token.id).absoluteURL())
+            //Ok(viewsAuth.forgotPasswordSent(email))
+            Ok("")
+        }
     }
 
     def changePassword = Action.async { request =>

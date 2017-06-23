@@ -25,4 +25,5 @@ class MailTokenUserService @Inject()(
     def consume(id: String): Unit = {
         mailTokenRepo.remove(id)
     }
+
 }
