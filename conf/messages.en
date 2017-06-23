@@ -46,6 +46,9 @@ If you have forgotten your password fill in your e-mail below \
 and we will send you further instructions. If you need \
 additional help, feel free to contact us at \
 <a href="mailto:help@json.services">help@json.services</a>.
+ui.forgot-password.email-sent=Check your mailbox
+ui.forgot-password.email-sent.message=An email with further instructions has been sent
+
 ui.change-password.info=\
 Please provide a new password and press change. After pressing \
 the change button you will be redirecte to the login page, \

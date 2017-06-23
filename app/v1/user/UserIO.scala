@@ -6,7 +6,7 @@ import play.api.libs.json._
 import play.api.libs.json.Reads._
 import json.JsPathExtra
 import play.api.libs.functional.syntax._
-import v1.user.{PostedCredentials, SignUp, User}
+import v1.user._
 
 package object UserIO {
 
@@ -28,6 +28,21 @@ package object UserIO {
         (__ \ "identifier").nonEmptyWith(email) ~
         (__ \ "password").nonEmpty
     )(PostedCredentials.apply _)
+
+    implicit val requestPasswordChangeReads: Reads[RequestPasswordChange] = (__ \ "identifier").nonEmptyWith(email).map(email => RequestPasswordChange(email))
+
+    implicit val passwordReads: Reads[PasswordChange] = (
+        (__ \ "password").nonEmptyWith(minLength(6)) ~
+        (__ \ "passwordRepeat").nonEmptyWith(minLength(6))
+    )(PasswordChange.apply _).flatMap { passwordChange =>
+        Reads { _ =>
+            if (passwordChange.password == passwordChange.passwordRepeat) {
+                JsSuccess(passwordChange)
+            } else {
+                JsError(__ \ "password", ValidationError("field1 and field2 must be equal"))
+            }
+        }
+    }
 
     implicit val userWrites: Writes[User] = new Writes[User] {
         def writes(u: User) = Json.obj(

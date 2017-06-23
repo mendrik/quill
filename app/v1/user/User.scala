@@ -26,3 +26,11 @@ case class PostedCredentials(
   password: String
 )
 
+case class RequestPasswordChange (
+    identifier: String
+)
+
+case class PasswordChange (
+    password: String,
+    passwordRepeat: String
+)

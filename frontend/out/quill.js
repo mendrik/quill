@@ -294,9 +294,18 @@ var quill;
             this.route('/');
         };
         LoginPage.prototype.forgotPasswordClicked = function () {
+            quill.Progress.start();
+            this.requestPasswordChange();
+        };
+        LoginPage.prototype.requestPasswordChange = function () {
+            quill.Progress.stop();
+            var title = Translate.translations['ui.forgot-password.email-sent'];
+            var message = Translate.translations['ui.forgot-password.email-sent.message'];
+            ToastManager.showToast(new Toast(title, message, Theme.Info));
+            this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
-            return Translate.translate("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.login\" icon=\"key\" active>\n                    <Text label=\"\u2022ui.signin.identifier\" name=\"signin.identifier\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" autofocus bind=\"credentials.identifier\"></Text>\n                    <Text label=\"\u2022ui.signin.password\" name=\"signin.password\" type=\"password\" icon=\"lock\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">\u2022ui.signin.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"\u2022ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"\u2022ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"\u2022ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"\u2022ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">\u2022ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"\u2022ui.forgot-password.email\" name=\"forgot-password.email\"  placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgotpassword-action\">\u2022ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
+            return Translate.translate("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.login\" icon=\"key\" active>\n                    <Text label=\"\u2022ui.signin.identifier\" name=\"signin.identifier\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" autofocus bind=\"credentials.identifier\"></Text>\n                    <Text label=\"\u2022ui.signin.password\" name=\"signin.password\" type=\"password\" icon=\"lock\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">\u2022ui.signin.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"\u2022ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"\u2022ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"\u2022ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"\u2022ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">\u2022ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"\u2022ui.forgot-password.email\" name=\"forgot-password.email\"  placeholder=\"your e-mail\" icon=\"envelope-o\" bind=\"forgotPassword.email\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgot-password-action\">\u2022ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
         };
         return LoginPage;
     }(AjaxForm));
@@ -322,8 +331,11 @@ var quill;
         Rest({ url: '/signup', method: Method.POST, body: 'signup', headers: quill.headers })
     ], LoginPage.prototype, "doSignup", null);
     __decorate([
-        On({ event: 'tap', selector: '.forgotpassword-action' })
+        On({ event: 'tap', selector: '.forgot-password-action' })
     ], LoginPage.prototype, "forgotPasswordClicked", null);
+    __decorate([
+        Rest({ url: '/account', method: Method.PUT, body: 'forgotPassword', headers: quill.headers })
+    ], LoginPage.prototype, "requestPasswordChange", null);
     __decorate([
         Template('default', false)
     ], LoginPage.prototype, "loginPage", null);

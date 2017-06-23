@@ -83,9 +83,19 @@ module quill {
             this.route('/')
         }
 
-        @On({event: 'tap', selector: '.forgotpassword-action'})
+        @On({event: 'tap', selector: '.forgot-password-action'})
         forgotPasswordClicked() {
+            Progress.start()
+            this.requestPasswordChange()
+        }
 
+        @Rest({url: '/account', method: Method.PUT, body: 'forgotPassword', headers: quill.headers})
+        requestPasswordChange() {
+            Progress.stop()
+            const title = Translate.translations['ui.forgot-password.email-sent']
+            const message = Translate.translations['ui.forgot-password.email-sent.message']
+            ToastManager.showToast(new Toast(title, message, Theme.Info))
+            this.route('/login')
         }
 
         @Template('default', false)
@@ -114,7 +124,7 @@ module quill {
                     <p><Translate key="ui.forgot-password.info"/></p>
                     <Text label="•ui.forgot-password.email" name="forgot-password.email"  placeholder="your e-mail" icon="envelope-o" bind="forgotPassword.email"></Text>
                     <div class="block has-text-right">
-                         <a class="button is-primary forgotpassword-action">•ui.forgot-password.button</a>
+                         <a class="button is-primary forgot-password-action">•ui.forgot-password.button</a>
                     </div>
                   </div>
               </tabs>
