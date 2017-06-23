@@ -20,6 +20,8 @@ module quill {
         id: number,
         name: string,
         email: string,
+        firstname: string,
+        lastname: string,
         lastProject: string
     }
 

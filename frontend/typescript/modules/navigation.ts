@@ -24,7 +24,7 @@ module quill {
         }
 
         init() {
-            this.userName = findParentValue<User>(this, 'user').name
+            this.userName = findParentValue<User>(this, 'user').firstname
             this.render()
         }
 
@@ -58,7 +58,7 @@ module quill {
         }
 
         @Rest({url: '/signout', method: Method.POST, body: 'credentials', headers: quill.headers})
-        doLogout(resp?: any) {
+        doLogout() {
             removeToken()
             this.route('/login')
         }

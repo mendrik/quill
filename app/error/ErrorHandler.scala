@@ -22,7 +22,9 @@ class ErrorHandler @Inject()(
 ) extends HttpErrorHandler with Status with Results with SecuredErrorHandler with UnsecuredErrorHandler {
 
     override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = Future.successful {
-        Redirect(routes.Security.signIn())
+        Unauthorized(Json.toJson(
+            Errors(Seq(SecurityError("Not authorized", "You must login")))
+        ))
     }
 
     // 403 - Forbidden
@@ -49,7 +51,6 @@ class ErrorHandler @Inject()(
                     Errors(Seq(ServerError(title, userNotFound)))
                 ))
             case e: Throwable =>
-                println(e)
                 InternalServerError(Json.toJson(Errors(List(ServerError("Server Error", e.getMessage.capitalize)))))
         })
     }

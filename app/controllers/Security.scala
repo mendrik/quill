@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordHasher}
-import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent, Silhouette}
+import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
@@ -46,6 +46,7 @@ class Security @Inject()(
 
     def signIn = Actions.json[PostedCredentials](Some("signin")) { (pc, r) =>
         val credentials = Credentials(pc.identifier, pc.password)
+        implicit val request = r
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
             userService.retrieve(loginInfo).flatMap {
                 case Some(user) =>
@@ -62,8 +63,9 @@ class Security @Inject()(
         }
     }
 
-    def signOut = Action.async { request =>
-        Future.successful(Ok(""))
+    def signOut = silhouette.SecuredAction.async { implicit request =>
+        eventBus.publish(LogoutEvent(request.identity, request))
+        authService.discard(request.authenticator, Ok)
     }
 
     def signUp = Actions.json[SignUp](Some("signup")) { (data, r) =>

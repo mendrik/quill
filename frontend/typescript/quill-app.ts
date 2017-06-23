@@ -39,26 +39,13 @@ module quill {
 
         @Rest({url: '/account', headers: quill.headers})
         checkLogin(resp?: User|ApiError) {
-            this.route('/login')
-/*
-            let code = (resp as ApiError).code;
-            if (!code) {
-                this.route('/login')
-            } else {
-                this.user = resp as User
-                // this.route(`/project/${this.user.lastProject}`)
-                this.route(`/project/1`)
-            }
-*/
+            this.user = resp as User
+            this.route(`/project/1`)
         }
 
-        @Subscribe('xhr-failure')
-        xhrFailure(err: string, xhr: XMLHttpRequest) {
-            if (xhr.status === 401) {
-                this.route('/login')
-            } else {
-                this.genericFetchError(err, xhr)
-            }
+        @Subscribe('xhr-failure-401')
+        unauthorized() {
+            this.route('/login')
         }
 
         genericFetchError(err: string, xhr: XMLHttpRequest) {

@@ -29,6 +29,13 @@ package object UserIO {
         (__ \ "password").nonEmpty
     )(PostedCredentials.apply _)
 
-    implicit val userWrites: Writes[User] = Json.writes[User]
+    implicit val userWrites: Writes[User] = new Writes[User] {
+        def writes(u: User) = Json.obj(
+            "id" -> u.id,
+            "email" -> u.email,
+            "firstname" -> u.firstName,
+            "lastname" -> u.lastName
+        )
+    }
 
 }

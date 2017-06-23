@@ -510,14 +510,11 @@ var quill;
         };
         QuillApplication.prototype.checkLogin = function (resp) {
             this.route('/login');
+            this.user = resp;
+            this.route("/project/1");
         };
-        QuillApplication.prototype.xhrFailure = function (err, xhr) {
-            if (xhr.status === 401) {
-                this.route('/login');
-            }
-            else {
-                this.genericFetchError(err, xhr);
-            }
+        QuillApplication.prototype.unauthorized = function () {
+            this.route('/login');
         };
         QuillApplication.prototype.genericFetchError = function (err, xhr) {
             ToastManager.showToast(new Toast('API request has failed', err, Theme.Error));
@@ -551,8 +548,8 @@ var quill;
         Rest({ url: '/account', headers: quill.headers })
     ], QuillApplication.prototype, "checkLogin", null);
     __decorate([
-        Subscribe('xhr-failure')
-    ], QuillApplication.prototype, "xhrFailure", null);
+        Subscribe('xhr-failure-401')
+    ], QuillApplication.prototype, "unauthorized", null);
     __decorate([
         Route('/project/:id')
     ], QuillApplication.prototype, "projectPage", null);
