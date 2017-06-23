@@ -38,6 +38,7 @@ ui.signup.lastname=Last name
 ui.signup.password=Password
 ui.signup.button=Sign up
 
+
 ui.forgot-password.email=Send instructions to
 ui.forgot-password.button=Request
 ui.forgot-password.info=\
@@ -45,4 +46,13 @@ If you have forgotten your password fill in your e-mail below \
 and we will send you further instructions. If you need \
 additional help, feel free to contact us at \
 <a href="mailto:help@json.services">help@json.services</a>.
-
+ui.change-password.info=\
+Please provide a new password and press change. After pressing \
+the change button you will be redirecte to the login page, \
+where you can use your new password.
+ui.change-password.password=Password
+ui.change-password.placeholder=Your new password
+ui.change-password.password-repeat=Repeat password
+ui.change-password.failed=Changing passwords failed
+ui.change-password.success=Your password has been successfully changed
+ui.change-password.button=Change

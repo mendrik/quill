@@ -66,6 +66,11 @@ module quill {
             this.pages.splice(0, 1, new LoginPage())
         }
 
+        @Route('/changepassword')
+        changePasswordPage() {
+            this.pages.splice(0, 1, new PassordChangePage())
+        }
+
         @Route('/')
         homePage() {
             this.checkLogin()

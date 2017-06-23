@@ -35,6 +35,7 @@
         "typescript/components/ajax-form.ts",
         "typescript/routes/project.ts",
         "typescript/routes/login.ts",
+        "typescript/routes/password-change.ts",
         "typescript/modules/tree-actions.ts",
         "typescript/modules/navigation.ts",
         "typescript/modules/content.ts",

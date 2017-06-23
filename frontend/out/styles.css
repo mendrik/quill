@@ -974,7 +974,7 @@ html, body{
         -ms-user-select:none;
             user-select:none;
 }
-.login{
+.login, .change-password{
     margin:auto;
     width:320px;
     max-width:100%;
@@ -1111,4 +1111,7 @@ progress-bar .progress-runner:after{
 .has-text-right .button:last-child{
         margin-right:0;
 }
-
+translate{
+    margin-bottom:10px;
+    display:block;
+}

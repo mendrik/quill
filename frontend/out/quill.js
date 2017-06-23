@@ -329,6 +329,50 @@ var quill;
     ], LoginPage.prototype, "loginPage", null);
     quill.LoginPage = LoginPage;
 })(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var Template = feather.annotations.Template;
+    var Bind = feather.observe.Bind;
+    var On = feather.event.On;
+    var Rest = feather.xhr.Rest;
+    var Method = feather.xhr.Method;
+    var AjaxForm = quill.components.AjaxForm;
+    var Translate = quill.components.Translate;
+    var PassordChangePage = (function (_super) {
+        __extends(PassordChangePage, _super);
+        function PassordChangePage() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.newPassword = {};
+            _this.changePasswordInfo = 'ui.change-password.info';
+            return _this;
+        }
+        PassordChangePage.prototype.submitClicked = function () {
+            quill.Progress.start();
+            this.doPasswordChange();
+        };
+        PassordChangePage.prototype.doPasswordChange = function () {
+            quill.Progress.stop();
+            this.route('/');
+        };
+        PassordChangePage.prototype.loginPage = function () {
+            return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"\u2022ui.change-password.password\" name=\"change-password.password\" placeholder=\"\u2022ui.change-password.placeholder\" icon=\"lock\" autofocus bind=\"newPassword.password\"></Text>\n                    <Text label=\"\u2022ui.change-password.password-repeat\" name=\"change-password.password-repeat\" type=\"password\" icon=\"lock\" bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\u2022ui.change-password.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
+        };
+        return PassordChangePage;
+    }(AjaxForm));
+    __decorate([
+        Bind()
+    ], PassordChangePage.prototype, "changePasswordInfo", void 0);
+    __decorate([
+        On({ event: 'tap', selector: '.change-action' })
+    ], PassordChangePage.prototype, "submitClicked", null);
+    __decorate([
+        Rest({ url: '/changepassword', method: Method.POST, body: 'signup', headers: quill.headers })
+    ], PassordChangePage.prototype, "doPasswordChange", null);
+    __decorate([
+        Template('default', false)
+    ], PassordChangePage.prototype, "loginPage", null);
+    quill.PassordChangePage = PassordChangePage;
+})(quill || (quill = {}));
 var feather;
 (function (feather) {
     var ui;
@@ -530,6 +574,9 @@ var quill;
         QuillApplication.prototype.loginPage = function () {
             this.pages.splice(0, 1, new quill.LoginPage());
         };
+        QuillApplication.prototype.changePasswordPage = function () {
+            this.pages.splice(0, 1, new quill.PassordChangePage());
+        };
         QuillApplication.prototype.homePage = function () {
             this.checkLogin();
         };
@@ -556,6 +603,9 @@ var quill;
     __decorate([
         Route('/login')
     ], QuillApplication.prototype, "loginPage", null);
+    __decorate([
+        Route('/changepassword')
+    ], QuillApplication.prototype, "changePasswordPage", null);
     __decorate([
         Route('/')
     ], QuillApplication.prototype, "homePage", null);
