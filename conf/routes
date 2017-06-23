@@ -5,7 +5,7 @@ GET			/project/:id        controllers.Home.project(id)
 
 # AUTHENTICATION
 POST		/signin							controllers.Security.signIn
-POST		/signout						controllers.Security.signOut
+GET     /signout						controllers.Security.signOut
 POST		/signup							controllers.Security.signUp
 
 # ACCOUNT

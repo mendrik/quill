@@ -275,6 +275,7 @@ var quill;
             }
         };
         LoginPage.prototype.doLogin = function (token) {
+            quill.setToken(token);
             this.route('/');
             quill.Progress.stop();
         };
@@ -381,7 +382,6 @@ var quill;
     var removeMultipleEventListeners = feather.ui.events.removeMultipleEventListeners;
     var tapEvents = feather.ui.events.tapEvents;
     var Rest = feather.xhr.Rest;
-    var Method = feather.xhr.Method;
     var Navigation = (function (_super) {
         __extends(Navigation, _super);
         function Navigation() {
@@ -390,7 +390,7 @@ var quill;
             return _this;
         }
         Navigation.prototype.init = function () {
-            this.userName = quill.findParentValue(this, 'user').name;
+            this.userName = quill.findParentValue(this, 'user').firstname;
             this.render();
         };
         Navigation.prototype.toggle = function (ev, el) {
@@ -417,7 +417,7 @@ var quill;
         Navigation.prototype.logoutClicked = function () {
             this.doLogout();
         };
-        Navigation.prototype.doLogout = function (resp) {
+        Navigation.prototype.doLogout = function () {
             quill.removeToken();
             this.route('/login');
         };
@@ -440,7 +440,7 @@ var quill;
         On({ event: 'tap', selector: 'a.logout' })
     ], Navigation.prototype, "logoutClicked", null);
     __decorate([
-        Rest({ url: '/signout', method: Method.POST, body: 'credentials', headers: quill.headers })
+        Rest({ url: '/signout', headers: quill.headers })
     ], Navigation.prototype, "doLogout", null);
     __decorate([
         Subscribe('xhr-failure')
@@ -509,7 +509,6 @@ var quill;
             this.render();
         };
         QuillApplication.prototype.checkLogin = function (resp) {
-            this.route('/login');
             this.user = resp;
             this.route("/project/1");
         };

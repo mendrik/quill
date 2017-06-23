@@ -57,7 +57,7 @@ module quill {
             this.doLogout()
         }
 
-        @Rest({url: '/signout', method: Method.POST, body: 'credentials', headers: quill.headers})
+        @Rest({url: '/signout', headers: quill.headers})
         doLogout() {
             removeToken()
             this.route('/login')
