@@ -9,6 +9,7 @@ signup.lastname=last name
 
 signin.failed=Login failed
 signin.error.notfound=User with the provided email doesn''t exist
+signin.error.password=Wrong password!
 signin.identifier=email
 signin.password=password
 

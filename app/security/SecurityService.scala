@@ -58,7 +58,7 @@ class SecurityService @Inject()(
 
     def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] =
         userRepo.findByEmail(loginInfo.providerKey).map {
-            case Some(user) => Some(user.password) 
+            case Some(user) => Some(user.password)
             case _ => None
         }
 

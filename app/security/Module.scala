@@ -1,6 +1,7 @@
 package security
 
 import com.google.inject.{AbstractModule, Provides}
+import com.mohiva.play.silhouette.api.actions.SecuredErrorHandler
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
 import com.mohiva.play.silhouette.api.util._
@@ -11,6 +12,7 @@ import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, Secure
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
+import error.ErrorHandler
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
 import v1.user.UserService
@@ -20,6 +22,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class Module extends AbstractModule with ScalaModule {
 
     def configure(): Unit = {
+        bind[SecuredErrorHandler].to[ErrorHandler]
         bind[DelegableAuthInfoDAO[PasswordInfo]].to[SecurityService]
         bind[Silhouette[QuillEnv]].to[SilhouetteProvider[QuillEnv]]
         bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
