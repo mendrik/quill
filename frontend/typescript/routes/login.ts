@@ -80,6 +80,7 @@ module quill {
         doSignup(token?: Token) {
             setToken(token)
             Progress.stop()
+            this.route('/')
         }
 
         @On({event: 'tap', selector: '.forgotpassword-action'})

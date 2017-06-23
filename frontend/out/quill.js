@@ -291,6 +291,7 @@ var quill;
         LoginPage.prototype.doSignup = function (token) {
             quill.setToken(token);
             quill.Progress.stop();
+            this.route('/');
         };
         LoginPage.prototype.forgotPasswordClicked = function () {
         };
