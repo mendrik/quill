@@ -22,7 +22,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class Module extends AbstractModule with ScalaModule {
 
     def configure(): Unit = {
-        bind[MailTokenService[MailToken]].to[MailTokenUserService]
+        bind[MailTokenService[MailTokenUser]].to[MailTokenUserService]
         bind[SecuredErrorHandler].to[ErrorHandler]
         bind[DelegableAuthInfoDAO[PasswordInfo]].to[SecurityService]
         bind[Silhouette[QuillEnv]].to[SilhouetteProvider[QuillEnv]]

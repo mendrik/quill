@@ -2,28 +2,26 @@ package controllers
 
 import javax.inject.Inject
 
+import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordHasher}
-import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
-import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import error.ErrorIO._
 import error.{Errors, SecurityError}
+import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
-import security.{MailToken, MailTokenService, MailTokenUser, QuillEnv}
-import utils.Actions
-import error.ErrorIO._
-import play.api.Configuration
-import play.api.libs.mailer.MailerClient
 import security.Implicits._
+import security.{MailTokenService, MailTokenUser, QuillEnv}
+import utils.{Actions, Mailer}
 import v1.UserIO._
 import v1.user._
 
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 class Security @Inject()(
   val messagesApi: MessagesApi,
@@ -33,8 +31,8 @@ class Security @Inject()(
   val authInfoRepository: AuthInfoRepository,
   val credentialsProvider: CredentialsProvider,
   val configuration: Configuration,
-  val mailTokenService: MailTokenService[MailToken],
-  val mailer: MailerClient,
+  val mailTokenService: MailTokenService[MailTokenUser],
+  val mailer: Mailer,
   val clock: Clock
 ) extends Controller {
 
@@ -98,14 +96,16 @@ class Security @Inject()(
 
     def requestPasswordChange = Actions.json[RequestPasswordChange](Some("forgot-password")) { (rpc, r) =>
         val token = MailTokenUser(rpc.identifier)
-        mailTokenService.create(token).map { _ =>
-            //mailer.forgotPassword(email, link = routes.Auth.resetPassword(token.id).absoluteURL())
-            //Ok(viewsAuth.forgotPasswordSent(email))
-            Ok("")
+        for {
+            Some(user) <- userService.retrieve(rpc.identifier)
+            Some(token) <- mailTokenService.create(token)
+        } yield {
+            mailer.forgotPassword(user.email, link = routes.Security.changePassword(token.id).absoluteURL())
+            Ok(Json.toJson(""))
         }
     }
 
-    def changePassword = Action.async { request =>
+    def changePassword(token: String) = Action.async { request =>
         Future.successful(Ok(""))
     }
 
