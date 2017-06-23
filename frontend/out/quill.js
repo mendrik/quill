@@ -287,7 +287,8 @@ var quill;
             quill.Progress.start();
             this.doSignup();
         };
-        LoginPage.prototype.doSignup = function (resp) {
+        LoginPage.prototype.doSignup = function (token) {
+            quill.setToken(token);
             quill.Progress.stop();
         };
         LoginPage.prototype.forgotPasswordClicked = function () {

@@ -27,6 +27,7 @@ ui.login.tabs.forgot-password=Unlock
 ui.signin.failed=Login failed
 ui.signin.identifier=Email
 ui.signin.password=Password
+ui.signin.rememberMe=Remember me
 ui.signin.button=Login
 
 ui.signup.failed=Signup has failed
