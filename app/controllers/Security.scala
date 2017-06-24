@@ -13,9 +13,9 @@ import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
+import utils.{Actions, Mailer}
 import security.Implicits._
 import security.{MailTokenService, MailTokenUser, QuillEnv}
-import utils.{Actions, Mailer}
 import v1.UserIO._
 import v1.user._
 
@@ -96,17 +96,42 @@ class Security @Inject()(
 
     def requestPasswordChange = Actions.json[RequestPasswordChange](Some("forgot-password")) { (rpc, r) =>
         val token = MailTokenUser(rpc.identifier)
+        implicit val request = r
         for {
             Some(user) <- userService.retrieve(rpc.identifier)
             Some(token) <- mailTokenService.create(token)
         } yield {
             mailer.forgotPassword(user.email, link = routes.Security.changePassword(token.id).absoluteURL())
-            Ok(Json.toJson(""))
+            Ok
         }
     }
 
-    def changePassword(token: String) = Action.async { request =>
-        Future.successful(Ok(""))
+    def changePasswordPage(id: String) = silhouette.UnsecuredAction.async { implicit request =>
+        for {
+            Some(token) <- mailTokenService.retrieve(id)
+        } yield {
+            if (!token.isExpired) {
+                Ok(views.html.index())
+            }
+            else {
+                mailTokenService.consume(id)
+                NotFound
+            }
+        }
+    }
+
+    def changePassword(id: String) = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
+        implicit val request = r
+        (for {
+            Some(token: MailTokenUser) <- mailTokenService.retrieve(id)
+            Some(user) <- userService.retrieve(token.email) if !token.isExpired
+            _ <- authInfoRepository.update(token.email, passwordHasher.hash(pc.password))
+            authenticator <- authService.create(user.email)
+            result <- authService.renew(authenticator, Ok)
+        } yield {
+            result
+        })
+        .fallbackTo(Future.successful(Unauthorized))
     }
 
     private def updatedAuthenticator(a: BearerTokenAuthenticator) = a.copy(

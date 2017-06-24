@@ -14,10 +14,10 @@ class Mailer @Inject()(
 
     implicit def html2String(html: Html): String = html.toString
 
-    def forgotPassword(email: String, link: String)(implicit lang: Lang) {
+    def forgotPassword(toEmail: String, link: String)(implicit lang: Lang) {
         val title = messages.translate("email.forgot-password.title", Nil).get
         val message = messages.translate("email.forgot-password.message", Seq(link))
-        val email = Email(title, "noreply@json.services", List(email), message)
+        val email = Email(title, "noreply@json.services", List(toEmail), message)
         ms.send(email)
     }
 

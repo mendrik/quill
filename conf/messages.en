@@ -13,6 +13,10 @@ signin.error.password=Wrong password!
 signin.identifier=email
 signin.password=password
 
+forgot-password.identifier=Email
+email.forgot-password.title=Reset your json.services password
+email.forgot-password.message=Click <a href="(0}">here</a to reset your password.
+
 errors.unauthorized=Unauthorized access
 errors.unauthorized.message=You don't have sufficient rights to access this resource
 

@@ -1,7 +1,6 @@
 # TEST PAGE
 GET			/                   controllers.Home.index
 GET			/login              controllers.Home.index
-GET			/changepassword     controllers.Home.index
 GET			/project/:id        controllers.Home.project(id)
 
 # AUTHENTICATION
@@ -12,7 +11,8 @@ POST		/signup							controllers.Security.signUp
 # ACCOUNT
 GET			/account						controllers.Security.accountInfo
 PUT			/account						controllers.Security.requestPasswordChange
-PUT			/account/password		controllers.Security.changePassword
+GET			/changepassword     controllers.Security.changePasswordPage(id: String ?= "")
+PUT			/account/password		controllers.Security.changePassword(id: String ?= "")
 
 
 # Map static resources from the /public folder to the /assets URL path

@@ -6,6 +6,7 @@ import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErr
 import com.mohiva.play.silhouette.impl.exceptions.{IdentityNotFoundException, InvalidPasswordException}
 import controllers.routes
 import error.ErrorIO._
+import org.apache.commons.lang3.exception.ExceptionUtils
 import play.api.http.{HttpErrorHandler, Status}
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
@@ -57,7 +58,7 @@ class ErrorHandler @Inject()(
                     Errors(Seq(ServerError(signinFailedTitle, wrongPassword)))
                 ))
             case e: Throwable =>
-                println(e)
+                println(ExceptionUtils.getStackTrace(e))
                 InternalServerError(Json.toJson(Errors(List(ServerError("Server Error", e.getMessage.capitalize)))))
         })
     }
