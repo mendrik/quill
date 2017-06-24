@@ -44,6 +44,7 @@ ui.signup.button=Sign up
 
 
 ui.forgot-password.email=Send instructions to
+ui.forgot-password.email.placeholder=Fill in your email
 ui.forgot-password.button=Request
 ui.forgot-password.info=\
 If you have forgotten your password fill in your e-mail below \

@@ -122,7 +122,7 @@ module quill {
                   </div>
                   <div class="form-components" title="•ui.login.tabs.forgot-password" icon="unlock">
                     <p><Translate key="ui.forgot-password.info"/></p>
-                    <Text label="•ui.forgot-password.email" name="forgot-password.email"  placeholder="your e-mail" icon="envelope-o" bind="forgotPassword.identifier"></Text>
+                    <Text label="•ui.forgot-password.email" name="forgot-password.email"  placeholder="•ui.forgot-password.email.placeholder" icon="envelope-o" bind="forgotPassword.identifier"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary forgot-password-action">•ui.forgot-password.button</a>
                     </div>
