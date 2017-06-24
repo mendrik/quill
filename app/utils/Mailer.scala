@@ -17,7 +17,7 @@ class Mailer @Inject()(
     def forgotPassword(toEmail: String, link: String)(implicit lang: Lang) {
         val title = messages.translate("email.forgot-password.title", Nil).get
         val message = messages.translate("email.forgot-password.message", Seq(link))
-        val email = Email(title, "noreply@json.services", List(toEmail), message)
+        val email = Email(title, "noreply@json.services", List(toEmail), None, message)
         ms.send(email)
     }
 
