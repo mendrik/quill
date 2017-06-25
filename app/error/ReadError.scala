@@ -6,6 +6,12 @@ trait Error {
     def errorType: String
     def title: String
     def message: String
+
+    def translate(messagesApi: MessagesApi): SecurityError = SecurityError(
+        messagesApi.translate(title, Nil).getOrElse(title),
+        messagesApi.translate(message, Nil).getOrElse(message)
+    )
+
 }
 
 case class ReadError(field: String, message: String) extends Error {
@@ -18,11 +24,6 @@ case class ServerError(title: String, message: String) extends Error {
 }
 
 case class SecurityError(title: String, message: String) extends Error {
-
-    def translate(messagesApi: MessagesApi): SecurityError = SecurityError(
-        messagesApi.translate(title, Nil).getOrElse(title),
-        messagesApi.translate(message, Nil).getOrElse(message)
-    )
 
     override def errorType = "security"
 }

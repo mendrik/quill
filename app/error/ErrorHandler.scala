@@ -22,10 +22,6 @@ class ErrorHandler @Inject()(
     router: Provider[Router]
 ) extends HttpErrorHandler with Status with Results with SecuredErrorHandler with UnsecuredErrorHandler {
 
-    val userNotFound = messagesApi.translate("signin.error.notfound", Nil).getOrElse("")
-    val wrongPassword = messagesApi.translate("signin.error.password", Nil).getOrElse("")
-    val signinFailedTitle = messagesApi.translate("signin.failed", Nil).getOrElse("")
-
     override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = Future.successful {
         Unauthorized(Json.toJson(
             Errors(Seq(SecurityError("Not authorized", "You must login")))
@@ -54,11 +50,11 @@ class ErrorHandler @Inject()(
                 ))
             case e: IdentityNotFoundException =>
                 Unauthorized(Json.toJson(
-                    Errors(Seq(ServerError(signinFailedTitle, userNotFound)))
+                    Errors(Seq(ServerError("signin.failed", "signin.error.notfound").translate(messagesApi)))
                 ))
             case e: InvalidPasswordException =>
                 Unauthorized(Json.toJson(
-                    Errors(Seq(ServerError(signinFailedTitle, wrongPassword)))
+                    Errors(Seq(ServerError("signin.failed", "signin.error.password").translate(messagesApi)))
                 ))
             case e: Throwable =>
                 println(ExceptionUtils.getStackTrace(e))
