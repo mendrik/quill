@@ -36,10 +36,9 @@ class Security @Inject()(
   val clock: Clock
 ) extends Controller {
 
-    val emailExistsMessage = messagesApi.translate("validation.email.exists", Nil).getOrElse("")
-    val userNotFoundMessage = messagesApi.translate("signin.error.notfound", Nil).getOrElse("")
-    val userExistsError = Errors(List(SecurityError("signup.email", emailExistsMessage)))
-    val userNotFoundError = Errors(List(SecurityError("signin.error", userNotFoundMessage)))
+    val userExistsError = Errors(List(SecurityError("signup.email", "validation.email.exists").translate(messagesApi)))
+    val userNotFoundError = Errors(List(SecurityError("signin.failed", "signin.error.notfound").translate(messagesApi)))
+    val emailNotFoundError = Errors(List(SecurityError("new-password.failed", "signin.error.notfound").translate(messagesApi)))
     val authenticatorExpiry = 30 days
     val authenticatorIdleTimeout = 5 days
     val authService = silhouette.env.authenticatorService
@@ -97,12 +96,15 @@ class Security @Inject()(
     def requestPasswordChange = Actions.json[RequestPasswordChange](Some("forgot-password")) { (rpc, r) =>
         val token = MailTokenUser(rpc.identifier)
         implicit val request = r
-        for {
+        (for {
             Some(user) <- userService.retrieve(rpc.identifier)
             Some(token) <- mailTokenService.create(token)
         } yield {
             mailer.forgotPassword(user.email, link = routes.Security.changePasswordPage(token.id).absoluteURL())
             Ok
+        })
+        .fallbackTo {
+            Future.successful(Unauthorized(Json.toJson(userNotFoundError)))
         }
     }
 

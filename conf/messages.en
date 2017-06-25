@@ -13,6 +13,7 @@ signin.error.password=Wrong password!
 signin.identifier=email
 signin.password=password
 
+new-password.failed=Request failed
 new-password.password=Password
 new-password.passwordRepeat=Repeated password
 

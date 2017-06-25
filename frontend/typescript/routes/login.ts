@@ -59,7 +59,7 @@ module quill {
         @Rest({url: '/signin', method: Method.POST, body: 'credentials', headers: quill.headers})
         doLogin(token?: Token) {
             setToken(token)
-            this.route('/')
+            this.route('/ ')
             Progress.stop()
         }
 

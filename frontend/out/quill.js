@@ -313,7 +313,7 @@ var quill;
         };
         LoginPage.prototype.doLogin = function (token) {
             quill.setToken(token);
-            this.route('/');
+            this.route('/ ');
             quill.Progress.stop();
         };
         LoginPage.prototype.unauthorized = function (err, xhr) {
@@ -401,13 +401,15 @@ var quill;
             _this.changePasswordInfo = 'ui.change-password.info';
             return _this;
         }
+        PassordChangePage.prototype.init = function () {
+            quill.removeToken();
+        };
         PassordChangePage.prototype.submitClicked = function () {
             quill.Progress.start();
             this.doPasswordChange();
         };
         PassordChangePage.prototype.doPasswordChange = function () {
             quill.Progress.stop();
-            quill.removeToken();
             this.route('/login');
             var title = Translate.translations['ui.change-password.success.title'];
             var message = Translate.translations['ui.change-password.success.message'];
@@ -415,7 +417,6 @@ var quill;
         };
         PassordChangePage.prototype.unauthorized = function (err, xhr) {
             quill.Progress.stop();
-            quill.removeToken();
             var title = Translate.translations['ui.change-password.fail.title'];
             var message = Translate.translations['ui.change-password.fail.message'];
             ToastManager.showToast(new Toast(title, message, Theme.Error));
