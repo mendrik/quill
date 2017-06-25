@@ -108,27 +108,35 @@ class Security @Inject()(
 
     def changePasswordPage(id: String) = Action.async { implicit request =>
         (for {
-            Some(token) <- mailTokenService.retrieve(id) if !token.isExpired
+            Some(token) <- mailTokenService.retrieve(id)
         } yield {
-            Ok(views.html.index())
+            if (token.isExpired) {
+                mailTokenService.consume(id)
+                Redirect("/404")
+            } else {
+                Ok(views.html.index())
+            }
         })
         .fallbackTo {
-            mailTokenService.consume(id)
-            Future.successful(NotFound)
+            Future.successful(Redirect("/404"))
         }
     }
 
     def changePassword = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
         implicit val request = r
         (for {
-            Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id) if !token.isExpired
+            Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id)
             Some(user) <- userService.retrieve(token.email)
             _ <- authInfoRepository.update(token.email, passwordHasher.hash(pc.password))
             authenticator <- authService.create(user.email)
             result <- authService.renew(authenticator, Ok)
         } yield {
             mailTokenService.consume(pc.id)
-            result
+            if (token.isExpired) {
+                Redirect("/404")
+            } else {
+                result
+            }
         })
         .fallbackTo(Future.successful(Unauthorized))
     }

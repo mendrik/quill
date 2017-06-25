@@ -43,7 +43,6 @@ class ErrorHandler @Inject()(
                 case NOT_FOUND => Redirect("/404", statusCode)
                 case _ => Status(statusCode)("A client error occurred: " + message)
             }
-
         )
     }
 

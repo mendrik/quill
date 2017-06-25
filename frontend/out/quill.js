@@ -407,6 +407,7 @@ var quill;
         };
         PassordChangePage.prototype.doPasswordChange = function () {
             quill.Progress.stop();
+            quill.removeToken();
             this.route('/login');
             var title = Translate.translations['ui.change-password.success.title'];
             var message = Translate.translations['ui.change-password.success.message'];
@@ -414,6 +415,7 @@ var quill;
         };
         PassordChangePage.prototype.unauthorized = function (err, xhr) {
             quill.Progress.stop();
+            quill.removeToken();
             var title = Translate.translations['ui.change-password.fail.title'];
             var message = Translate.translations['ui.change-password.fail.message'];
             ToastManager.showToast(new Toast(title, message, Theme.Error));

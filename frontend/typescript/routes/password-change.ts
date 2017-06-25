@@ -37,6 +37,7 @@ module quill {
         @Rest({url: '/account/password', method: Method.PUT, body: 'newPassword', headers: quill.headers})
         doPasswordChange() {
             Progress.stop()
+            removeToken();
             this.route('/login')
             const title = Translate.translations['ui.change-password.success.title']
             const message = Translate.translations['ui.change-password.success.message']
@@ -46,6 +47,7 @@ module quill {
         @Subscribe('xhr-failure-401')
         unauthorized(err: Errors, xhr) {
             Progress.stop()
+            removeToken();
             const title = Translate.translations['ui.change-password.fail.title']
             const message = Translate.translations['ui.change-password.fail.message']
             ToastManager.showToast(new Toast(title, message, Theme.Error))
