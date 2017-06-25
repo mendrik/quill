@@ -101,12 +101,12 @@ class Security @Inject()(
             Some(user) <- userService.retrieve(rpc.identifier)
             Some(token) <- mailTokenService.create(token)
         } yield {
-            mailer.forgotPassword(user.email, link = routes.Security.changePassword(token.id).absoluteURL())
+            mailer.forgotPassword(user.email, link = routes.Security.changePasswordPage(token.id).absoluteURL())
             Ok
         }
     }
 
-    def changePasswordPage(id: String) = silhouette.UnsecuredAction.async { implicit request =>
+    def changePasswordPage(id: String) = Action.async { implicit request =>
         for {
             Some(token) <- mailTokenService.retrieve(id)
         } yield {
@@ -114,7 +114,7 @@ class Security @Inject()(
                 Ok(views.html.index())
             }
             else {
-                mailTokenService.consume(id)
+              //  mailTokenService.consume(id)
                 NotFound
             }
         }

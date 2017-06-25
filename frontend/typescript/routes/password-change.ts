@@ -47,12 +47,14 @@ module quill {
                     <Text label="•ui.change-password.password" 
                           name="change-password.password" 
                           placeholder="•ui.change-password.placeholder" 
+                          type="password" 
                           icon="lock" 
                           autofocus 
                           bind="newPassword.password"></Text>
                     <Text label="•ui.change-password.password-repeat" 
                           name="change-password.password-repeat" 
-                          type="password" icon="lock" 
+                          type="password" 
+                          icon="lock" 
                           bind="newPassword.passwordRepeat"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary change-action">•ui.change-password.button</a>

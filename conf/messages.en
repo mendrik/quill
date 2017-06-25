@@ -15,7 +15,7 @@ signin.password=password
 
 forgot-password.identifier=Email
 email.forgot-password.title=Reset your json.services password
-email.forgot-password.message=Click <a href="(0}">here</a to reset your password.
+email.forgot-password.message=Click <a href="{0}">here</a to reset your password.
 
 errors.unauthorized=Unauthorized access
 errors.unauthorized.message=You don't have sufficient rights to access this resource
@@ -43,6 +43,8 @@ ui.signup.password=Password
 ui.signup.button=Sign up
 
 
+ui.new-password.failed=Changing password failed
+ui.forgot-password.failed=Request failed
 ui.forgot-password.email=Send instructions to
 ui.forgot-password.email.placeholder=Fill in your email
 ui.forgot-password.button=Request
