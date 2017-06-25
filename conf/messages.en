@@ -14,7 +14,7 @@ signin.identifier=email
 signin.password=password
 
 new-password.password=Password
-New-password.passwordRepeat=Repeated password
+new-password.passwordRepeat=Repeated password
 
 forgot-password.identifier=Email
 email.forgot-password.title=Reset your json.services password
