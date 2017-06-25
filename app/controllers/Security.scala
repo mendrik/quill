@@ -114,21 +114,22 @@ class Security @Inject()(
                 Ok(views.html.index())
             }
             else {
-              //  mailTokenService.consume(id)
+                mailTokenService.consume(id)
                 NotFound
             }
         }
     }
 
-    def changePassword(id: String) = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
+    def changePassword = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
         implicit val request = r
         (for {
-            Some(token: MailTokenUser) <- mailTokenService.retrieve(id)
+            Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id)
             Some(user) <- userService.retrieve(token.email) if !token.isExpired
             _ <- authInfoRepository.update(token.email, passwordHasher.hash(pc.password))
             authenticator <- authService.create(user.email)
             result <- authService.renew(authenticator, Ok)
         } yield {
+            mailTokenService.consume(pc.id)
             result
         })
         .fallbackTo(Future.successful(Unauthorized))

@@ -12,7 +12,7 @@ POST		/signup							controllers.Security.signUp
 GET			/account						controllers.Security.accountInfo
 PUT			/account						controllers.Security.requestPasswordChange
 GET			/changepassword     controllers.Security.changePasswordPage(id: String ?= "")
-PUT			/account/password		controllers.Security.changePassword(id: String ?= "")
+PUT			/account/password		controllers.Security.changePassword
 
 
 # Map static resources from the /public folder to the /assets URL path

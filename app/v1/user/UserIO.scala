@@ -32,6 +32,7 @@ package object UserIO {
     implicit val requestPasswordChangeReads: Reads[RequestPasswordChange] = (__ \ "identifier").nonEmptyWith(email).map(email => RequestPasswordChange(email))
 
     implicit val passwordReads: Reads[PasswordChange] = (
+        (__ \ "id").nonEmpty ~
         (__ \ "password").nonEmptyWith(minLength(6)) ~
         (__ \ "passwordRepeat").nonEmptyWith(minLength(6))
     )(PasswordChange.apply _).flatMap { passwordChange =>
@@ -39,7 +40,7 @@ package object UserIO {
             if (passwordChange.password == passwordChange.passwordRepeat) {
                 JsSuccess(passwordChange)
             } else {
-                JsError(__ \ "password", ValidationError("field1 and field2 must be equal"))
+                JsError(__ \ "password", ValidationError("Passwords don't match"))
             }
         }
     }

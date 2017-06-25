@@ -31,6 +31,7 @@ case class RequestPasswordChange (
 )
 
 case class PasswordChange (
+    id: String,
     password: String,
     passwordRepeat: String
 )

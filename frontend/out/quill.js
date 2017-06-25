@@ -16,6 +16,16 @@ var quill;
             }
         }
     };
+    var urlParams = {};
+    var popstate = function () {
+        var pl = /\+/g, search = /([^&=]+)=?([^&]*)/g, decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); }, query = window.location.search.substring(1);
+        var match;
+        while (match = search.exec(query))
+            urlParams[decode(match[1])] = decode(match[2]);
+    };
+    window.addEventListener('popstate', popstate);
+    popstate();
+    quill.getQueryStringParam = function (key) { return urlParams[key]; };
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
@@ -345,16 +355,22 @@ var quill;
 (function (quill) {
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
+    var Subscribe = feather.hub.Subscribe;
     var On = feather.event.On;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
+    var Theme = feather.ui.toast.Theme;
     var AjaxForm = quill.components.AjaxForm;
     var Translate = quill.components.Translate;
+    var Toast = feather.ui.toast.Toast;
+    var ToastManager = feather.ui.toast.ToastManager;
     var PassordChangePage = (function (_super) {
         __extends(PassordChangePage, _super);
         function PassordChangePage() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.newPassword = {};
+            _this.newPassword = {
+                id: quill.getQueryStringParam('id')
+            };
             _this.changePasswordInfo = 'ui.change-password.info';
             return _this;
         }
@@ -364,7 +380,17 @@ var quill;
         };
         PassordChangePage.prototype.doPasswordChange = function () {
             quill.Progress.stop();
-            this.route('/');
+            this.route('/login');
+            var title = Translate.translations['ui.change-password.success.title'];
+            var message = Translate.translations['ui.change-password.success.message'];
+            ToastManager.showToast(new Toast(title, message, Theme.Error));
+        };
+        PassordChangePage.prototype.unauthorized = function (err, xhr) {
+            quill.Progress.stop();
+            var title = Translate.translations['ui.change-password.fail.title'];
+            var message = Translate.translations['ui.change-password.fail.message'];
+            ToastManager.showToast(new Toast(title, message, Theme.Error));
+            this.route('/login');
         };
         PassordChangePage.prototype.loginPage = function () {
             return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"\u2022ui.change-password.password\" \n                          name=\"change-password.password\" \n                          placeholder=\"\u2022ui.change-password.placeholder\" \n                          type=\"password\" \n                          icon=\"lock\" \n                          autofocus \n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"\u2022ui.change-password.password-repeat\" \n                          name=\"change-password.password-repeat\" \n                          type=\"password\" \n                          icon=\"lock\" \n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\u2022ui.change-password.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
@@ -380,6 +406,9 @@ var quill;
     __decorate([
         Rest({ url: '/account/password', method: Method.PUT, body: 'newPassword', headers: quill.headers })
     ], PassordChangePage.prototype, "doPasswordChange", null);
+    __decorate([
+        Subscribe('xhr-failure-401')
+    ], PassordChangePage.prototype, "unauthorized", null);
     __decorate([
         Template('default', false)
     ], PassordChangePage.prototype, "loginPage", null);

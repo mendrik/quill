@@ -13,9 +13,12 @@ signin.error.password=Wrong password!
 signin.identifier=email
 signin.password=password
 
+new-password.password=Password
+New-password.passwordRepeat=Repeated password
+
 forgot-password.identifier=Email
 email.forgot-password.title=Reset your json.services password
-email.forgot-password.message=Click <a href="{0}">here</a to reset your password.
+email.forgot-password.message=Click <a href="{0}">here</a> to reset your password.
 
 errors.unauthorized=Unauthorized access
 errors.unauthorized.message=You don't have sufficient rights to access this resource
@@ -66,3 +69,7 @@ ui.change-password.password-repeat=Repeat password
 ui.change-password.failed=Changing passwords failed
 ui.change-password.success=Your password has been successfully changed
 ui.change-password.button=Change
+ui.change-password.success.title=Password was successfully resetted
+ui.change-password.success.message=You can now login with your new password.
+ui.change-password.fail.title=Token expired
+ui.change-password.fail.message=Your password reset token has expired. Request a new one.

@@ -15,13 +15,16 @@ module quill {
     import Scope = feather.event.Scope
 
     interface NewPassword {
+        id: string,
         password?: string,
         passwordRepeat?: string
     }
 
     export class PassordChangePage extends AjaxForm {
 
-        newPassword: NewPassword = {}
+        newPassword: NewPassword = {
+            id: quill.getQueryStringParam('id')
+        }
 
         @Bind() changePasswordInfo = 'ui.change-password.info'
 
@@ -34,7 +37,19 @@ module quill {
         @Rest({url: '/account/password', method: Method.PUT, body: 'newPassword', headers: quill.headers})
         doPasswordChange() {
             Progress.stop()
-            this.route('/')
+            this.route('/login')
+            const title = Translate.translations['ui.change-password.success.title']
+            const message = Translate.translations['ui.change-password.success.message']
+            ToastManager.showToast(new Toast(title, message, Theme.Error))
+        }
+
+        @Subscribe('xhr-failure-401')
+        unauthorized(err: Errors, xhr) {
+            Progress.stop()
+            const title = Translate.translations['ui.change-password.fail.title']
+            const message = Translate.translations['ui.change-password.fail.message']
+            ToastManager.showToast(new Toast(title, message, Theme.Error))
+            this.route('/login')
         }
 
         @Template('default', false)
