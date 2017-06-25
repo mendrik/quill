@@ -651,12 +651,7 @@ var quill;
             this.pages.splice(0, 1, new quill.PassordChangePage());
         };
         QuillApplication.prototype.homePage = function () {
-            if (!this.user) {
-                this.route('/login');
-            }
-            else {
-                this.checkLogin();
-            }
+            this.checkLogin();
         };
         QuillApplication.prototype.applicationHTML = function () {
             return ("<progress-bar></progress-bar><panel class=\"fullscreen v-flex\" {{pages}}></panel>");

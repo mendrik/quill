@@ -78,11 +78,7 @@ module quill {
 
         @Route('/')
         homePage() {
-            if (!this.user) {
-                this.route('/login')
-            } else {
-                this.checkLogin()
-            }
+            this.checkLogin()
         }
 
         @Template()
