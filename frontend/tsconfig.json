@@ -33,6 +33,7 @@
         "typescript/components/progress.ts",
         "typescript/components/translate.ts",
         "typescript/components/ajax-form.ts",
+        "typescript/routes/notfound.ts",
         "typescript/routes/project.ts",
         "typescript/routes/login.ts",
         "typescript/routes/password-change.ts",

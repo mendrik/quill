@@ -39,7 +39,11 @@ class ErrorHandler @Inject()(
 
     def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
         Future.successful(
-            Status(statusCode)("A client error occurred: " + message)
+            statusCode match {
+                case NOT_FOUND => Redirect("/404", statusCode)
+                case _ => Status(statusCode)("A client error occurred: " + message)
+            }
+
         )
     }
 

@@ -107,24 +107,22 @@ class Security @Inject()(
     }
 
     def changePasswordPage(id: String) = Action.async { implicit request =>
-        for {
-            Some(token) <- mailTokenService.retrieve(id)
+        (for {
+            Some(token) <- mailTokenService.retrieve(id) if !token.isExpired
         } yield {
-            if (!token.isExpired) {
-                Ok(views.html.index())
-            }
-            else {
-                mailTokenService.consume(id)
-                NotFound
-            }
+            Ok(views.html.index())
+        })
+        .fallbackTo {
+            mailTokenService.consume(id)
+            Future.successful(NotFound)
         }
     }
 
     def changePassword = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
         implicit val request = r
         (for {
-            Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id)
-            Some(user) <- userService.retrieve(token.email) if !token.isExpired
+            Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id) if !token.isExpired
+            Some(user) <- userService.retrieve(token.email)
             _ <- authInfoRepository.update(token.email, passwordHasher.hash(pc.password))
             authenticator <- authService.create(user.email)
             result <- authService.renew(authenticator, Ok)

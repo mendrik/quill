@@ -205,6 +205,33 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
+    var Template = feather.annotations.Template;
+    var Translate = quill.components.Translate;
+    var On = feather.event.On;
+    var Widget = feather.core.Widget;
+    var NotFoundPage = (function (_super) {
+        __extends(NotFoundPage, _super);
+        function NotFoundPage() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        NotFoundPage.prototype.backButtonClicked = function () {
+            this.route("/");
+        };
+        NotFoundPage.prototype.loginPage = function () {
+            return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"small-info-page\">\n                  <h1>\u2022ui.page.notfound.title</h1>\n                  <p>\u2022ui.page.notfound.body</p>\n                  <div class=\"form-components\">\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary back-action\">\u2022ui.page.notfound.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
+        };
+        return NotFoundPage;
+    }(Widget));
+    __decorate([
+        On({ event: 'click', selector: '.back-action', preventDefault: true })
+    ], NotFoundPage.prototype, "backButtonClicked", null);
+    __decorate([
+        Template('default', false)
+    ], NotFoundPage.prototype, "loginPage", null);
+    quill.NotFoundPage = NotFoundPage;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
     var Widget = feather.core.Widget;
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
@@ -615,11 +642,19 @@ var quill;
         QuillApplication.prototype.loginPage = function () {
             this.pages.splice(0, 1, new quill.LoginPage());
         };
+        QuillApplication.prototype.notFoundPage = function () {
+            this.pages.splice(0, 1, new quill.NotFoundPage());
+        };
         QuillApplication.prototype.changePasswordPage = function () {
             this.pages.splice(0, 1, new quill.PassordChangePage());
         };
         QuillApplication.prototype.homePage = function () {
-            this.checkLogin();
+            if (!this.user) {
+                this.route('/login');
+            }
+            else {
+                this.checkLogin();
+            }
         };
         QuillApplication.prototype.applicationHTML = function () {
             return ("<progress-bar></progress-bar><panel class=\"fullscreen v-flex\" {{pages}}></panel>");
@@ -644,6 +679,9 @@ var quill;
     __decorate([
         Route('/login')
     ], QuillApplication.prototype, "loginPage", null);
+    __decorate([
+        Route('/404')
+    ], QuillApplication.prototype, "notFoundPage", null);
     __decorate([
         Route('/changepassword')
     ], QuillApplication.prototype, "changePasswordPage", null);
