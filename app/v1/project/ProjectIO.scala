@@ -1,10 +1,12 @@
 package v1
 
 import play.api.libs.json._
-import v1.project.CreateProject // Combinator syntax
+import v1.project.Project // Combinator syntax
 
 package object ProjectIO {
 
-    implicit val reads: Reads[CreateProject] = Json.reads[CreateProject]
+    implicit val projectReads: Reads[Project] = Json.reads[Project]
+
+    implicit val projectWrites : Writes[Project] = Json.writes[Project]
 
 }

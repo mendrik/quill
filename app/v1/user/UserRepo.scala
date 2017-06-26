@@ -32,9 +32,9 @@ class UserRepo @Inject()(dcp: DatabaseConfigProvider) {
     def remove(user: User) =
         db.run(Users.filter(_.id === user.id).delete)
 
-    def toUser(userRow: UsersRow): User =
-        User(userRow.id, userRow.email, userRow.confirmed,
-            userRow.password, userRow.firstname, userRow.lastname)
+    def toUser(row: UsersRow): User =
+        User(row.id, row.email, row.confirmed,
+            row.password, row.firstname, row.lastname)
 
     implicit def toUsersRow(signUp: SignUp): UsersRow =
         UsersRow(0, signUp.email, signUp.password, signUp.firstName, signUp.lastName)
