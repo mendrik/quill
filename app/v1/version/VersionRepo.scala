@@ -1,0 +1,41 @@
+package v1.version
+
+import javax.inject.{Inject, Singleton}
+
+import database.Tables._
+import play.api.db.slick.DatabaseConfigProvider
+import slick.jdbc.MySQLProfile
+import slick.jdbc.MySQLProfile.api._
+import v1.project.Project
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+@Singleton
+class VersionRepo @Inject()(dcp: DatabaseConfigProvider) {
+
+    private val dbConfig = dcp.get[MySQLProfile]
+    private val db = dbConfig.db
+
+    def findById(id: Long): Future[Option[Version]] =
+        db.run(Versions.filter(_.id === id).result.headOption.map(_.map(toVersion)))
+
+    def createVersion(version: Version, project: Project): Future[Option[Version]] =
+        db.run(Versions returning Versions.map(_.id) += toVersionsRow(version, project)).flatMap(findById)
+
+    def update(version: Version) =
+        db.run(Versions.filter(_.id === version.id)
+            .map(v => v.name)
+            .update(version.name))
+
+    def remove(version: Version) =
+        db.run(Versions.filter(_.id === version.id).delete)
+
+    def toVersion(row: VersionsRow): Version =
+        Version(row.id, row.name)
+
+    def toVersionsRow(version: Version, project: Project): VersionsRow =
+        VersionsRow(version.id, version.name, project.id)
+
+}
+

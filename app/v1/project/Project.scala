@@ -1,6 +1,7 @@
 package v1.project
 
-case class Project(id: Long, name: String, hash: String)
+import v1.generic.Entity
 
-case class CreateProject(name: String)
+case class Project(id: Long, name: String, hash: String) extends Entity
+
 
