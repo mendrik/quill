@@ -1,65 +1,57 @@
-h1, h2, h3, h4{
-}
-h1:first-child, h2:first-child, h3:first-child, h4:first-child{
+.toggler[open]{
+        z-index:16;
+}.toggler[open]::before{
+        opacity:1;
+        position:fixed;
+        z-index:-1;
+        background-color:rgba(0, 0, 0, 0.1);
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+}h1, h2, h3, h4{
+}h1:first-child, h2:first-child, h3:first-child, h4:first-child{
         margin-top:calc(1rem - 10px);
-}
-.form-components > *{
+}.form-components > *{
         display:block;
         margin-bottom:10px;
-}
-.form-components ::-webkit-input-placeholder{
+}.form-components ::-webkit-input-placeholder{
         color:#b5b5b5;
-}
-.form-components :-ms-input-placeholder{
+}.form-components :-ms-input-placeholder{
         color:#b5b5b5;
-}
-.form-components ::-moz-placeholder{
+}.form-components ::-moz-placeholder{
         color:#b5b5b5;
-}
-.form-components ::placeholder{
+}.form-components ::placeholder{
         color:#b5b5b5;
-}
-@media screen and (min-width: 769px){
-        .form-components{
+}@media screen and (min-width: 769px){.form-components{
         max-width:500px;
         }
-    }
-.button-success, .button-error, .button-warning, .button-secondary{
+    }.button-success, .button-error, .button-warning, .button-secondary{
     color:white;
     border-radius:4px;
     text-shadow:0 1px 1px rgba(0, 0, 0, 0.2);
-}
-.button-success{
+}.button-success{
     background:rgb(28, 184, 65);
-}
-.button-error{
+}.button-error{
     background:rgb(202, 60, 60);
-}
-.button-warning{
+}.button-warning{
     background:rgb(223, 117, 20);
-}
-.button-secondary{
+}.button-secondary{
     background:rgb(66, 184, 221);
-}
-.button-xsmall{
+}.button-xsmall{
     font-size:70%;
-}
-.button-small{
+}.button-small{
     font-size:85%;
-}
-.button-large{
+}.button-large{
     font-size:110%;
-}
-.button-xlarge{
+}.button-xlarge{
     font-size:125%;
-}
-auto-grow-input{
+}auto-grow-input{
     position:relative;
     display:block;
     max-width:100%;
     overflow:hidden;
-}
-auto-grow-input span{
+}auto-grow-input span{
         white-space:pre;
         position:absolute;
         z-index:-1;
@@ -67,34 +59,25 @@ auto-grow-input span{
         display:block;
         top:-999px;
         overflow:hidden;
-}
-auto-grow-input input[type="text"]:last-child{
+}auto-grow-input input[type="text"]:last-child{
         width:15px;
         min-width:15px
-}
-auto-grow-input input[type="text"]:last-child::-ms-clear{
+}auto-grow-input input[type="text"]:last-child::-ms-clear{
         display:none;
-}
-chooser, dropdown{
+}chooser, dropdown{
     position:relative;
 
-}
-@media (hover: hover){
-        chooser .values > li, dropdown .values > li{
-}
-        chooser .values > li:hover, dropdown .values > li:hover{
+}@media (hover: hover){chooser .values > li, dropdown .values > li{
+}chooser .values > li:hover, dropdown .values > li:hover{
                 background-color:rgba(230, 230, 230, 0.3);
         }
-}
-chooser .values.fetching:empty:after, dropdown .values.fetching:empty:after{
+}chooser .values.fetching:empty:after, dropdown .values.fetching:empty:after{
         content:'Searching...';
-}
-chooser .fa, dropdown .fa{
+}chooser .fa, dropdown .fa{
         font-size:14px;
         color:lightgrey;
         margin-right:3px;
-}
-chooser .selected-values, dropdown .selected-values{
+}chooser .selected-values, dropdown .selected-values{
         display:-webkit-box;
         display:-ms-flexbox;
         display:flex;
@@ -117,22 +100,19 @@ chooser .selected-values, dropdown .selected-values{
                 box-shadow:inset 0 1px 2px rgba(10,10,10,.1);
         max-width:100%;
         width:100%;
-}
-chooser .selected-values input, dropdown .selected-values input{
+}chooser .selected-values input, dropdown .selected-values input{
         border:0;
         font-size:1rem;
         padding:0;
         height:27px;
         margin-left:5px;
-}
-chooser .selected-values .buttons, dropdown .selected-values .buttons{
+}chooser .selected-values .buttons, dropdown .selected-values .buttons{
         width:25px;
         text-align:center;
         padding-top:4px;
         -ms-flex-negative:0;
             flex-shrink:0;
-}
-chooser .selected-values ul, dropdown .selected-values ul{
+}chooser .selected-values ul, dropdown .selected-values ul{
         display:-webkit-inline-box;
         display:-ms-inline-flexbox;
         display:inline-flex;
@@ -147,28 +127,22 @@ chooser .selected-values ul, dropdown .selected-values ul{
                 flex-grow:1;
         cursor:text;
         padding-right:5px;
-}
-chooser .selected-values ul > li, dropdown .selected-values ul > li{
+}chooser .selected-values ul > li, dropdown .selected-values ul > li{
         padding-right:5px;
         margin-bottom:2px;
         white-space:nowrap;
-}
-chooser .selected-values ul > li > div, dropdown .selected-values ul > li > div{
+}chooser .selected-values ul > li > div, dropdown .selected-values ul > li > div{
         padding:1px 5px 1px 1px;
         border:1px solid lightgray;
         border-radius:3px;
-}
-chooser .selected-values ul > li > div .delete, dropdown .selected-values ul > li > div .delete{
+}chooser .selected-values ul > li > div .delete, dropdown .selected-values ul > li > div .delete{
         margin:3px 0 0 5px;
-}
-chooser .selected-values ul > li.selected > div, dropdown .selected-values ul > li.selected > div{
+}chooser .selected-values ul > li.selected > div, dropdown .selected-values ul > li.selected > div{
         border:1px solid #a2a2a2;
-}
-chooser .selected-values ul > li.selected > div .fa:before, dropdown .selected-values ul > li.selected > div .fa:before{
+}chooser .selected-values ul > li.selected > div .fa:before, dropdown .selected-values ul > li.selected > div .fa:before{
         content:'\f00c';
         color:#23d160;
-}
-chooser .values, dropdown .values{
+}chooser .values, dropdown .values{
         border:1px solid lightgray;
         position:absolute;
         top:100%;
@@ -180,63 +154,46 @@ chooser .values, dropdown .values{
                 box-shadow:0 2px 2px rgba(0, 0, 0, 0.10);
         z-index:16;
         background-color:white;
-}
-chooser .values > li.selectable, dropdown .values > li.selectable{
+}chooser .values > li.selectable, dropdown .values > li.selectable{
         cursor:pointer;
-}
-chooser .values > li, dropdown .values > li{
+}chooser .values > li, dropdown .values > li{
         padding:5px
-}
-chooser .values > li.selected, dropdown .values > li.selected{
+}chooser .values > li.selected, dropdown .values > li.selected{
         background-color:rgba(230, 230, 230, 0.3);
-}
-chooser .values:empty:after, dropdown .values:empty:after{
+}chooser .values:empty:after, dropdown .values:empty:after{
         content:'No entries found';
         text-align:center;
         display:block;
         padding:5px 10px;
-}
-chooser.single-value .selected-values, dropdown.single-value .selected-values{
+}chooser.single-value .selected-values, dropdown.single-value .selected-values{
         padding-bottom:0;
-}
-chooser.single-value .selected-values .buttons, dropdown.single-value .selected-values .buttons{
+}chooser.single-value .selected-values .buttons, dropdown.single-value .selected-values .buttons{
         padding-top:3px;
-}
-chooser.single-value .selected-values > ul > li.clickable, dropdown.single-value .selected-values > ul > li.clickable{
+}chooser.single-value .selected-values > ul > li.clickable, dropdown.single-value .selected-values > ul > li.clickable{
         width:100%;
-}
-chooser.single-value .selected-values > ul > li.clickable > div, dropdown.single-value .selected-values > ul > li.clickable > div{
+}chooser.single-value .selected-values > ul > li.clickable > div, dropdown.single-value .selected-values > ul > li.clickable > div{
         padding-top:0;
-}
-chooser.single-value .selected-values > ul > li.clickable + li, dropdown.single-value .selected-values > ul > li.clickable + li{
+}chooser.single-value .selected-values > ul > li.clickable + li, dropdown.single-value .selected-values > ul > li.clickable + li{
         display:none;
-}
-chooser.single-value .selected-values input, dropdown.single-value .selected-values input{
+}chooser.single-value .selected-values input, dropdown.single-value .selected-values input{
         max-width:180px !important;
-}
-chooser.single-value .selected-values > ul[count="0"] li.clickable > div .fa + span, dropdown.single-value .selected-values > ul[count="0"] li.clickable > div .fa + span{
+}chooser.single-value .selected-values > ul[count="0"] li.clickable > div .fa + span, dropdown.single-value .selected-values > ul[count="0"] li.clickable > div .fa + span{
         max-width:200px;
-}
-chooser.single-value .selected-values > ul[count="0"] + .buttons, dropdown.single-value .selected-values > ul[count="0"] + .buttons{
+}chooser.single-value .selected-values > ul[count="0"] + .buttons, dropdown.single-value .selected-values > ul[count="0"] + .buttons{
         display:none;
-}
-chooser.single-value li.clickable, dropdown.single-value li.clickable{
+}chooser.single-value li.clickable, dropdown.single-value li.clickable{
         margin-bottom:0;
-}
-chooser.single-value li.clickable > div, dropdown.single-value li.clickable > div{
+}chooser.single-value li.clickable > div, dropdown.single-value li.clickable > div{
         white-space:nowrap;
         border:0;
-}
-chooser.single-value li.clickable > div .fa + span, dropdown.single-value li.clickable > div .fa + span{
+}chooser.single-value li.clickable > div .fa + span, dropdown.single-value li.clickable > div .fa + span{
         display:inline-block;
         text-overflow:ellipsis;
         max-width:125px;
         overflow:hidden;
-}
-checkbox input{
+}checkbox input{
         display:none;
-}
-checkbox input + span:before{
+}checkbox input + span:before{
         font:normal normal normal 14px/1 FontAwesome;
         font-size:inherit;
         text-rendering:auto;
@@ -252,32 +209,25 @@ checkbox input + span:before{
                 box-shadow:inset 0 1px 2px rgba(10,10,10,.1);
         border-radius:3px;
         width:24px;
-}
-checkbox input:checked + span:before{
+}checkbox input:checked + span:before{
         content:'\f00c';
         color:#23d160;
-}
-checkbox label + label{
+}checkbox label + label{
         display:inline-block;
-}
-checkbox label span{
+}checkbox label span{
         -webkit-user-select:none;
            -moz-user-select:none;
             -ms-user-select:none;
                 user-select:none;
-}
-.tree-view{
+}.tree-view{
     list-style:none;
     padding:0 10px;
     min-width:200px;
-}
-.tree-node{
+}.tree-node{
     display:block;
-}
-.tree-node > div.open + ul{
+}.tree-node > div.open + ul{
         display:block;
-}
-.tree-node > div{
+}.tree-node > div{
         display:-webkit-box;
         display:-ms-flexbox;
         display:flex;
@@ -288,17 +238,13 @@ checkbox label span{
         -webkit-box-align:center;
             -ms-flex-align:center;
                 align-items:center;
-}
-.tree-node > div > *{
+}.tree-node > div > *{
         line-height:1.5rem;
-}
-.tree-node > div + ul{
+}.tree-node > div + ul{
         display:none;
-}
-.tree-node > div .node-text{
+}.tree-node > div .node-text{
         white-space:nowrap;
-}
-.tree-node > div i{
+}.tree-node > div i{
         font-size:14px;
         -ms-flex-preferred-size:15px;
             flex-basis:15px;
@@ -307,81 +253,58 @@ checkbox label span{
                 flex-grow:0;
         -ms-flex-negative:0;
             flex-shrink:0;
-}
-.tree-node > div i + i{
+}.tree-node > div i + i{
         color:#b5b5b5;
         margin-right:3px;
-}
-.tree-node > div i.fa-caret-right{
+}.tree-node > div i.fa-caret-right{
         -webkit-transition:all 0.2s linear;
         transition:all 0.2s linear;
-}
-.tree-node > div i.fa-caret-right.down{
+}.tree-node > div i.fa-caret-right.down{
         -webkit-transform:rotate(90deg);
                 transform:rotate(90deg);
-}
-.tree-node > div.selected{
+}.tree-node > div.selected{
         background-color:#e3e3e3;
-}
-.tree-node ul > li > div{
+}.tree-node ul > li > div{
         padding-left:1rem;
-}
-.tree-node ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div{
         padding-left:2rem;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div{
         padding-left:3rem;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div{
         padding-left:4em;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
         padding-left:5em;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
         padding-left:6em;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
         padding-left:7em;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
         padding-left:8em;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
         padding-left:9em;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
         padding-left:10em;
-}
-.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
+}.tree-node ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div + ul > li > div{
         padding-left:11em;
-}
-.snap-scroll{
+}.snap-scroll{
 
-}
-.snap-scroll.animate{
+}.snap-scroll.animate{
         -webkit-transition:all 0.3s ease-out;
         transition:all 0.3s ease-out;
-}
-panel{
+}panel{
     display:block
-}
-panel.fullscreen{
+}panel.fullscreen{
         width:100%;
         height:100%;
-}
-sidebar{
+}sidebar{
     width:300px;
     min-width:50px;
     max-width:70%;
     background-color:white
-}
-@media screen and (max-width: 400px){
-        sidebar{
+}@media screen and (max-width: 400px){sidebar{
         width:40%;
         }
-    }
-horizontal-split{
+    }horizontal-split{
     display:-webkit-box;
     display:-ms-flexbox;
     display:flex;
@@ -393,21 +316,17 @@ horizontal-split{
         -ms-flex-align:stretch;
             align-items:stretch;
     overflow:hidden;
-}
-horizontal-split > *:first-child{
+}horizontal-split > *:first-child{
         -webkit-box-flex:0;
             -ms-flex-positive:0;
                 flex-grow:0;
         -ms-flex-negative:0;
             flex-shrink:0;
-}
-horizontal-split > *:last-child{
+}horizontal-split > *:last-child{
         -webkit-box-flex:1;
             -ms-flex-positive:1;
                 flex-grow:1;
-}
-@media screen and (min-width: 769px){
-        horizontal-split > .dragger.dragging:after{
+}@media screen and (min-width: 769px){horizontal-split > .dragger.dragging:after{
                 content:'';
                 position:fixed;
                 top:0;
@@ -416,8 +335,7 @@ horizontal-split > *:last-child{
                 bottom:0;
                 cursor:col-resize;
                 z-index:10;
-        }
-        horizontal-split > .dragger{
+        }horizontal-split > .dragger{
                 -ms-flex-preferred-size:5px;
                     flex-basis:5px;
                 -webkit-box-flex:0;
@@ -434,8 +352,7 @@ horizontal-split > *:last-child{
                    -moz-user-select:none;
                     -ms-user-select:none;
                         user-select:none
-        }
-        horizontal-split > .dragger:before{
+        }horizontal-split > .dragger:before{
                 z-index:1;
                 content:'';
                 position:absolute;
@@ -445,12 +362,9 @@ horizontal-split > *:last-child{
                 top:0;
                 bottom:0;
         }
-    }
-@media screen and (max-width: 768px){
-        horizontal-split{
+    }@media screen and (max-width: 768px){horizontal-split{
         position:relative;
-        }
-        horizontal-split > *:first-child:after{
+        }horizontal-split > *:first-child:after{
                 font:normal normal normal 14px/1 FontAwesome;
                 font-size:inherit;
                 text-rendering:auto;
@@ -473,8 +387,7 @@ horizontal-split > *:last-child{
                 cursor:pointer;
                 -webkit-transform:translateY(-50%);
                         transform:translateY(-50%);
-        }
-        horizontal-split > *:first-child{
+        }horizontal-split > *:first-child{
                 position:absolute;
                 top:0;
                 left:0;
@@ -490,25 +403,19 @@ horizontal-split > *:last-child{
                 -webkit-box-shadow:2px 0 2px rgba(0, 0, 0, 0.10);
                         box-shadow:2px 0 2px rgba(0, 0, 0, 0.10);
                 cursor:pointer;
-        }
-        horizontal-split > *:first-child > *{
+        }horizontal-split > *:first-child > *{
                 cursor:default;
-        }
-        horizontal-split > *:first-child.open{
+        }horizontal-split > *:first-child.open{
                 -webkit-transform:translateX(0%);
                         transform:translateX(0%);
-        }
-        horizontal-split > *:first-child.open:after{
+        }horizontal-split > *:first-child.open:after{
                 content:'\f100';
-        }
-        horizontal-split > .dragger{
+        }horizontal-split > .dragger{
                 display:none;
-        }
-        horizontal-split > *:last-child{
+        }horizontal-split > *:last-child{
                 margin-left:calc(2 * 10px);
         }
-    }
-scroll-pane{
+    }scroll-pane{
     display:-webkit-box;
     display:-ms-flexbox;
     display:flex;
@@ -519,8 +426,7 @@ scroll-pane{
     -webkit-overflow-scrolling:touch;
     -ms-overflow-style:-ms-autohiding-scrollbar;
     background-color:white;
-}
-scroll-pane .inner-scroll-pane{
+}scroll-pane .inner-scroll-pane{
         display:-webkit-box;
         display:-ms-flexbox;
         display:flex;
@@ -529,49 +435,38 @@ scroll-pane .inner-scroll-pane{
         min-height:-webkit-min-content;
         min-height:-moz-min-content;
         min-height:min-content;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0){
-        scroll-pane:hover{
+}@media screen and (-webkit-min-device-pixel-ratio:0){scroll-pane:hover{
             background-color:rgba(0,0,0,0.18);
-        }
-        scroll-pane::-webkit-scrollbar-thumb{
+        }scroll-pane::-webkit-scrollbar-thumb{
             background:inherit;
-        }
-        scroll-pane::-webkit-scrollbar{
+        }scroll-pane::-webkit-scrollbar{
             background-color:transparent;
             width:3px;
             height:3px;
-        }
-        scroll-pane{
+        }scroll-pane{
         background-color:rgba(0,0,0,0);
         -webkit-transition:background-color .8s;
         transition:background-color .8s;
         -webkit-background-clip:content-box;
-        }
-        scroll-pane > div.inner-scroll-pane{
+        }scroll-pane > div.inner-scroll-pane{
                 background-color:white;
                 width:100%;
-        }
-        scroll-pane::-webkit-scrollbar-track{
+        }scroll-pane::-webkit-scrollbar-track{
             display:none;
         }
 
-    }
-datepicker{
+    }datepicker{
 
     display:block;
     max-width:200px;
     color:rgb(60, 60, 60);
 
-}
-datepicker input{
+}datepicker input{
         cursor:pointer;
-}
-datepicker input + .icon{
+}datepicker input + .icon{
         cursor:pointer;
         pointer-events:initial !important
-}
-datepicker .calendar{
+}datepicker .calendar{
         border:1px solid lightgrey;
         margin-top:1px;
         border-radius:2px;
@@ -586,69 +481,53 @@ datepicker .calendar{
            -moz-user-select:none;
             -ms-user-select:none;
                 user-select:none;
-}
-@media (hover: hover){
-        datepicker .calendar ul.month > li{
-}
-        datepicker .calendar ul.month > li:hover{
+}@media (hover: hover){datepicker .calendar ul.month > li{
+}datepicker .calendar ul.month > li:hover{
                 background-color:lightgrey;
                 color:black;
         }
-}
-datepicker .calendar ul.month.next{
+}datepicker .calendar ul.month.next{
         -webkit-transform:translateX(100%);
                 transform:translateX(100%);
-}
-datepicker .calendar ul.month.previous{
+}datepicker .calendar ul.month.previous{
         -webkit-transform:translateX(-100%);
                 transform:translateX(-100%);
-}
-datepicker .calendar nav{
+}datepicker .calendar nav{
         height:1.5rem;
         background-color:white;
         z-index:1;
-}
-datepicker .calendar nav i{
+}datepicker .calendar nav i{
         line-height:1.5rem;
         vertical-align:middle;
-}
-datepicker .calendar nav span.nav-left{
+}datepicker .calendar nav span.nav-left{
         padding-left:5px;
         overflow:visible;
         height:100%;
-}
-datepicker .calendar nav span.nav-center{
+}datepicker .calendar nav span.nav-center{
         -webkit-box-flex:1;
             -ms-flex-positive:1;
                 flex-grow:1;
-}
-datepicker .calendar nav span.nav-right{
+}datepicker .calendar nav span.nav-right{
         padding-right:5px;
         overflow:visible;
         height:100%;
-}
-datepicker .calendar nav .year{
+}datepicker .calendar nav .year{
         padding:0;
-}
-datepicker .calendar nav .month{
+}datepicker .calendar nav .month{
         padding:0;
         padding-right:10px;
-}
-datepicker .calendar nav .year .fa, datepicker .calendar nav .month .fa{
+}datepicker .calendar nav .year .fa, datepicker .calendar nav .month .fa{
         font-size:10px;
         margin-left:5px;
-}
-datepicker .calendar ul.weekday{
+}datepicker .calendar ul.weekday{
         border-bottom:1px dotted lightgray;
         border-top:1px dotted lightgray;
-}
-datepicker .calendar ul.weekday > li.column{
+}datepicker .calendar ul.weekday > li.column{
         text-align:center;
         font-size:11px;
         padding:2px 0;
         color:lightgrey;
-}
-datepicker .calendar .months{
+}datepicker .calendar .months{
         position:relative;
         -webkit-transform:translateX(0%);
                 transform:translateX(0%);
@@ -657,8 +536,7 @@ datepicker .calendar .months{
         width:calc(3 * 200px);
         -ms-touch-action:none;
             touch-action:none;
-}
-datepicker .calendar ul.month{
+}datepicker .calendar ul.month{
         -webkit-user-select:none;
            -moz-user-select:none;
             -ms-user-select:none;
@@ -673,12 +551,10 @@ datepicker .calendar ul.month{
         width:200px;
         -webkit-box-shadow:0 2px 2px rgba(0, 0, 0, 0.10);
                 box-shadow:0 2px 2px rgba(0, 0, 0, 0.10);
-}
-datepicker .calendar ul.month > li.today{
+}datepicker .calendar ul.month > li.today{
         background-color:darkgrey;
         color:white;
-}
-datepicker .calendar ul.month > li{
+}datepicker .calendar ul.month > li{
         -ms-flex-preferred-size:14.28%;
             flex-basis:14.28%;
         -webkit-box-flex:1;
@@ -687,15 +563,12 @@ datepicker .calendar ul.month > li{
         text-align:center;
         cursor:pointer;
         line-height:1.8rem
-}
-datepicker .calendar ul.month > li.off{
+}datepicker .calendar ul.month > li.off{
         color:lightgrey;
-}
-datepicker .calendar ul.month.normal{
+}datepicker .calendar ul.month.normal{
         -webkit-transform:translateX(0%);
                 transform:translateX(0%);
-}
-datepicker .calendar .month-selector, datepicker .calendar .year-selector{
+}datepicker .calendar .month-selector, datepicker .calendar .year-selector{
         display:-webkit-box;
         display:-ms-flexbox;
         display:flex;
@@ -711,19 +584,14 @@ datepicker .calendar .month-selector, datepicker .calendar .year-selector{
         transition:all 0.3s ease-out;
         -webkit-transform:translateY(-102%);
                 transform:translateY(-102%);
-}
-@media (hover: hover){
-        datepicker .calendar .month-selector > li, datepicker .calendar .year-selector > li{
-}
-        datepicker .calendar .month-selector > li:hover, datepicker .calendar .year-selector > li:hover{
+}@media (hover: hover){datepicker .calendar .month-selector > li, datepicker .calendar .year-selector > li{
+}datepicker .calendar .month-selector > li:hover, datepicker .calendar .year-selector > li:hover{
                 background-color:lightgrey;
                 color:black;
         }
-}
-datepicker .calendar .month-selector > li:nth-last-child(-n+3), datepicker .calendar .year-selector > li:nth-last-child(-n+3){
+}datepicker .calendar .month-selector > li:nth-last-child(-n+3), datepicker .calendar .year-selector > li:nth-last-child(-n+3){
         border-bottom-width:0;
-}
-datepicker .calendar .month-selector > li, datepicker .calendar .year-selector > li{
+}datepicker .calendar .month-selector > li, datepicker .calendar .year-selector > li{
         -ms-flex-preferred-size:33%;
             flex-basis:33%;
         -webkit-box-flex:1;
@@ -736,25 +604,18 @@ datepicker .calendar .month-selector > li, datepicker .calendar .year-selector >
         border-color:lightgrey;
         border-width:0 1px 1px 0;
         cursor:pointer
-}
-datepicker .calendar .month-selector > li:nth-child(3n), datepicker .calendar .year-selector > li:nth-child(3n){
+}datepicker .calendar .month-selector > li:nth-child(3n), datepicker .calendar .year-selector > li:nth-child(3n){
         border-right-width:0;
-}
-datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.open{
+}datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.open{
         -webkit-transform:translateY(0);
                 transform:translateY(0);
-}
-@media (hover: hover){
-        datepicker input + .icon{
-}
-        datepicker input + .icon:hover i{
+}@media (hover: hover){datepicker input + .icon{
+}datepicker input + .icon:hover i{
                 color:black;
         }
-    }
-.toggler{
+    }.toggler{
     position:relative;
-}
-.toggler .toggle{
+}.toggler .toggle{
         position:absolute;
         width:290px;
         top:100%;
@@ -766,8 +627,7 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
         border:1px solid lightgray;
         z-index:16;
         background-color:white
-}
-.toggler .toggle::after{
+}.toggler .toggle::after{
         background-color:white;
         content:"\00a0";
         display:block;
@@ -780,45 +640,33 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
         width:10px;
         border-top:1px solid lightgray;
         border-left:1px solid lightgray;
-}
-.toggler[open]{
-        z-index:16;
-}
-.toggler[open]::before{
-            content:'';
-            position:fixed;
-            z-index:-1;
-            background-color:rgba(0, 0, 0, 0.1);
-            top:0;
-            bottom:0;
-            left:0;
-            right:0;
-}
-@-webkit-keyframes toast-disappear-animation{
+}.toggler::before{
+        content:'';
+        opacity:0;
+        -webkit-transition:opacity 0.5s ease-in;
+        transition:opacity 0.5s ease-in;
+}@-webkit-keyframes toast-disappear-animation{
     0%{
         opacity:1;
     }
     100%{
         opacity:0;
     }
-}
-@keyframes toast-disappear-animation{
+}@keyframes toast-disappear-animation{
     0%{
         opacity:1;
     }
     100%{
         opacity:0;
     }
-}
-.toasts{
+}.toasts{
     list-style:none;
     position:fixed;
     right:10px;
     bottom:10px;
     width:400px;
     z-index:256;
-}
-.toasts > li[added]{
+}.toasts > li[added]{
         -webkit-transform:translateX(0);
                 transform:translateX(0);
         -webkit-animation:toast-disappear-animation;
@@ -827,18 +675,14 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
                 animation-duration:1s;
         -webkit-animation-delay:8s;
                 animation-delay:8s;
-}
-.toasts > li[added]:hover{
+}.toasts > li[added]:hover{
         -webkit-animation:none;
                 animation:none;
-}
-.toasts > li.error .delete{
+}.toasts > li.error .delete{
         background-color:#ff3860;
-}
-.toasts > li.warning .delete{
+}.toasts > li.warning .delete{
         background-color:#ffdd57;
-}
-.toasts > li{
+}.toasts > li{
         margin:0;
         margin-top:10px;
         -webkit-box-shadow:0 2px 2px rgba(0, 0, 0, 0.10);
@@ -852,15 +696,13 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
         padding:3px;
         border:1px solid #e3e3e3;
         position:relative;
-}
-.toasts > li h4.message-header{
+}.toasts > li h4.message-header{
         margin-top:0;
         padding:2px 2px 2px 10px;
         background-color:transparent;
         color:black;
         font-weight:bold;
-}
-.toasts > li .toast-message{
+}.toasts > li .toast-message{
         display:-webkit-box;
         display:-ms-flexbox;
         display:flex;
@@ -872,22 +714,18 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
             -ms-flex-align:end;
                 align-items:flex-end;
         padding:2px 10px;
-}
-.toasts > li .toast-message > p{
+}.toasts > li .toast-message > p{
         -webkit-box-flex:1;
             -ms-flex-positive:1;
                 flex-grow:1;
         padding-right:10px;
         word-break:break-all;
-}
-.toasts > li .toast-message > *:empty{
+}.toasts > li .toast-message > *:empty{
         display:none;
-}
-.toasts > li .toast-message > ul{
+}.toasts > li .toast-message > ul{
         margin-left:-5px;
         width:100%;
-}
-.toasts > li .toast-message > ul > li{
+}.toasts > li .toast-message > ul > li{
         position:relative;
         display:-webkit-box;
         display:-ms-flexbox;
@@ -896,19 +734,15 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
             -ms-flex-align:center;
                 align-items:center;
         margin-top:5px;
-}
-.toasts > li .toast-message > ul > li .icon{
+}.toasts > li .toast-message > ul > li .icon{
         margin-right:5px;
         color:#b5b5b5;
-}
-.toasts > li .toast-message > ul > li .icon + span{
+}.toasts > li .toast-message > ul > li .icon + span{
         color:black;
         margin-right:auto;
-}
-.toasts > li .toast-message > ul > li:first-child{
+}.toasts > li .toast-message > ul > li:first-child{
         margin-top:0;
-}
-.toasts > li .toast-message > .action-link{
+}.toasts > li .toast-message > .action-link{
         font-weight:bold;
         -ms-flex-preferred-size:20%;
             flex-basis:20%;
@@ -917,17 +751,13 @@ datepicker .calendar .month-selector.open, datepicker .calendar .year-selector.o
                 flex-grow:1;
         display:block;
         padding:0;
-}
-.toasts > li.info .delete{
+}.toasts > li.info .delete{
         background-color:#3273dc;
-}
-@media screen and (max-width: 400px){
-        .toasts{
+}@media screen and (max-width: 400px){.toasts{
         width:auto;
         left:10px;
         }
-    }
-html, body{
+    }html, body{
     font-size:15px;
     padding:0;
     margin:0;
@@ -937,13 +767,11 @@ html, body{
     overflow-y:hidden;
     max-width:100%;
     -webkit-tap-highlight-color:transparent;
-}
-*, *:after, *:before{
+}*, *:after, *:before{
     -webkit-box-sizing:border-box;
             box-sizing:border-box;
     outline:none;
-}
-.v-flex{
+}.v-flex{
     display:-webkit-box;
     display:-ms-flexbox;
     display:flex;
@@ -953,8 +781,7 @@ html, body{
             flex-direction:column;
     -ms-flex-line-pack:stretch;
         align-content:stretch;
-}
-.h-flex{
+}.h-flex{
     display:-webkit-box;
     display:-ms-flexbox;
     display:flex;
@@ -964,27 +791,23 @@ html, body{
             flex-direction:row;
     -ms-flex-line-pack:stretch;
         align-content:stretch;
-}
-.v-flex .grow, .h-flex .grow{
+}.v-flex .grow, .h-flex .grow{
         -webkit-box-flex:1;
             -ms-flex-positive:1;
                 flex-grow:1;
-}
-.v-flex .no-grow, .h-flex .no-grow{
+}.v-flex .no-grow, .h-flex .no-grow{
         -webkit-box-flex:0;
             -ms-flex-positive:0;
                 flex-grow:0;
         -ms-flex-negative:0;
             flex-shrink:0;
-}
-.clickable{
+}.clickable{
     cursor:pointer;
     -webkit-user-select:none;
        -moz-user-select:none;
         -ms-user-select:none;
             user-select:none;
-}
-.login, .change-password, .small-info-page{
+}.login, .change-password, .small-info-page{
     margin:auto;
     width:320px;
     max-width:100%;
@@ -992,57 +815,42 @@ html, body{
     border:1px solid lightgray;
     -webkit-box-shadow:0 2px 2px rgba(0, 0, 0, 0.10);
             box-shadow:0 2px 2px rgba(0, 0, 0, 0.10);
-}
-navigation{
+}navigation{
     border-bottom:1px solid lightgray;
     z-index:64;
-}
-navigation #search{
+}navigation #search{
         width:100%;
-}
-navigation #search input{
+}navigation #search input{
         border-radius:25px;
-}
-navigation #search .icon{
+}navigation #search .icon{
         margin-right:5px;
-}
-#logo{
+}#logo{
     font-weight:bold;
     color:black;
-}
-#logo img{
+}#logo img{
         width:2rem;
         height:2rem;
         margin-right:10px;
-}
-sidebar .level{
+}sidebar .level{
         padding:5px;
-}
-sidebar .level .level-left > .button, sidebar .level .level-left > .toggler, sidebar .level .level-right > .button, sidebar .level .level-right > .toggler{
+}sidebar .level .level-left > .button, sidebar .level .level-left > .toggler, sidebar .level .level-right > .button, sidebar .level .level-right > .toggler{
         margin-right:5px;
-}
-sidebar aside{
+}sidebar aside{
         padding:10px;
         width:100%;
-}
-sidebar .tree-view{
+}sidebar .tree-view{
         padding:0;
-}
-sidebar .create-node{
+}sidebar .create-node{
         padding:5px;
-}
-footer{
+}footer{
     height:20px;
     border-top:1px solid lightgray;
     background-color:#e3e3e3;
-}
-.input.is-warning, .textarea.is-warning{
+}.input.is-warning, .textarea.is-warning{
     border-color:#dbdbdb;
-}
-.input.is-warning + .icon i:before, .textarea.is-warning + .icon i:before{
+}.input.is-warning + .icon i:before, .textarea.is-warning + .icon i:before{
         color:#ff3860;
-}
-@-webkit-keyframes progress-animation{
+}@-webkit-keyframes progress-animation{
     0%{
         width:0;
     }
@@ -1058,8 +866,7 @@ footer{
         left:0;
         width:100%
     }
-}
-@keyframes progress-animation{
+}@keyframes progress-animation{
     0%{
         width:0;
     }
@@ -1075,11 +882,9 @@ footer{
         left:0;
         width:100%
     }
-}
-progress-bar .progress-runner.running{
+}progress-bar .progress-runner.running {
         pointer-events:initial;
-}
-progress-bar .progress-runner.running:after{
+}progress-bar .progress-runner.running:after{
         -webkit-animation-name:progress-animation;
                 animation-name:progress-animation;
         -webkit-animation-duration:3s;
@@ -1092,8 +897,7 @@ progress-bar .progress-runner.running:after{
                 animation-delay:0s;
         background-color:#7ebdf1;
         opacity:1;
-}
-progress-bar .progress-runner{
+}progress-bar .progress-runner{
         position:fixed;
         top:0;
         left:0;
@@ -1101,8 +905,7 @@ progress-bar .progress-runner{
         bottom:0;
         z-index:256;
         pointer-events:none
-}
-progress-bar .progress-runner:after{
+}progress-bar .progress-runner:after {
         content:'';
         position:absolute;
         top:0;
@@ -1114,26 +917,19 @@ progress-bar .progress-runner:after{
         transition:opacity 0.3s linear;
         -webkit-transition-delay:0.3s;
                 transition-delay:0.3s;
-}
-.inline{
+}.inline{
     display:inline-block;
-}
-.has-text-right .button:last-child{
+}.has-text-right .button:last-child{
         margin-right:0;
-}
-translate{
+}translate{
     margin-bottom:10px;
     display:block;
-}
-h1{
+}h1{
     font-size:1.5rem;
-}
-h2{
+}h2{
     font-size:1.25rem;
-}
-h3{
+}h3{
     font-weight:bold;
-}
-.block{
+}.block{
     margin:2rem 0 0 0;
 }

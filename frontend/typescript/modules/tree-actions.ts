@@ -6,25 +6,48 @@ module feather.ui {
     import Bind = feather.observe.Bind
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
+    import NodeType = quill.NodeType
+    import NodeTypeType = quill.NodeTypeType;
 
-    export interface City {
-        name: string
+    const iconFor = (key: NodeTypeType): string => {
+        switch (key) {
+            case 'string': return 'font';
+            case 'number': return 'table';
+            case 'enum': return 'ellipsis-v';
+            case 'list': return 'database';
+            case 'node': return 'sitemap';
+            case 'boolean': return 'toggle-on';
+        }
     }
+
+    const textFor = (key: NodeTypeType): string => {
+        switch (key) {
+            case 'string': return 'Text';
+            case 'number': return 'Number';
+            case 'enum': return 'Enumeration';
+            case 'list': return 'List';
+            case 'node': return 'Node';
+            case 'boolean': return 'Toggle';
+        }
+    }
+
+    const typeConverter = (c: NodeType) => new ChooserValue<NodeType>(textFor(c.name), iconFor(c.name), c)
 
     @Construct({selector: 'tree-actions'})
     export class TreeActions extends Widget {
 
         @Bind() disabled = true
 
-        dropdownConfig: DropdownConfig<City> = {
+        dropdownConfig: DropdownConfig<NodeType> = {
             values: [
-                new ChooserValue('Ravensburg', 'globe', {name: 'Ravensburg'}),
-                new ChooserValue('Karlsruhe', 'globe', {name: 'Karlsruhe'}),
-                new ChooserValue('Dortmund', 'globe', {name: 'Dortmund'}),
-                new ChooserValue('Munich', 'globe', {name: 'Munich'}),
-                new ChooserValue('Stuttgart', 'globe', {name: 'Stuttgart'}),
-            ],
-            dataConverter: (c: City) => new ChooserValue<City>(c.name, 'globe', c)
+                {name: 'string'},
+                {name: 'number'},
+                {name: 'enum'},
+                {name: 'list'},
+                {name: 'node'},
+                {name: 'boolean'}
+            ].map(typeConverter),
+            dataConverter: typeConverter
         }
 
         init() {
@@ -46,6 +69,7 @@ module feather.ui {
                       <div class="block form-components create-node toggle open-in-view">
                          <Text label="Name"></Text>
                          <Dropdown label="Single value chooser" config={dropdownConfig}/>
+                         <Checkbox label="Structure or Schema" checked={true} on="Structure" off="Schema"/>
                          <div class="block has-text-right">
                             <a class="button">Cancel</a>
                             <a class="button is-primary">Create</a>

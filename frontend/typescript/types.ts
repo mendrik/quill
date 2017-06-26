@@ -34,4 +34,9 @@ module quill {
         id: string
     }
 
+    export type NodeTypeType = 'string' | 'number' | 'enum' | 'boolean' | 'node' | 'list'
+
+    export interface NodeType {
+        name: NodeTypeType
+    }
 }

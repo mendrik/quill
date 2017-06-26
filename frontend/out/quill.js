@@ -453,6 +453,27 @@ var feather;
         var Template = feather.annotations.Template;
         var Bind = feather.observe.Bind;
         var Subscribe = feather.hub.Subscribe;
+        var iconFor = function (key) {
+            switch (key) {
+                case 'string': return 'font';
+                case 'number': return 'table';
+                case 'enum': return 'ellipsis-v';
+                case 'list': return 'database';
+                case 'node': return 'sitemap';
+                case 'boolean': return 'toggle-on';
+            }
+        };
+        var textFor = function (key) {
+            switch (key) {
+                case 'string': return 'Text';
+                case 'number': return 'Number';
+                case 'enum': return 'Enumeration';
+                case 'list': return 'List';
+                case 'node': return 'Node';
+                case 'boolean': return 'Toggle';
+            }
+        };
+        var typeConverter = function (c) { return new ui.ChooserValue(textFor(c.name), iconFor(c.name), c); };
         var TreeActions = (function (_super) {
             __extends(TreeActions, _super);
             function TreeActions() {
@@ -460,13 +481,14 @@ var feather;
                 _this.disabled = true;
                 _this.dropdownConfig = {
                     values: [
-                        new ui.ChooserValue('Ravensburg', 'globe', { name: 'Ravensburg' }),
-                        new ui.ChooserValue('Karlsruhe', 'globe', { name: 'Karlsruhe' }),
-                        new ui.ChooserValue('Dortmund', 'globe', { name: 'Dortmund' }),
-                        new ui.ChooserValue('Munich', 'globe', { name: 'Munich' }),
-                        new ui.ChooserValue('Stuttgart', 'globe', { name: 'Stuttgart' }),
-                    ],
-                    dataConverter: function (c) { return new ui.ChooserValue(c.name, 'globe', c); }
+                        { name: 'string' },
+                        { name: 'number' },
+                        { name: 'enum' },
+                        { name: 'list' },
+                        { name: 'node' },
+                        { name: 'boolean' }
+                    ].map(typeConverter),
+                    dataConverter: typeConverter
                 };
                 return _this;
             }
@@ -477,7 +499,7 @@ var feather;
                 this.disabled = false;
             };
             TreeActions.prototype.markup = function () {
-                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <div class=\"inline toggler\">\n                      <a class=\"button is-small\"><Icon name=\"plus\"></Icon></a>\n                      <div class=\"block form-components create-node toggle open-in-view\">\n                         <Text label=\"Name\"></Text>\n                         <Dropdown label=\"Single value chooser\" config={dropdownConfig}/>\n                         <div class=\"block has-text-right\">\n                            <a class=\"button\">Cancel</a>\n                            <a class=\"button is-primary\">Create</a>\n                         </div>\n                      </div>\n                   </div>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"lock\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"cut\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"paste\"/></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
+                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <div class=\"inline toggler\">\n                      <a class=\"button is-small\"><Icon name=\"plus\"></Icon></a>\n                      <div class=\"block form-components create-node toggle open-in-view\">\n                         <Text label=\"Name\"></Text>\n                         <Dropdown label=\"Single value chooser\" config={dropdownConfig}/>\n                         <Checkbox label=\"Structure or Schema\" checked={true} on=\"Structure\" off=\"Schema\"/>\n                         <div class=\"block has-text-right\">\n                            <a class=\"button\">Cancel</a>\n                            <a class=\"button is-primary\">Create</a>\n                         </div>\n                      </div>\n                   </div>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"lock\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"cut\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"paste\"/></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
             };
             return TreeActions;
         }(Widget));
