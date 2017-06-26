@@ -11,14 +11,5 @@ import scala.concurrent.ExecutionContext
  */
 class ProjectController @Inject() (repo: ProjectRepo)(implicit ec: ExecutionContext) extends Controller {
 
-  def create() = Action(parse.json) { implicit request =>
-    request.body.validate[CreateProject].fold(
-      error => InternalServerError("JSON did not validate."),
-      project => {
-     //   repo.save(Project(None, project.name))
-        Ok("all good ")
-      }
-    )
-  }
 
 }

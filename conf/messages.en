@@ -46,7 +46,6 @@ ui.signup.lastname=Last name
 ui.signup.password=Password
 ui.signup.button=Sign up
 
-
 ui.new-password.failed=Changing password failed
 ui.forgot-password.failed=Request failed
 ui.forgot-password.email=Send instructions to
