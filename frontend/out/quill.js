@@ -458,6 +458,16 @@ var feather;
             function TreeActions() {
                 var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.disabled = true;
+                _this.dropdownConfig = {
+                    values: [
+                        new ui.ChooserValue('Ravensburg', 'globe', { name: 'Ravensburg' }),
+                        new ui.ChooserValue('Karlsruhe', 'globe', { name: 'Karlsruhe' }),
+                        new ui.ChooserValue('Dortmund', 'globe', { name: 'Dortmund' }),
+                        new ui.ChooserValue('Munich', 'globe', { name: 'Munich' }),
+                        new ui.ChooserValue('Stuttgart', 'globe', { name: 'Stuttgart' }),
+                    ],
+                    dataConverter: function (c) { return new ui.ChooserValue(c.name, 'globe', c); }
+                };
                 return _this;
             }
             TreeActions.prototype.init = function () {
@@ -467,7 +477,7 @@ var feather;
                 this.disabled = false;
             };
             TreeActions.prototype.markup = function () {
-                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <div class=\"inline toggler\">\n                      <a class=\"button is-small\"><Icon name=\"plus\"></Icon></a>\n                      <div class=\"block form-components create-node toggle open-in-view\">\n                         <Text label=\"Name\"></Text>\n                         <div class=\"block has-text-right\">\n                            <a class=\"button\">Cancel</a>\n                            <a class=\"button is-primary\">Create</a>\n                         </div>\n                      </div>\n                   </div>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"lock\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"cut\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"paste\"/></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
+                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <div class=\"inline toggler\">\n                      <a class=\"button is-small\"><Icon name=\"plus\"></Icon></a>\n                      <div class=\"block form-components create-node toggle open-in-view\">\n                         <Text label=\"Name\"></Text>\n                         <Dropdown label=\"Single value chooser\" config={dropdownConfig}/>\n                         <div class=\"block has-text-right\">\n                            <a class=\"button\">Cancel</a>\n                            <a class=\"button is-primary\">Create</a>\n                         </div>\n                      </div>\n                   </div>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"lock\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"cut\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"paste\"/></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
             };
             return TreeActions;
         }(Widget));
