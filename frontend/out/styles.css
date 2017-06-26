@@ -842,6 +842,14 @@
         padding:0;
 }sidebar .create-node{
         padding:5px;
+}selectable-tree-label{
+    margin:0.5rem 0;
+    display:block;
+}selectable-tree-label p[selected]{
+        font-weight:bold;
+        color:black;
+}selectable-tree-label p[selected] span{
+        font-weight:normal;
 }footer{
     height:20px;
     border-top:1px solid lightgray;

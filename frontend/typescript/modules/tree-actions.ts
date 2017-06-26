@@ -69,7 +69,6 @@ module feather.ui {
                       <div class="block form-components create-node toggle open-in-view">
                          <Text label="Name"></Text>
                          <Dropdown label="Type of node" config={dropdownConfig}/>
-                         <Checkbox label="Structure or Schema" checked={true} on="Structure" off="Schema"/>
                          <div class="block has-text-right">
                             <a class="button">Cancel</a>
                             <a class="button is-primary">Create</a>

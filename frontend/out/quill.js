@@ -205,6 +205,46 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
+    var components;
+    (function (components) {
+        var GestureWidget = feather.ui.events.GestureWidget;
+        var Construct = feather.annotations.Construct;
+        var Bind = feather.observe.Bind;
+        var Template = feather.annotations.Template;
+        var SelectableTreeLabel = (function (_super) {
+            __extends(SelectableTreeLabel, _super);
+            function SelectableTreeLabel(label, selected, group) {
+                var _this = _super.call(this) || this;
+                _this.label = label;
+                _this.selected = selected;
+                _this.group = group;
+                return _this;
+            }
+            SelectableTreeLabel.prototype.init = function () {
+                this.render();
+            };
+            SelectableTreeLabel.prototype.markup = function () {
+                return ("<p class=\"menu-label clickable\" {{selected}}>\n                <span class=\"icon is-small\">\n                    <i class=\"fa fa-angle-double-right\"></i>\n                </span>\n                {{label}}\n            </p>");
+            };
+            return SelectableTreeLabel;
+        }(GestureWidget));
+        __decorate([
+            Bind()
+        ], SelectableTreeLabel.prototype, "selected", void 0);
+        __decorate([
+            Bind()
+        ], SelectableTreeLabel.prototype, "label", void 0);
+        __decorate([
+            Template()
+        ], SelectableTreeLabel.prototype, "markup", null);
+        SelectableTreeLabel = __decorate([
+            Construct({ selector: 'selectable-tree-label', attributes: ['label', 'selected', 'group'] })
+        ], SelectableTreeLabel);
+        components.SelectableTreeLabel = SelectableTreeLabel;
+    })(components = quill.components || (quill.components = {}));
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
     var Template = feather.annotations.Template;
     var Translate = quill.components.Translate;
     var On = feather.event.On;
@@ -262,7 +302,7 @@ var quill;
             this.triggerDown('deselect-other-nodes', node);
         };
         ProjectPage.prototype.projectPage = function () {
-            return ("\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-actions></tree-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <p class=\"menu-label\">Structure</p>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <p class=\"menu-label\">Schemas</p>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ");
+            return ("\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-actions></tree-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" group=\"node-type\" selected={true}></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" group=\"node-type\" selected={false}></selectable-tree-label>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ");
         };
         return ProjectPage;
     }(Widget));
@@ -499,7 +539,7 @@ var feather;
                 this.disabled = false;
             };
             TreeActions.prototype.markup = function () {
-                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <div class=\"inline toggler\">\n                      <a class=\"button is-small\"><Icon name=\"plus\"></Icon></a>\n                      <div class=\"block form-components create-node toggle open-in-view\">\n                         <Text label=\"Name\"></Text>\n                         <Dropdown label=\"Type of node\" config={dropdownConfig}/>\n                         <Checkbox label=\"Structure or Schema\" checked={true} on=\"Structure\" off=\"Schema\"/>\n                         <div class=\"block has-text-right\">\n                            <a class=\"button\">Cancel</a>\n                            <a class=\"button is-primary\">Create</a>\n                         </div>\n                      </div>\n                   </div>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"lock\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"cut\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"paste\"/></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
+                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <div class=\"inline toggler\">\n                      <a class=\"button is-small\"><Icon name=\"plus\"></Icon></a>\n                      <div class=\"block form-components create-node toggle open-in-view\">\n                         <Text label=\"Name\"></Text>\n                         <Dropdown label=\"Type of node\" config={dropdownConfig}/>\n                         <div class=\"block has-text-right\">\n                            <a class=\"button\">Cancel</a>\n                            <a class=\"button is-primary\">Create</a>\n                         </div>\n                      </div>\n                   </div>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"lock\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"cut\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"paste\"/></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
             };
             return TreeActions;
         }(Widget));

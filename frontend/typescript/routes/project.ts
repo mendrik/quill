@@ -65,9 +65,9 @@ module quill {
                       <tree-actions></tree-actions>
                       <scroll-pane class="grow">
                         <aside class="menu">
-                          <p class="menu-label">Structure</p>
+                          <selectable-tree-label label="Structure" group="node-type" selected={true}></selectable-tree-label>
                           <ul class="tree-view is-marginless" {{nodes}}></ul>
-                          <p class="menu-label">Schemas</p>
+                          <selectable-tree-label label="Schemas" group="node-type" selected={false}></selectable-tree-label>
                         </aside>
                       </scroll-pane>
                     </sidebar>

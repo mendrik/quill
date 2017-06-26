@@ -33,6 +33,7 @@
         "typescript/components/progress.ts",
         "typescript/components/translate.ts",
         "typescript/components/ajax-form.ts",
+        "typescript/components/selectable-tree-label.ts",
         "typescript/routes/notfound.ts",
         "typescript/routes/project.ts",
         "typescript/routes/login.ts",
