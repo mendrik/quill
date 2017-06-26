@@ -127,18 +127,14 @@ class Security @Inject()(
     def changePassword = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
         implicit val request = r
         (for {
-            Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id)
+            Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id) if !token.isExpired
             Some(user) <- userService.retrieve(token.email)
             _ <- authInfoRepository.update(token.email, passwordHasher.hash(pc.password))
             authenticator <- authService.create(user.email)
             result <- authService.renew(authenticator, Ok)
         } yield {
             mailTokenService.consume(pc.id)
-            if (token.isExpired) {
-                Redirect("/404")
-            } else {
-                result
-            }
+            result
         })
         .fallbackTo(Future.successful(Unauthorized))
     }

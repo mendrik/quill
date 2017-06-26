@@ -25,9 +25,9 @@ class UserRepo @Inject()(dcp: DatabaseConfigProvider) {
         db.run(Users returning Users.map(_.id) += signUp).flatMap(findById)
 
     def update(user: User) =
-        Users.filter(_.id === user.id)
+        db.run(Users.filter(_.id === user.id)
             .map(u => (u.email, u.password, u.firstname, u.lastname, u.confirmed))
-            .update((user.email, user.password, user.firstName, user.lastname, user.confirmed))
+            .update((user.email, user.password, user.firstName, user.lastname, user.confirmed)))
 
     def remove(user: User) =
         db.run(Users.filter(_.id === user.id).delete)
