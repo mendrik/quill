@@ -4,7 +4,6 @@ import javax.inject._
 
 import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import com.mohiva.play.silhouette.impl.exceptions.{IdentityNotFoundException, InvalidPasswordException}
-import controllers.routes
 import error.ErrorIO._
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.api.http.{HttpErrorHandler, Status}

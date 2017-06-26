@@ -1,6 +1,7 @@
 package v1.user
 
 import javax.inject.{Inject, Singleton}
+
 import database.Tables._
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.MySQLProfile

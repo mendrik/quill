@@ -5,8 +5,8 @@ import javax.inject.Inject
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
-import utils.{Message, Messages}
 import utils.MessageIO._
+import utils.{Message, Messages}
 
 class Localization @Inject()(val messagesApi: MessagesApi) extends Controller {
 

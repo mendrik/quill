@@ -1,11 +1,11 @@
 package v1
 
 import com.mohiva.play.silhouette.api.util.PasswordInfo
-import play.api.data.validation.ValidationError
-import play.api.libs.json._
-import play.api.libs.json.Reads._
 import json.JsPathExtra
+import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
+import play.api.libs.json.Reads._
+import play.api.libs.json._
 import v1.user._
 
 package object UserIO {

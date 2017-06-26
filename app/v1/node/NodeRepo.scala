@@ -6,13 +6,12 @@ import database.Tables._
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.MySQLProfile
 import slick.jdbc.MySQLProfile.api._
-import v1.project.{Project, ProjectRepo}
 import v1.NodeIO._
+import v1.project.{Project, ProjectRepo}
 import v1.version.Version
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import v1.NodeIO._
 
 @Singleton
 class NodeRepo @Inject()(

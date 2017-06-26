@@ -1,7 +1,6 @@
 package v1.node
 
 import v1.generic.Entity
-import v1.project.Project
 
 sealed trait NodeType
 case object BoolType extends NodeType

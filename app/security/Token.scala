@@ -3,8 +3,6 @@ package security
 import org.joda.time.DateTime
 import play.api.libs.json.{JsString, JsValue, Writes}
 
-import scala.concurrent.duration.FiniteDuration
-
 case class Token(
     id: String,
     user: Long,

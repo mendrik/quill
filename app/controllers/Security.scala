@@ -13,9 +13,9 @@ import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
-import utils.{Actions, Mailer}
 import security.Implicits._
 import security.{MailTokenService, MailTokenUser, QuillEnv}
+import utils.{Actions, Mailer}
 import v1.UserIO._
 import v1.user._
 

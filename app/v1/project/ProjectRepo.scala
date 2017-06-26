@@ -2,12 +2,11 @@ package v1.project
 
 import javax.inject.{Inject, Singleton}
 
-import javax.inject.{Inject, Singleton}
 import database.Tables._
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.MySQLProfile
 import slick.jdbc.MySQLProfile.api._
-import v1.project.extensions._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
