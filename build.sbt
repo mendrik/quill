@@ -10,6 +10,7 @@ scalaVersion := scVersion
 autoScalaLibrary := true
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers += "dl-john-ky" at "http://dl.john-ky.io/maven/releases"
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
@@ -40,6 +41,7 @@ libraryDependencies ++= Seq(
     filters,
     javaJdbc,
     specs2 % Test,
+    "io.john-ky" %% "hashids-scala" % "1.1.2-2974446",
     "com.typesafe.play" %% "play-mailer" % "5.0.0",
     "com.mohiva" %% "play-silhouette" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion,

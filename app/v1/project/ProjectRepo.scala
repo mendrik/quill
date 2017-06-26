@@ -7,7 +7,7 @@ import database.Tables._
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.MySQLProfile
 import slick.jdbc.MySQLProfile.api._
-
+import v1.project.extensions._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -25,17 +25,17 @@ class ProjectRepo @Inject()(dcp: DatabaseConfigProvider) {
 
     def update(project: Project) =
         db.run(Projects.filter(_.id === project.id)
-            .map(p => (p.name, p.hash))
-            .update((project.name, project.hash)))
+            .map(p => p.name)
+            .update(project.name))
 
     def remove(user: Project) =
         db.run(Projects.filter(_.id === user.id).delete)
 
     def toProject(row: ProjectsRow): Project =
-        Project(row.id, row.name, row.hash)
+        Project(row.id, row.name)
 
     implicit def toProjectsRow(p: Project): ProjectsRow =
-        ProjectsRow(p.id, p.name, p.hash)
+        ProjectsRow(p.id, p.name)
 
 
 }
