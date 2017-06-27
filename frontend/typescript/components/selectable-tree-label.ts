@@ -8,9 +8,12 @@ module quill.components {
     import Rest = feather.xhr.Rest
     import Bind = feather.observe.Bind
     import Template = feather.annotations.Template
+    import removeFromArray = feather.arrays.removeFromArray
 
     @Construct({selector: 'selectable-tree-label', attributes: ['label', 'selected', 'group']})
     export class SelectableTreeLabel extends GestureWidget {
+
+        static labels: SelectableTreeLabel[] = []
 
         @Bind() selected: boolean
         @Bind() label: string
@@ -21,11 +24,23 @@ module quill.components {
             this.label = label;
             this.selected = selected;
             this.group = group;
+            SelectableTreeLabel.labels.push(this)
         }
 
         init() {
             this.render()
         }
+
+        @On({event: 'tap'})
+        click() {
+            this.selected = true;
+            SelectableTreeLabel.labels.forEach(l => {
+                if (l !== this) {
+                    l.selected = false
+                }
+            })
+        }
+
 
         @Template()
         markup() {
@@ -38,5 +53,9 @@ module quill.components {
             </p>`);
         }
 
+        cleanUp() {
+            super.cleanUp()
+            removeFromArray(SelectableTreeLabel.labels, [this])
+        }
     }
 }

@@ -209,25 +209,42 @@ var quill;
     (function (components) {
         var GestureWidget = feather.ui.events.GestureWidget;
         var Construct = feather.annotations.Construct;
+        var On = feather.event.On;
         var Bind = feather.observe.Bind;
         var Template = feather.annotations.Template;
-        var SelectableTreeLabel = (function (_super) {
+        var removeFromArray = feather.arrays.removeFromArray;
+        var SelectableTreeLabel = SelectableTreeLabel_1 = (function (_super) {
             __extends(SelectableTreeLabel, _super);
             function SelectableTreeLabel(label, selected, group) {
                 var _this = _super.call(this) || this;
                 _this.label = label;
                 _this.selected = selected;
                 _this.group = group;
+                SelectableTreeLabel_1.labels.push(_this);
                 return _this;
             }
             SelectableTreeLabel.prototype.init = function () {
                 this.render();
             };
+            SelectableTreeLabel.prototype.click = function () {
+                var _this = this;
+                this.selected = true;
+                SelectableTreeLabel_1.labels.forEach(function (l) {
+                    if (l !== _this) {
+                        l.selected = false;
+                    }
+                });
+            };
             SelectableTreeLabel.prototype.markup = function () {
                 return ("<p class=\"menu-label clickable\" {{selected}}>\n                <span class=\"icon is-small\">\n                    <i class=\"fa fa-angle-double-right\"></i>\n                </span>\n                {{label}}\n            </p>");
             };
+            SelectableTreeLabel.prototype.cleanUp = function () {
+                _super.prototype.cleanUp.call(this);
+                removeFromArray(SelectableTreeLabel_1.labels, [this]);
+            };
             return SelectableTreeLabel;
         }(GestureWidget));
+        SelectableTreeLabel.labels = [];
         __decorate([
             Bind()
         ], SelectableTreeLabel.prototype, "selected", void 0);
@@ -235,12 +252,16 @@ var quill;
             Bind()
         ], SelectableTreeLabel.prototype, "label", void 0);
         __decorate([
+            On({ event: 'tap' })
+        ], SelectableTreeLabel.prototype, "click", null);
+        __decorate([
             Template()
         ], SelectableTreeLabel.prototype, "markup", null);
-        SelectableTreeLabel = __decorate([
+        SelectableTreeLabel = SelectableTreeLabel_1 = __decorate([
             Construct({ selector: 'selectable-tree-label', attributes: ['label', 'selected', 'group'] })
         ], SelectableTreeLabel);
         components.SelectableTreeLabel = SelectableTreeLabel;
+        var SelectableTreeLabel_1;
     })(components = quill.components || (quill.components = {}));
 })(quill || (quill = {}));
 var quill;
