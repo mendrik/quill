@@ -269,7 +269,7 @@ var quill;
     var Template = feather.annotations.Template;
     var Translate = quill.components.Translate;
     var On = feather.event.On;
-    var Widget = feather.core.Widget;
+    var GestureWidget = feather.ui.events.GestureWidget;
     var NotFoundPage = (function (_super) {
         __extends(NotFoundPage, _super);
         function NotFoundPage() {
@@ -282,9 +282,9 @@ var quill;
             return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"small-info-page\">\n                  <h1>\u2022ui.page.notfound.title</h1>\n                  <p>\u2022ui.page.notfound.body</p>\n                  <div class=\"form-components\">\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary back-action\">\u2022ui.page.notfound.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
         };
         return NotFoundPage;
-    }(Widget));
+    }(GestureWidget));
     __decorate([
-        On({ event: 'click', selector: '.back-action', preventDefault: true })
+        On({ event: 'tap', selector: '.back-action', preventDefault: true })
     ], NotFoundPage.prototype, "backButtonClicked", null);
     __decorate([
         Template('default', false)

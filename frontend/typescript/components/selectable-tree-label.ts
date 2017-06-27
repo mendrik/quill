@@ -41,7 +41,6 @@ module quill.components {
             })
         }
 
-
         @Template()
         markup() {
             return (
