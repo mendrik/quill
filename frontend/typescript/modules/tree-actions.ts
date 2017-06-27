@@ -54,7 +54,7 @@ module feather.ui {
             this.render()
         }
 
-        @Subscribe('deselect-other-nodes')
+        @Subscribe('defocus-other-nodes')
         nodeSelected(node: TreeNode<any>) {
             this.disabled = false
         }
@@ -64,7 +64,7 @@ module feather.ui {
             return (`
               <div class="level is-mobile is-marginless">
                 <div class="level-left">
-                  <a class="button is-small"><Icon name="plus"></Icon></a>
+                   <a class="button is-small"><Icon name="plus"></Icon></a>
                    <a class="button is-small" {{disabled}}><Icon name="lock"/></a>
                    <a class="button is-small" {{disabled}}><Icon name="cut"/></a>
                    <a class="button is-small" {{disabled}}><Icon name="paste"/></a>

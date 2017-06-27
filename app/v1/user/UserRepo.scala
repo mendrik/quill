@@ -27,21 +27,22 @@ class UserRepo @Inject()(dcp: DatabaseConfigProvider) {
 
     def update(user: User) =
         db.run(Users.filter(_.id === user.id)
-            .map(u => (u.email, u.password, u.firstname, u.lastname, u.confirmed))
-            .update((user.email, user.password, user.firstName, user.lastname, user.confirmed)))
+            .map(u => (u.email, u.password, u.firstname, u.lastname, u.confirmed, u.lastProject))
+            .update((user.email, user.password, user.firstName, user.lastname, user.confirmed, user.lastProject)))
 
     def remove(user: User) =
         db.run(Users.filter(_.id === user.id).delete)
 
     def toUser(row: UsersRow): User =
         User(row.id, row.email, row.confirmed,
-            row.password, row.firstname, row.lastname)
+            row.password, row.firstname, row.lastname, row.lastProject)
 
     implicit def toUsersRow(signUp: SignUp): UsersRow =
         UsersRow(0, signUp.email, signUp.password, signUp.firstName, signUp.lastName)
 
     implicit def toUsersRow(user: User): UsersRow =
-        UsersRow(user.id, user.email, user.password, user.firstName, user.lastName, user.confirmed)
+        UsersRow(user.id, user.email, user.password, user.firstName, user.lastName,
+            user.confirmed, user.lastProject)
 
 }
 

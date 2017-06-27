@@ -9,7 +9,7 @@ import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import org.joda.time.DateTime
 import play.api.Configuration
-import security.Implicits._
+import utils.Implicits._
 import v1.token.TokenRepo
 import v1.user.{User, UserRepo}
 

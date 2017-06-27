@@ -30,11 +30,3 @@ package object json {
 
 }
 
-package object database {
-
-    implicit def toDatetime(timestamp: Timestamp): DateTime =
-        new DateTime(timestamp.getTime)
-
-    implicit def toTimestamp(datetime: DateTime): Timestamp =
-        new Timestamp(datetime.getMillis)
-}

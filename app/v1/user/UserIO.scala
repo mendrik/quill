@@ -7,6 +7,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import v1.user._
+import v1.generic.extensions._
 
 package object UserIO {
 
@@ -50,7 +51,8 @@ package object UserIO {
             "id" -> u.id,
             "email" -> u.email,
             "firstname" -> u.firstName,
-            "lastname" -> u.lastName
+            "lastname" -> u.lastName,
+            "lastProject" -> u.lastProjectHash
         )
     }
 

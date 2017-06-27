@@ -17,13 +17,11 @@ module quill.components {
 
         @Bind() selected: boolean
         @Bind() label: string
-        group: string
 
-        constructor(label: string, selected: boolean, group: string) {
+        constructor(label: string, selected: boolean) {
             super();
             this.label = label;
             this.selected = selected;
-            this.group = group;
             SelectableTreeLabel.labels.push(this)
         }
 

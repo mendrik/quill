@@ -4,6 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import database.Tables._
 import database._
+import utils.Implicits._
 import play.api.db.slick.DatabaseConfigProvider
 import security.Token
 import slick.jdbc.MySQLProfile

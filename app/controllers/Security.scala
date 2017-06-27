@@ -13,18 +13,19 @@ import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
-import security.Implicits._
+import utils.Implicits._
 import security.{MailTokenService, MailTokenUser, QuillEnv}
 import utils.{Actions, Mailer}
 import v1.UserIO._
+import v1.project.ProjectService
 import v1.user._
-
+import utils.Implicits._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class Security @Inject()(
   val messagesApi: MessagesApi,
+  val projectService: ProjectService,
   val userService: UserService,
   val silhouette: Silhouette[QuillEnv],
   val passwordHasher: PasswordHasher,
@@ -58,7 +59,7 @@ class Security @Inject()(
                         Ok(Json.obj("token" -> token))
                     }
                 case _ =>
-                    Future.successful(Unauthorized(Json.toJson(userNotFoundError)))
+                    Unauthorized(Json.toJson(userNotFoundError))
             }
         }
     }
@@ -73,7 +74,7 @@ class Security @Inject()(
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
-                Future.successful(BadRequest(Json.toJson(userExistsError)))
+                BadRequest(Json.toJson(userExistsError))
             case None =>
                 val authInfo = passwordHasher.hash(data.password)
                 for {
@@ -90,7 +91,16 @@ class Security @Inject()(
     }
 
     def accountInfo = silhouette.SecuredAction.async { implicit request =>
-        Future.successful(Ok(Json.toJson(request.identity)))
+        val user: User = request.identity
+        if (user.lastProject.isEmpty) {
+            for {
+                project <- projectService.getProject(user)
+            } yield {
+                Ok(Json.toJson(user.copy(lastProject = Some(project.id))))
+            }
+        } else {
+            Ok(Json.toJson(user))
+        }
     }
 
     def requestPasswordChange = Actions.json[RequestPasswordChange](Some("forgot-password")) { (rpc, r) =>
@@ -104,7 +114,7 @@ class Security @Inject()(
             Ok
         })
         .fallbackTo {
-            Future.successful(Unauthorized(Json.toJson(userNotFoundError)))
+            Unauthorized(Json.toJson(userNotFoundError))
         }
     }
 
@@ -119,9 +129,7 @@ class Security @Inject()(
                 Ok(views.html.index())
             }
         })
-        .fallbackTo {
-            Future.successful(Redirect("/404"))
-        }
+        .fallbackTo(Redirect("/404"))
     }
 
     def changePassword = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
@@ -136,7 +144,7 @@ class Security @Inject()(
             mailTokenService.consume(pc.id)
             result
         })
-        .fallbackTo(Future.successful(Unauthorized))
+        .fallbackTo(Unauthorized)
     }
 
     private def updatedAuthenticator(a: BearerTokenAuthenticator) = a.copy(

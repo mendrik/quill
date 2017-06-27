@@ -9,7 +9,8 @@ case class User(
   confirmed: Boolean,
   password: String,
   firstName: String,
-  lastName: String
+  lastName: String,
+  lastProject: Option[Long]
 ) extends Identity with Entity {
     def key = email
     def fullName: String = firstName + " " + lastName
