@@ -25,11 +25,9 @@ class Project @Inject()(
 
     def project(hash: String) = silhouette.SecuredAction.async { implicit request =>
         val user: User = request.identity
-        (for {
-            Some(project) <- projectService.findByHashAndUser(hash, user.id)
-        } yield {
+        projectService.findByHashAndUser(hash, user.id).flatMap { project =>
             Ok(Json.toJson(project))
-        })
+        }
         .fallbackTo(Unauthorized)
     }
 

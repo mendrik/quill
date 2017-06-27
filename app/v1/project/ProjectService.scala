@@ -37,10 +37,11 @@ class ProjectService @Inject()(
         puRepo.find(user, project).map(_.nonEmpty)
     }
 
-    def findByHashAndUser(hash: String, user: Long): Future[Option[Project]] = {
+    def findByHashAndUser(hash: String, user: Long): Future[Project] = {
         for {
             id <- v1.generic.extensions.decodeHash(hash)
-            Some(project) <- userInProject(user, id).map(b => repo.findById(id) if
+            ok <- userInProject(user, id)
+            Some(project) <- repo.findById(id) if ok
         } yield {
             project
         }
