@@ -64,17 +64,7 @@ module feather.ui {
             return (`
               <div class="level is-mobile is-marginless">
                 <div class="level-left">
-                   <div class="inline toggler">
-                      <a class="button is-small"><Icon name="plus"></Icon></a>
-                      <div class="block form-components create-node toggle open-in-view">
-                         <Text label="Name"></Text>
-                         <Dropdown label="Type of node" config={dropdownConfig}/>
-                         <div class="block has-text-right">
-                            <a class="button">Cancel</a>
-                            <a class="button is-primary">Create</a>
-                         </div>
-                      </div>
-                   </div>
+                  <a class="button is-small"><Icon name="plus"></Icon></a>
                    <a class="button is-small" {{disabled}}><Icon name="lock"/></a>
                    <a class="button is-small" {{disabled}}><Icon name="cut"/></a>
                    <a class="button is-small" {{disabled}}><Icon name="paste"/></a>

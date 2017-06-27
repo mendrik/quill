@@ -1,10 +1,8 @@
 .toggler[open]{
         z-index:16;
 }.toggler[open]::before{
-        opacity:1;
         position:fixed;
         z-index:-1;
-        background-color:rgba(0, 0, 0, 0.1);
         top:0;
         bottom:0;
         left:0;
@@ -227,6 +225,10 @@
     display:block;
 }.tree-node > div.open + ul{
         display:block;
+}.tree-node > div.selected{
+        background-color:#e3e3e3;
+}.tree-node > div.selected > .node-settings{
+        display:block;
 }.tree-node > div{
         display:-webkit-box;
         display:-ms-flexbox;
@@ -240,10 +242,27 @@
                 align-items:center;
 }.tree-node > div > *{
         line-height:1.5rem;
+}.tree-node > div > input{
+        display:none;
+        -webkit-box-flex:1;
+            -ms-flex:1;
+                flex:1;
+        font-size:15px;
+        line-height:1.4rem;
+        border:1px solid #e3e3e3;
+        background-color:white;
+        -webkit-box-shadow:none;
+                box-shadow:none;
+        padding:0 1px;
+        margin-left:-2px;
 }.tree-node > div + ul{
         display:none;
-}.tree-node > div .node-text{
+}.tree-node > div > .node-text{
         white-space:nowrap;
+}.tree-node > div > .node-settings{
+        margin-left:auto;
+        margin-right:5px;
+        display:none;
 }.tree-node > div i{
         font-size:14px;
         -ms-flex-preferred-size:15px;
@@ -262,8 +281,10 @@
 }.tree-node > div i.fa-caret-right.down{
         -webkit-transform:rotate(90deg);
                 transform:rotate(90deg);
-}.tree-node > div.selected{
-        background-color:#e3e3e3;
+}.tree-node > div[editing] .node-text, .tree-node > div[editing] .node-settings{
+        display:none;
+}.tree-node > div[editing] > input{
+        display:block;
 }.tree-node ul > li > div{
         padding-left:1rem;
 }.tree-node ul > li > div + ul > li > div{
@@ -642,9 +663,6 @@
         border-left:1px solid lightgray;
 }.toggler::before{
         content:'';
-        opacity:0;
-        -webkit-transition:opacity 0.5s ease-in;
-        transition:opacity 0.5s ease-in;
 }@-webkit-keyframes toast-disappear-animation{
     0%{
         opacity:1;

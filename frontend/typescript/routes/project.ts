@@ -50,9 +50,9 @@ module quill {
             this.nodes.push(animals, cars)
         }
 
-        @Subscribe('node-selected')
+        @Subscribe('node-focused')
         nodeSelected(node: TreeNode<any>) {
-            this.triggerDown('deselect-other-nodes', node)
+            this.triggerDown('defocus-other-nodes', node)
         }
 
         @Template()
