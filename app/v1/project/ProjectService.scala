@@ -4,7 +4,7 @@ import javax.inject._
 
 import v1.project_user.ProjectUserRepo
 import v1.user.{User, UserRepo}
-
+import scalaz.Scalaz._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -31,5 +31,18 @@ class ProjectService @Inject()(
             project
         })
         .fallbackTo(createProject(user))
+    }
+
+    def userInProject(user: Long, project: Long): Future[Boolean] = {
+        puRepo.find(user, project).map(_.nonEmpty)
+    }
+
+    def findByHashAndUser(hash: String, user: Long): Future[Option[Project]] = {
+        for {
+            id <- v1.generic.extensions.decodeHash(hash)
+            Some(project) <- userInProject(user, id).map(b => repo.findById(id) if
+        } yield {
+            project
+        }
     }
 }

@@ -4,6 +4,8 @@ GET			/login              controllers.Home.index
 GET			/404                controllers.Home.index
 GET			/project/:id        controllers.Home.project(id)
 
+GET			/projects/:id       controllers.Project.project(id)
+
 # AUTHENTICATION
 POST		/signin							controllers.Security.signIn
 GET     /signout						controllers.Security.signOut

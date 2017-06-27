@@ -40,7 +40,7 @@ module quill {
         @Rest({url: '/account', headers: quill.headers})
         checkLogin(resp?: User|ApiError) {
             this.user = resp as User
-            this.route(`/project/1`)
+            this.route(`/project/${this.user.lastProject}`)
         }
 
         @Subscribe('xhr-failure-401')

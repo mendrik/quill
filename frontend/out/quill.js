@@ -718,7 +718,7 @@ var quill;
         };
         QuillApplication.prototype.checkLogin = function (resp) {
             this.user = resp;
-            this.route("/project/1");
+            this.route("/project/" + this.user.lastProject);
         };
         QuillApplication.prototype.unauthorized = function () {
             this.route('/login');

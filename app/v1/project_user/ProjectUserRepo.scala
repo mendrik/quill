@@ -18,11 +18,12 @@ class ProjectUserRepo @Inject()(dcp: DatabaseConfigProvider) {
     private val dbConfig = dcp.get[MySQLProfile]
     private val db = dbConfig.db
 
-    def find(user: User, project: Project): Future[Option[ProjectUser]] =
-        db.run(ProjectUsers.filter(pu => pu.user === user.id && pu.project === project.id).result.headOption.map(_.map(toProjectUser)))
+    def find(user: Long, project: Long): Future[Option[ProjectUser]] =
+        db.run(ProjectUsers.filter(pu => pu.user === user && pu.project === project).result
+            .headOption.map(_.map(toProjectUser)))
 
     def createProjectUser(user: User, project: Project): Future[Option[ProjectUser]] =
-        db.run(ProjectUsers += toProjectUsersRow(user, project)).flatMap(x => find(user, project))
+        db.run(ProjectUsers += toProjectUsersRow(user, project)).flatMap(x => find(user.id, project.id))
 
     def remove(user: User, project: Project) =
         db.run(ProjectUsers.filter(pu => pu.user === user.id && pu.project === project.id).delete)

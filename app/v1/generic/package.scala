@@ -8,10 +8,11 @@ trait Entity {
     val id: Long
 }
 
-
 package object extensions {
 
-    val hashids = Hashids.reference("p4013c7-1Ds")
+    val hashids = Hashids.reference("p4013c7-1Ds", 7)
+
+    def decodeHash(hash: String): Option[Long] = hashids.decode(hash).headOption
 
     implicit class ProjectExtensions(project: Project) {
 
