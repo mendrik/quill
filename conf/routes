@@ -6,9 +6,10 @@ GET			/project/:id                                    controllers.Home.project(i
 
 # API
 GET			/projects/:id                                   controllers.Project.project(id)
-POST		/projects/:id/structure                         controllers.Project.createStructureNode(id)
-POST		/projects/:id/schema                            controllers.Project.createSchemaNode(id)
-POST		/projects/:id/node/:nodeId                      controllers.Project.createChildNode(id, nodeId: Long)
+
+POST		/projects/:id/structure                         controllers.Node.createStructureNode(id)
+POST		/projects/:id/schema                            controllers.Node.createSchemaNode(id)
+POST		/projects/:id/node/:nodeId                      controllers.Node.createChildNode(id, nodeId: Long)
 
 # AUTHENTICATION
 POST		/signin							                            controllers.Security.signIn

@@ -26,11 +26,11 @@ class NodeRepo @Inject()(
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
-    def createNode(project: Project, node: Node, parent: Option[Node]): Future[Option[Node]] =
+    def createNode(project: Long, node: Node, parent: Option[Long]): Future[Option[Node]] =
         db.run(Nodes returning Nodes.map(_.id) += NodesRow(
             node.id,
-            parent.map(_.id),
-            project.id,
+            parent,
+            project,
             node.name,
             node.nodeType.toString,
             node.nodeRoot.toString

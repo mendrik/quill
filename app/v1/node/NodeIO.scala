@@ -1,8 +1,18 @@
 package v1
 
+import play.api.libs.json.{Json, Writes}
 import v1.node._
 
 package object NodeIO {
+
+    implicit val nodeWrites : Writes[Node] = new Writes[Node] {
+        def writes(n: Node) = Json.obj(
+            "id" -> n.id,
+            "email" -> n.name,
+            "firstname" -> n.nodeType.toString,
+            "lastname" -> n.nodeRoot.toString
+        )
+    }
 
     implicit def toNodeType(s: String): NodeType = s.toLowerCase match {
         case "bool" => BoolType

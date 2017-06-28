@@ -215,10 +215,11 @@ var quill;
         var removeFromArray = feather.arrays.removeFromArray;
         var SelectableTreeLabel = SelectableTreeLabel_1 = (function (_super) {
             __extends(SelectableTreeLabel, _super);
-            function SelectableTreeLabel(label, selected) {
+            function SelectableTreeLabel(label, selected, type) {
                 var _this = _super.call(this) || this;
                 _this.label = label;
                 _this.selected = selected;
+                _this.type = type;
                 SelectableTreeLabel_1.labels.push(_this);
                 return _this;
             }
@@ -228,6 +229,7 @@ var quill;
             SelectableTreeLabel.prototype.click = function () {
                 var _this = this;
                 this.selected = true;
+                this.triggerUp('root-type-selected', this.type);
                 SelectableTreeLabel_1.labels.forEach(function (l) {
                     if (l !== _this) {
                         l.selected = false;
@@ -257,7 +259,7 @@ var quill;
             Template()
         ], SelectableTreeLabel.prototype, "markup", null);
         SelectableTreeLabel = SelectableTreeLabel_1 = __decorate([
-            Construct({ selector: 'selectable-tree-label', attributes: ['label', 'selected', 'group'] })
+            Construct({ selector: 'selectable-tree-label', attributes: ['label', 'selected', 'type'] })
         ], SelectableTreeLabel);
         components.SelectableTreeLabel = SelectableTreeLabel;
         var SelectableTreeLabel_1;
@@ -297,11 +299,13 @@ var quill;
     var Bind = feather.observe.Bind;
     var Subscribe = feather.hub.Subscribe;
     var Rest = feather.xhr.Rest;
+    var Method = feather.xhr.Method;
     var ProjectPage = (function (_super) {
         __extends(ProjectPage, _super);
         function ProjectPage(projectId) {
             var _this = _super.call(this) || this;
             _this.nodes = [];
+            _this.currentRootType = 'structure';
             _this.projectId = projectId;
             return _this;
         }
@@ -318,11 +322,34 @@ var quill;
             this.currentTreeNode = node;
             this.triggerDown('defocus-other-nodes', node);
         };
+        ProjectPage.prototype.rootTypeSelected = function (type) {
+            this.currentRootType = type;
+        };
         ProjectPage.prototype.nodeAction = function (action) {
-            console.log(action);
+            switch (action) {
+                case 'node-add': {
+                    if (this.currentTreeNode) {
+                        this.createChildNode();
+                    }
+                    else {
+                        this.createNode();
+                    }
+                    break;
+                }
+                case 'node-delete': {
+                    this.deleteNode();
+                    break;
+                }
+            }
+        };
+        ProjectPage.prototype.createChildNode = function () {
+        };
+        ProjectPage.prototype.deleteNode = function () {
+        };
+        ProjectPage.prototype.createNode = function () {
         };
         ProjectPage.prototype.projectPage = function () {
-            return ("\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-actions></tree-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" selected={true}></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" selected={false}></selectable-tree-label>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ");
+            return ("\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-actions></tree-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ");
         };
         return ProjectPage;
     }(Widget));
@@ -339,8 +366,20 @@ var quill;
         Subscribe('node-focused')
     ], ProjectPage.prototype, "nodeSelected", null);
     __decorate([
+        Subscribe('root-type-selected')
+    ], ProjectPage.prototype, "rootTypeSelected", null);
+    __decorate([
         Subscribe('node-action')
     ], ProjectPage.prototype, "nodeAction", null);
+    __decorate([
+        Rest({ url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.POST, headers: quill.headers })
+    ], ProjectPage.prototype, "createChildNode", null);
+    __decorate([
+        Rest({ url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.DELETE, headers: quill.headers })
+    ], ProjectPage.prototype, "deleteNode", null);
+    __decorate([
+        Rest({ url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, headers: quill.headers })
+    ], ProjectPage.prototype, "createNode", null);
     __decorate([
         Template()
     ], ProjectPage.prototype, "projectPage", null);

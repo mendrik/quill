@@ -8,7 +8,6 @@ module feather.ui {
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
     import NodeType = quill.NodeType
-    import NodeTypeType = quill.NodeTypeType;
     import GestureWidget = feather.ui.events.GestureWidget;
 
 /*

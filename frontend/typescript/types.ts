@@ -44,6 +44,8 @@ module quill {
         id: string
     }
 
+    export type NodeRoot = 'structure' | 'schema'
+
     export type NodeType = 'string' | 'number' | 'enum' | 'boolean' | 'node' | 'list'
 
 }

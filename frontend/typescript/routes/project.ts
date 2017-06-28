@@ -7,6 +7,7 @@ module quill {
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
     import Rest = feather.xhr.Rest
+    import Method = feather.xhr.Method
 
     export class ProjectPage extends Widget {
 
@@ -14,6 +15,7 @@ module quill {
 
         projectId: string
         currentTreeNode: TreeNode<Node>
+        currentRootType: NodeRoot = 'structure'
 
         constructor(projectId: string) {
             super()
@@ -40,9 +42,42 @@ module quill {
             this.triggerDown('defocus-other-nodes', node)
         }
 
+        @Subscribe('root-type-selected')
+        rootTypeSelected(type: NodeRoot) {
+            this.currentRootType = type
+        }
+
         @Subscribe('node-action')
         nodeAction(action: string) {
-            console.log(action)
+            switch (action) {
+                case 'node-add': {
+                    if (this.currentTreeNode) {
+                        this.createChildNode()
+                    } else {
+                        this.createNode()
+                    }
+                    break;
+                }
+                case 'node-delete': {
+                    this.deleteNode()
+                    break;
+                }
+            }
+        }
+
+        @Rest({url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.POST, headers: quill.headers})
+        createChildNode() {
+
+        }
+
+        @Rest({url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.DELETE, headers: quill.headers})
+        deleteNode() {
+
+        }
+
+        @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, headers: quill.headers})
+        createNode() {
+
         }
 
         @Template()
@@ -55,9 +90,9 @@ module quill {
                       <tree-actions></tree-actions>
                       <scroll-pane class="grow">
                         <aside class="menu">
-                          <selectable-tree-label label="Structure" selected={true}></selectable-tree-label>
+                          <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
                           <ul class="tree-view is-marginless" {{nodes}}></ul>
-                          <selectable-tree-label label="Schemas" selected={false}></selectable-tree-label>
+                          <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
                         </aside>
                       </scroll-pane>
                     </sidebar>

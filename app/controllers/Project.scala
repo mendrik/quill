@@ -31,15 +31,4 @@ class Project @Inject()(
         .fallbackTo(Unauthorized)
     }
 
-    def createStructureNode(hash: String) = silhouette.SecuredAction.async { implicit request =>
-        Ok(Json.toJson(""))
-    }
-
-    def createSchemaNode(hash: String) = silhouette.SecuredAction.async { implicit request =>
-        Ok(Json.toJson(""))
-    }
-
-    def createChildNode(hash: String, parent: Long) = silhouette.SecuredAction.async { implicit request =>
-        Ok(Json.toJson(""))
-    }
 }

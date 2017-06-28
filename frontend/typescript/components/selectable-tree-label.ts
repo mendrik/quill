@@ -10,18 +10,20 @@ module quill.components {
     import Template = feather.annotations.Template
     import removeFromArray = feather.arrays.removeFromArray
 
-    @Construct({selector: 'selectable-tree-label', attributes: ['label', 'selected', 'group']})
+    @Construct({selector: 'selectable-tree-label', attributes: ['label', 'selected', 'type']})
     export class SelectableTreeLabel extends GestureWidget {
 
         static labels: SelectableTreeLabel[] = []
 
         @Bind() selected: boolean
         @Bind() label: string
+        type: string
 
-        constructor(label: string, selected: boolean) {
+        constructor(label: string, selected: boolean, type: string) {
             super();
-            this.label = label;
-            this.selected = selected;
+            this.label = label
+            this.selected = selected
+            this.type = type
             SelectableTreeLabel.labels.push(this)
         }
 
@@ -32,6 +34,7 @@ module quill.components {
         @On({event: 'tap'})
         click() {
             this.selected = true;
+            this.triggerUp('root-type-selected', this.type)
             SelectableTreeLabel.labels.forEach(l => {
                 if (l !== this) {
                     l.selected = false
