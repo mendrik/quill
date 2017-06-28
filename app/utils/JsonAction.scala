@@ -1,10 +1,13 @@
 package utils
 
+import com.mohiva.play.silhouette.api.Silhouette
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import error.ReadError
 import play.api.data.validation.ValidationError
 import play.api.i18n.MessagesApi
 import play.api.libs.json._
 import play.api.mvc._
+import security.QuillEnv
 
 import scala.concurrent.Future
 
@@ -40,6 +43,17 @@ object Actions extends Results {
     def json[C](prefix: Option[String] = None)
                (block: (C, RequestHeader) => Future[Result])
                (implicit reads: Reads[C]) = Action.async(BodyParsers.parse.json) { request =>
+        request.body.validate[C] match {
+            case JsSuccess(json, _) =>
+                block(json, request)
+            case JsError(errors) =>
+                throw BodyParseException(prefix, errors)
+        }
+    }
+
+    def securedJson[C](prefix: Option[String] = None)
+               (block: (C, SecuredRequest[QuillEnv, JsValue]) => Future[Result])
+               (implicit reads: Reads[C], silhouette: Silhouette[QuillEnv]) = silhouette.SecuredAction.async(BodyParsers.parse.json) { request =>
         request.body.validate[C] match {
             case JsSuccess(json, _) =>
                 block(json, request)

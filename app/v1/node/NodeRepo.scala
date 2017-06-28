@@ -26,25 +26,26 @@ class NodeRepo @Inject()(
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
-    def createNode(node: Node, parent: Option[Node], version: Version, project: Project): Future[Option[Node]] =
+    def createNode(project: Project, node: Node, parent: Option[Node]): Future[Option[Node]] =
         db.run(Nodes returning Nodes.map(_.id) += NodesRow(
             node.id,
             parent.map(_.id),
             project.id,
             node.name,
-            node.nodeType.toString
+            node.nodeType.toString,
+            node.nodeRoot.toString
         )).flatMap(findById)
 
-    def update(node: Node) =
+    def update(project: Project, node: Node, parent: Option[Node]) =
         db.run(Nodes.filter(_.id === node.id)
-            .map(v => v.name)
-            .update(node.name))
+            .map(n => (n.name, n.parent, n.project, n.nodeType, n.nodeRoot))
+            .update((node.name, parent.map(_.id), project.id, node.nodeType.toString, node.nodeRoot.toString)))
 
     def remove(node: Node) =
         db.run(Nodes.filter(_.id === node.id).delete)
 
     def toNode(row: NodesRow): Node = {
-        Node(row.id, row.name, row.nodeType, Nil)
+        Node(row.id, row.name, row.nodeType, row.nodeRoot, Nil)
     }
 
 }

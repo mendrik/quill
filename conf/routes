@@ -1,25 +1,29 @@
 
-GET			/                   controllers.Home.index
-GET			/login              controllers.Home.index
-GET			/404                controllers.Home.index
-GET			/project/:id        controllers.Home.project(id)
+GET			/                                               controllers.Home.index
+GET			/login                                          controllers.Home.index
+GET			/404                                            controllers.Home.index
+GET			/project/:id                                    controllers.Home.project(id)
 
-GET			/projects/:id       controllers.Project.project(id)
+# API
+GET			/projects/:id                                   controllers.Project.project(id)
+POST		/projects/:id/structure                         controllers.Project.createStructureNode(id)
+POST		/projects/:id/schema                            controllers.Project.createSchemaNode(id)
+POST		/projects/:id/node/:nodeId                      controllers.Project.createChildNode(id, nodeId: Long)
 
 # AUTHENTICATION
-POST		/signin							controllers.Security.signIn
-GET     /signout						controllers.Security.signOut
-POST		/signup							controllers.Security.signUp
+POST		/signin							                            controllers.Security.signIn
+GET     /signout						                            controllers.Security.signOut
+POST		/signup							                            controllers.Security.signUp
 
 # ACCOUNT
-GET			/account						controllers.Security.accountInfo
-PUT			/account						controllers.Security.requestPasswordChange
-GET			/changepassword     controllers.Security.changePasswordPage(id: String ?= "")
-PUT			/account/password		controllers.Security.changePassword
+GET			/account						                            controllers.Security.accountInfo
+PUT			/account						                            controllers.Security.requestPasswordChange
+GET			/changepassword                                 controllers.Security.changePasswordPage(id: String ?= "")
+PUT			/account/password		                            controllers.Security.changePassword
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET			/assets/*file				controllers.Assets.versioned(path="/public", file: Asset)
+GET			/assets/*file				                            controllers.Assets.versioned(path="/public", file: Asset)
 
 # TRANSLATION
-GET     /translations       controllers.Localization.translations()
+GET     /translations                                   controllers.Localization.translations()

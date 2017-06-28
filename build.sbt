@@ -14,6 +14,8 @@ resolvers += "dl-john-ky" at "http://dl.john-ky.io/maven/releases"
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
 
+routesImport += "play.api.mvc.PathBindable._"
+
 lazy val root = (project in file("."))
     .enablePlugins(PlayScala)
     .settings(sharedSettings)

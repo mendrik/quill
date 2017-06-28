@@ -23,7 +23,20 @@ package object NodeIO {
             case NodeType => "node"
             case ListType => "list"
         }
-
     }
+
+    implicit def toNodeRoot(s: String): NodeRoot = s.toLowerCase match {
+        case "structure" => Structure
+        case "schema" => Schema
+    }
+
+    implicit class NodeRootExtension(nodeType: NodeRoot) {
+
+        override def toString: String = nodeType match {
+            case Structure => "structure"
+            case Schema => "schema"
+        }
+    }
+
 }
 
