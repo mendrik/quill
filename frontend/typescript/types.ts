@@ -30,6 +30,11 @@ module quill {
         name: string
     }
 
+    export interface Node {
+        name: string,
+        type: NodeType
+    }
+
     export interface ApiError {
         code: number,
         message: string
@@ -39,9 +44,6 @@ module quill {
         id: string
     }
 
-    export type NodeTypeType = 'string' | 'number' | 'enum' | 'boolean' | 'node' | 'list'
+    export type NodeType = 'string' | 'number' | 'enum' | 'boolean' | 'node' | 'list'
 
-    export interface NodeType {
-        name: NodeTypeType
-    }
 }

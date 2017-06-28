@@ -311,7 +311,11 @@ var quill;
         ProjectPage.prototype.fetchProject = function (project) {
             console.log(project);
         };
+        ProjectPage.prototype.nodeDeselected = function (node) {
+            this.currentTreeNode = undefined;
+        };
         ProjectPage.prototype.nodeSelected = function (node) {
+            this.currentTreeNode = node;
             this.triggerDown('defocus-other-nodes', node);
         };
         ProjectPage.prototype.nodeAction = function (action) {
@@ -328,6 +332,9 @@ var quill;
     __decorate([
         Rest({ url: '/projects/{{projectId}}', headers: quill.headers })
     ], ProjectPage.prototype, "fetchProject", null);
+    __decorate([
+        Subscribe('node-defocused')
+    ], ProjectPage.prototype, "nodeDeselected", null);
     __decorate([
         Subscribe('node-focused')
     ], ProjectPage.prototype, "nodeSelected", null);

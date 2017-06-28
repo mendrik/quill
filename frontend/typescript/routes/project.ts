@@ -13,6 +13,7 @@ module quill {
         @Bind() nodes: Array<TreeNode<any>> = []
 
         projectId: string
+        currentTreeNode: TreeNode<Node>
 
         constructor(projectId: string) {
             super()
@@ -28,8 +29,14 @@ module quill {
             console.log(project)
         }
 
+        @Subscribe('node-defocused')
+        nodeDeselected(node: TreeNode<any>) {
+            this.currentTreeNode = undefined
+        }
+
         @Subscribe('node-focused')
         nodeSelected(node: TreeNode<any>) {
+            this.currentTreeNode = node
             this.triggerDown('defocus-other-nodes', node)
         }
 
