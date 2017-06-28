@@ -33,6 +33,11 @@ module quill {
             this.triggerDown('defocus-other-nodes', node)
         }
 
+        @Subscribe('node-action')
+        nodeAction(action: string) {
+            console.log(action)
+        }
+
         @Template()
         projectPage() {
             return (`

@@ -4,11 +4,14 @@ module feather.ui {
     import Construct = feather.annotations.Construct
     import Template = feather.annotations.Template
     import Bind = feather.observe.Bind
+    import On = feather.event.On
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
     import NodeType = quill.NodeType
     import NodeTypeType = quill.NodeTypeType;
+    import GestureWidget = feather.ui.events.GestureWidget;
 
+/*
     const iconFor = (key: NodeTypeType): string => {
         switch (key) {
             case 'string': return 'font';
@@ -30,25 +33,14 @@ module feather.ui {
             case 'boolean': return 'Toggle';
         }
     }
+*/
 
-    const typeConverter = (c: NodeType) => new ChooserValue<NodeType>(textFor(c.name), iconFor(c.name), c)
+    // const typeConverter = (c: NodeType) => new ChooserValue<NodeType>(textFor(c.name), iconFor(c.name), c)
 
     @Construct({selector: 'tree-actions'})
-    export class TreeActions extends Widget {
+    export class TreeActions extends GestureWidget {
 
         @Bind() disabled = true
-
-        dropdownConfig: DropdownConfig<NodeType> = {
-            values: [
-                {name: 'string'},
-                {name: 'number'},
-                {name: 'enum'},
-                {name: 'list'},
-                {name: 'node'},
-                {name: 'boolean'}
-            ].map(typeConverter),
-            dataConverter: typeConverter
-        }
 
         init() {
             this.render()
@@ -59,18 +51,20 @@ module feather.ui {
             this.disabled = false
         }
 
+        @On({event: 'tap', selector: 'a[action]:not([disabled])'})
+        buttonClicked(ev, el) {
+            this.triggerUp('node-action', el.getAttribute('action'))
+        }
+
         @Template()
         markup() {
             return (`
               <div class="level is-mobile is-marginless">
                 <div class="level-left">
-                   <a class="button is-small"><Icon name="plus"></Icon></a>
-                   <a class="button is-small" {{disabled}}><Icon name="lock"/></a>
-                   <a class="button is-small" {{disabled}}><Icon name="cut"/></a>
-                   <a class="button is-small" {{disabled}}><Icon name="paste"/></a>
+                   <a class="button is-small" action="node-add"><Icon name="plus"></Icon></a>
                 </div>
                 <div class="level-right">
-                   <a class="button is-small" {{disabled}}><Icon name="trash-o"/></a>
+                   <a class="button is-small" action="node-delete" {{disabled}}><Icon name="trash-o"/></a>
                 </div>
               </div>
             `)

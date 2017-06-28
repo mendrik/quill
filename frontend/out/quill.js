@@ -314,6 +314,9 @@ var quill;
         ProjectPage.prototype.nodeSelected = function (node) {
             this.triggerDown('defocus-other-nodes', node);
         };
+        ProjectPage.prototype.nodeAction = function (action) {
+            console.log(action);
+        };
         ProjectPage.prototype.projectPage = function () {
             return ("\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-actions></tree-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" selected={true}></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" selected={false}></selectable-tree-label>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ");
         };
@@ -328,6 +331,9 @@ var quill;
     __decorate([
         Subscribe('node-focused')
     ], ProjectPage.prototype, "nodeSelected", null);
+    __decorate([
+        Subscribe('node-action')
+    ], ProjectPage.prototype, "nodeAction", null);
     __decorate([
         Template()
     ], ProjectPage.prototype, "projectPage", null);
@@ -504,48 +510,17 @@ var feather;
 (function (feather) {
     var ui;
     (function (ui) {
-        var Widget = feather.core.Widget;
         var Construct = feather.annotations.Construct;
         var Template = feather.annotations.Template;
         var Bind = feather.observe.Bind;
+        var On = feather.event.On;
         var Subscribe = feather.hub.Subscribe;
-        var iconFor = function (key) {
-            switch (key) {
-                case 'string': return 'font';
-                case 'number': return 'table';
-                case 'enum': return 'ellipsis-v';
-                case 'list': return 'database';
-                case 'node': return 'sitemap';
-                case 'boolean': return 'toggle-on';
-            }
-        };
-        var textFor = function (key) {
-            switch (key) {
-                case 'string': return 'Text';
-                case 'number': return 'Number';
-                case 'enum': return 'Enumeration';
-                case 'list': return 'List';
-                case 'node': return 'Node';
-                case 'boolean': return 'Toggle';
-            }
-        };
-        var typeConverter = function (c) { return new ui.ChooserValue(textFor(c.name), iconFor(c.name), c); };
+        var GestureWidget = feather.ui.events.GestureWidget;
         var TreeActions = (function (_super) {
             __extends(TreeActions, _super);
             function TreeActions() {
                 var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.disabled = true;
-                _this.dropdownConfig = {
-                    values: [
-                        { name: 'string' },
-                        { name: 'number' },
-                        { name: 'enum' },
-                        { name: 'list' },
-                        { name: 'node' },
-                        { name: 'boolean' }
-                    ].map(typeConverter),
-                    dataConverter: typeConverter
-                };
                 return _this;
             }
             TreeActions.prototype.init = function () {
@@ -554,17 +529,23 @@ var feather;
             TreeActions.prototype.nodeSelected = function (node) {
                 this.disabled = false;
             };
+            TreeActions.prototype.buttonClicked = function (ev, el) {
+                this.triggerUp('node-action', el.getAttribute('action'));
+            };
             TreeActions.prototype.markup = function () {
-                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <a class=\"button is-small\"><Icon name=\"plus\"></Icon></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"lock\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"cut\"/></a>\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"paste\"/></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
+                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <a class=\"button is-small\" action=\"node-add\"><Icon name=\"plus\"></Icon></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" action=\"node-delete\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
             };
             return TreeActions;
-        }(Widget));
+        }(GestureWidget));
         __decorate([
             Bind()
         ], TreeActions.prototype, "disabled", void 0);
         __decorate([
             Subscribe('defocus-other-nodes')
         ], TreeActions.prototype, "nodeSelected", null);
+        __decorate([
+            On({ event: 'tap', selector: 'a[action]:not([disabled])' })
+        ], TreeActions.prototype, "buttonClicked", null);
         __decorate([
             Template()
         ], TreeActions.prototype, "markup", null);
