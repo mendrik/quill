@@ -22,3 +22,4 @@ object Implicits {
 
     implicit def toFuture(status: Result): Future[Result] = Future.successful(status)
 }
+

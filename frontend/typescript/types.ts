@@ -25,6 +25,11 @@ module quill {
         lastProject: string
     }
 
+    export interface Project {
+        id: number,
+        name: string
+    }
+
     export interface ApiError {
         code: number,
         message: string

@@ -2,8 +2,12 @@ package v1.project
 
 import javax.inject._
 
+import com.mohiva.play.silhouette.impl.exceptions.AccessDeniedException
+import com.mohiva.play.silhouette.impl.providers.OAuth1Provider.AuthorizationError
+import utils.Implicits._
 import v1.project_user.ProjectUserRepo
 import v1.user.{User, UserRepo}
+
 import scalaz.Scalaz._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -13,6 +17,7 @@ class ProjectService @Inject()(
     repo: ProjectRepo,
     puRepo: ProjectUserRepo
 ) {
+    val unauthorized = Future.failed(new AccessDeniedException("Access denied to project"))
 
     def createProject(user: User): Future[Project] = {
         for {
@@ -34,12 +39,12 @@ class ProjectService @Inject()(
     }
 
     def userInProject(user: Long, project: Long): Future[Boolean] = {
-        puRepo.find(user, project).map(_.nonEmpty)
+        puRepo.find(user, project).map(_.isDefined)
     }
 
     def findByHashAndUser(hash: String, user: Long): Future[Project] = {
         for {
-            id <- v1.generic.extensions.decodeHash(hash)
+            Some(id) <- Future.successful(v1.generic.extensions.decodeHash(hash))
             ok <- userInProject(user, id)
             Some(project) <- repo.findById(id) if ok
         } yield {

@@ -6,6 +6,7 @@ module quill {
     import Bind = feather.observe.Bind
     import Subscribe = feather.hub.Subscribe
     import TreeNode = feather.ui.tree.TreeNode
+    import Rest = feather.xhr.Rest
 
     export class ProjectPage extends Widget {
 
@@ -19,35 +20,12 @@ module quill {
         }
 
         init() {
-            const animals = new TreeNode('Animals', {}),
-                cats = new TreeNode('Cats', {}),
-                dogs = new TreeNode('Dogs', {}),
-                birds = new TreeNode('Birds', {}),
-                fish = new TreeNode('Fish', {})
+            this.fetchProject()
+        }
 
-            const lion = new TreeNode('Lion', {}),
-                tiger = new TreeNode('Tiger', {}),
-                cheetah = new TreeNode('Cheetah', {}),
-                leopard = new TreeNode('Leopard', {})
-
-            const cars = new TreeNode('Cars', {}),
-                merc = new TreeNode('Mercedes', {}),
-                bmw = new TreeNode('BMW', {}),
-                audi = new TreeNode('Audi', {}),
-                porsche = new TreeNode('Porsche', {})
-
-            const p911 = new TreeNode('911', {}),
-                p911t = new TreeNode('911 Turbo', {}),
-                p911ts = new TreeNode('911 Turbo S', {})
-
-            p911t.push(p911ts)
-            p911.push(p911t)
-            porsche.push(p911)
-
-            cats.push(lion, tiger, cheetah, leopard)
-            animals.push(cats, dogs, birds, fish)
-            cars.push(merc, porsche, bmw, audi)
-            this.nodes.push(animals, cars)
+        @Rest({url: '/projects/{{projectId}}', headers: quill.headers})
+        fetchProject(project?: Project) {
+            console.log(project)
         }
 
         @Subscribe('node-focused')

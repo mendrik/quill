@@ -296,7 +296,7 @@ var quill;
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
     var Subscribe = feather.hub.Subscribe;
-    var TreeNode = feather.ui.tree.TreeNode;
+    var Rest = feather.xhr.Rest;
     var ProjectPage = (function (_super) {
         __extends(ProjectPage, _super);
         function ProjectPage(projectId) {
@@ -306,17 +306,10 @@ var quill;
             return _this;
         }
         ProjectPage.prototype.init = function () {
-            var animals = new TreeNode('Animals', {}), cats = new TreeNode('Cats', {}), dogs = new TreeNode('Dogs', {}), birds = new TreeNode('Birds', {}), fish = new TreeNode('Fish', {});
-            var lion = new TreeNode('Lion', {}), tiger = new TreeNode('Tiger', {}), cheetah = new TreeNode('Cheetah', {}), leopard = new TreeNode('Leopard', {});
-            var cars = new TreeNode('Cars', {}), merc = new TreeNode('Mercedes', {}), bmw = new TreeNode('BMW', {}), audi = new TreeNode('Audi', {}), porsche = new TreeNode('Porsche', {});
-            var p911 = new TreeNode('911', {}), p911t = new TreeNode('911 Turbo', {}), p911ts = new TreeNode('911 Turbo S', {});
-            p911t.push(p911ts);
-            p911.push(p911t);
-            porsche.push(p911);
-            cats.push(lion, tiger, cheetah, leopard);
-            animals.push(cats, dogs, birds, fish);
-            cars.push(merc, porsche, bmw, audi);
-            this.nodes.push(animals, cars);
+            this.fetchProject();
+        };
+        ProjectPage.prototype.fetchProject = function (project) {
+            console.log(project);
         };
         ProjectPage.prototype.nodeSelected = function (node) {
             this.triggerDown('defocus-other-nodes', node);
@@ -329,6 +322,9 @@ var quill;
     __decorate([
         Bind()
     ], ProjectPage.prototype, "nodes", void 0);
+    __decorate([
+        Rest({ url: '/projects/{{projectId}}', headers: quill.headers })
+    ], ProjectPage.prototype, "fetchProject", null);
     __decorate([
         Subscribe('node-focused')
     ], ProjectPage.prototype, "nodeSelected", null);
