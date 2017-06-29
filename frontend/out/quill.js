@@ -37,6 +37,13 @@ var quill;
         },
         _a[AUTH_HEADER] = localStorage.getItem(AUTH_HEADER),
         _a);
+    quill.emptyBodyHeaders = (_b = {
+            'X-Api-Key': 'AbCdEfGhIjK1',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept-Language': 'en_IE.UTF-8'
+        },
+        _b[AUTH_HEADER] = localStorage.getItem(AUTH_HEADER),
+        _b);
     quill.setToken = function (token) {
         localStorage.setItem(AUTH_HEADER, token.token);
         quill.headers[AUTH_HEADER] = token.token;
@@ -45,7 +52,7 @@ var quill;
         localStorage.removeItem(AUTH_HEADER);
         quill.headers[AUTH_HEADER] = undefined;
     };
-    var _a;
+    var _a, _b;
 })(quill || (quill = {}));
 var _this = this;
 if (window['Element'] && !Element.prototype.closest) {
@@ -378,7 +385,7 @@ var quill;
         Rest({ url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.DELETE, headers: quill.headers })
     ], ProjectPage.prototype, "deleteNode", null);
     __decorate([
-        Rest({ url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, headers: quill.headers })
+        Rest({ url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, headers: quill.emptyBodyHeaders })
     ], ProjectPage.prototype, "createNode", null);
     __decorate([
         Template()

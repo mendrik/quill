@@ -25,7 +25,7 @@ class Node @Inject()(
     def newNodeName = messagesApi.translate("node.default-name", Nil).get
 
     def createStructureNode(hash: String) = silhouette.SecuredAction.async { implicit request =>
-        val newNode = Node(0, newNodeName, StringType, Structure, Nil)
+        val newNode = Node(0, newNodeName, Structure, StringType, Nil)
         for {
             Some(id) <- Future.successful(decodeHash(hash))
             Some(node) <- nodeService.createNode(id, newNode, None)

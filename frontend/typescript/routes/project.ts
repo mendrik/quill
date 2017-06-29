@@ -75,7 +75,7 @@ module quill {
 
         }
 
-        @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, headers: quill.headers})
+        @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, headers: quill.emptyBodyHeaders})
         createNode() {
 
         }

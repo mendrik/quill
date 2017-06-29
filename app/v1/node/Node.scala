@@ -18,8 +18,8 @@ case object Schema extends NodeRoot
 case class Node(
     id: Long,
     name: String,
-    nodeType: NodeType,
     nodeRoot: NodeRoot,
+    nodeType: NodeType,
     children: Seq[Node]
 ) extends Entity
 

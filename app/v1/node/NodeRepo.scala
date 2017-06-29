@@ -8,7 +8,6 @@ import slick.jdbc.MySQLProfile
 import slick.jdbc.MySQLProfile.api._
 import v1.NodeIO._
 import v1.project.{Project, ProjectRepo}
-import v1.version.Version
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -32,20 +31,20 @@ class NodeRepo @Inject()(
             parent,
             project,
             node.name,
-            node.nodeType.toString,
-            node.nodeRoot.toString
+            node.nodeRoot,
+            node.nodeType
         )).flatMap(findById)
 
     def update(project: Project, node: Node, parent: Option[Node]) =
         db.run(Nodes.filter(_.id === node.id)
-            .map(n => (n.name, n.parent, n.project, n.nodeType, n.nodeRoot))
-            .update((node.name, parent.map(_.id), project.id, node.nodeType.toString, node.nodeRoot.toString)))
+            .map(n => (n.name, n.parent, n.project, n.nodeRoot, n.nodeType))
+            .update((node.name, parent.map(_.id), project.id, node.nodeRoot, node.nodeType)))
 
     def remove(node: Node) =
         db.run(Nodes.filter(_.id === node.id).delete)
 
     def toNode(row: NodesRow): Node = {
-        Node(row.id, row.name, row.nodeType, row.nodeRoot, Nil)
+        Node(row.id, row.name, row.nodeRoot, row.nodeType, Nil)
     }
 
 }

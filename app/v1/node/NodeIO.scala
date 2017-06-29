@@ -5,12 +5,12 @@ import v1.node._
 
 package object NodeIO {
 
-    implicit val nodeWrites : Writes[Node] = new Writes[Node] {
+    implicit val nodeWrites: Writes[Node] = new Writes[Node] {
         def writes(n: Node) = Json.obj(
             "id" -> n.id,
-            "email" -> n.name,
-            "firstname" -> n.nodeType.toString,
-            "lastname" -> n.nodeRoot.toString
+            "name" -> n.name,
+            "type" -> n.nodeType.toString,
+            "rootType" -> n.nodeRoot.toString
         )
     }
 
@@ -23,16 +23,13 @@ package object NodeIO {
         case "list" => ListType
     }
 
-    implicit class NodeTypeExtension(nodeType: NodeType) {
-
-        override def toString: String = nodeType match {
-            case BoolType => "bool"
-            case NumberType => "number"
-            case StringType => "string"
-            case DateType => "date"
-            case NodeType => "node"
-            case ListType => "list"
-        }
+    implicit def asString(nodeType: NodeType): String = nodeType match {
+        case BoolType => "bool"
+        case NumberType => "number"
+        case StringType => "string"
+        case DateType => "date"
+        case NodeType => "node"
+        case ListType => "list"
     }
 
     implicit def toNodeRoot(s: String): NodeRoot = s.toLowerCase match {
@@ -40,13 +37,9 @@ package object NodeIO {
         case "schema" => Schema
     }
 
-    implicit class NodeRootExtension(nodeType: NodeRoot) {
-
-        override def toString: String = nodeType match {
-            case Structure => "structure"
-            case Schema => "schema"
-        }
+    implicit def asString(nodeRoot: NodeRoot): String = nodeRoot match {
+        case Structure => "structure"
+        case Schema => "schema"
     }
-
 }
 
