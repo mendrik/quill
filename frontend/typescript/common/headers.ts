@@ -12,13 +12,6 @@ module quill {
         [AUTH_HEADER]: localStorage.getItem(AUTH_HEADER)
     }
 
-    export const emptyBodyHeaders: TypedMap<string|StringFactory> = {
-        'X-Api-Key': 'AbCdEfGhIjK1',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept-Language': 'en_IE.UTF-8',
-        [AUTH_HEADER]: localStorage.getItem(AUTH_HEADER)
-    }
-
     export const setToken = (token: Token) => {
         localStorage.setItem(AUTH_HEADER, token.token)
         headers[AUTH_HEADER] = token.token

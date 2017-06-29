@@ -5,12 +5,15 @@ import v1.node._
 
 package object NodeIO {
 
+    implicit val newNodeReads = Json.reads[NewNode]
+
     implicit val nodeWrites: Writes[Node] = new Writes[Node] {
         def writes(n: Node) = Json.obj(
             "id" -> n.id,
             "name" -> n.name,
             "type" -> n.nodeType.toString,
-            "rootType" -> n.nodeRoot.toString
+            "rootType" -> n.nodeRoot.toString,
+            "sort" -> n.sort
         )
     }
 

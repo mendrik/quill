@@ -31,8 +31,16 @@ module quill {
     }
 
     export interface Node {
+        id: number,
         name: string,
-        type: NodeType
+        type: NodeType,
+        root: NodeRoot,
+        order: number
+    }
+
+    export interface NewNode {
+        name: string,
+        sort: number
     }
 
     export interface ApiError {

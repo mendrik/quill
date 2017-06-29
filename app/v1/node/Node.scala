@@ -24,3 +24,7 @@ case class Node(
     children: Seq[Node]
 ) extends Entity
 
+case class NewNode(
+    name: String,
+    sort: Int
+)

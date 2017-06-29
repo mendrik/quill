@@ -16,6 +16,10 @@ module quill {
         projectId: string
         currentTreeNode: TreeNode<Node>
         currentRootType: NodeRoot = 'structure'
+        newNode: NewNode = {
+            name: 'New node',
+            sort: 0
+        }
 
         constructor(projectId: string) {
             super()
@@ -75,7 +79,7 @@ module quill {
 
         }
 
-        @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, headers: quill.emptyBodyHeaders})
+        @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
         createNode() {
 
         }
