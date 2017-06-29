@@ -9,13 +9,13 @@ package object NodeIO {
 
     implicit val newNodeReads = Json.reads[NewNode]
 
-    lazy implicit val nodeReads: Reads[Node] = (
+    implicit val nodeReads: Reads[Node] = (
         (__ \ "id").read[Long] ~
         (__ \ "name").read[String] ~
         (__ \ "nodeRoot").read[String].map(toNodeRoot) ~
         (__ \ "nodeType").read[String].map(toNodeType) ~
         (__ \ "sort").read[Int] ~
-        (__ \ "children").readList[Node]
+        (__ \ "children").lazyRead(Reads.list[Node](nodeReads))
     )(Node.apply _)
 
     implicit val nodeWrites: Writes[Node] = new Writes[Node] {
