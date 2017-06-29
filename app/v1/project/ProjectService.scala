@@ -21,7 +21,7 @@ class ProjectService @Inject()(
 
     def createProject(user: User): Future[Project] = {
         for {
-            Some(project) <- repo.createProject(Project(0, None))
+            Some(project) <- repo.createProject(Project(0, None, Nil, Nil))
             _ <- puRepo.createProjectUser(user, project)
             _ <- uRepo.update(user.copy(lastProject = Some(project.id)))
         } yield {

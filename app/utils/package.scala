@@ -1,6 +1,3 @@
-import java.sql.Timestamp
-
-import org.joda.time.DateTime
 import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads._
 import play.api.libs.json.{Reads, _}
