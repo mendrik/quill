@@ -37,14 +37,14 @@ class NodeRepo @Inject()(
 
     def update(project: Project, node: Node, parent: Option[Node]) =
         db.run(Nodes.filter(_.id === node.id)
-            .map(n => (n.name, n.parent, n.project, n.nodeRoot, n.nodeType))
-            .update((node.name, parent.map(_.id), project.id, node.nodeRoot, node.nodeType)))
+            .map(n => (n.name, n.parent, n.project, n.nodeRoot, n.nodeType, n.sort))
+            .update((node.name, parent.map(_.id), project.id, node.nodeRoot, node.nodeType, node.sort)))
 
     def remove(node: Node) =
         db.run(Nodes.filter(_.id === node.id).delete)
 
     def toNode(row: NodesRow): Node = {
-        Node(row.id, row.name, row.nodeRoot, row.nodeType, Nil)
+        Node(row.id, row.name, row.nodeRoot, row.nodeType, row.sort, Nil)
     }
 
 }

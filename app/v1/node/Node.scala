@@ -20,6 +20,7 @@ case class Node(
     name: String,
     nodeRoot: NodeRoot,
     nodeType: NodeType,
+    sort: Int,
     children: Seq[Node]
 ) extends Entity
 
