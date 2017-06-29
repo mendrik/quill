@@ -23,7 +23,8 @@ package object UserIO {
     implicit val passwordInfoFormat = (
         (__ \ "hasher").format[String] ~
         (__ \ "password").format[String] ~
-        (__ \ "salt").formatNullable[String]) (PasswordInfo.apply, unlift(PasswordInfo.unapply))
+        (__ \ "salt").formatNullable[String]
+    )(PasswordInfo.apply, unlift(PasswordInfo.unapply))
 
     implicit val credentialsReads: Reads[PostedCredentials] = (
         (__ \ "identifier").nonEmptyWith(email) ~

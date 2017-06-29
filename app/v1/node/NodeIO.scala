@@ -1,11 +1,22 @@
 package v1
 
-import play.api.libs.json.{Json, Writes}
+import json._
+import play.api.libs.json.{Json, Reads, Writes, __}
+import play.api.libs.functional.syntax._
 import v1.node._
 
 package object NodeIO {
 
     implicit val newNodeReads = Json.reads[NewNode]
+
+    lazy implicit val nodeReads: Reads[Node] = (
+        (__ \ "id").read[Long] ~
+        (__ \ "name").read[String] ~
+        (__ \ "nodeRoot").read[String].map(toNodeRoot) ~
+        (__ \ "nodeType").read[String].map(toNodeType) ~
+        (__ \ "sort").read[Int] ~
+        (__ \ "children").readList[Node]
+    )(Node.apply _)
 
     implicit val nodeWrites: Writes[Node] = new Writes[Node] {
         def writes(n: Node) = Json.obj(

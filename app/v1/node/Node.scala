@@ -21,7 +21,7 @@ case class Node(
     nodeRoot: NodeRoot,
     nodeType: NodeType,
     sort: Int,
-    children: Seq[Node]
+    children: List[Node]
 ) extends Entity
 
 case class NewNode(

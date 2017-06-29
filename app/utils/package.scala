@@ -14,6 +14,8 @@ package object json {
             }
         }
 
+        def readList[A](implicit r: Reads[List[A]]): Reads[List[A]] = Reads.at(p)
+
         def readWithDefault[A](default: A)(implicit r: Reads[A]) =
             p.read[A].orElse(Reads.pure(default))
 

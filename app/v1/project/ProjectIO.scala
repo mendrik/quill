@@ -13,8 +13,8 @@ package object ProjectIO {
     implicit val projectReads: Reads[Project] = (
         (__ \ "id").read[Long] ~
         (__ \ "name").readNullable[String] ~
-        (__ \ "structure").readWithDefault[List[Node]](Nil) ~
-        (__ \ "schema").readWithDefault[List[Node]](Nil)
+        (__ \ "structure").readList[Node] ~
+        (__ \ "schema").readList[Node]
     )(Project.apply _)
 
     implicit val projectWrites : Writes[Project] = new Writes[Project] {
@@ -26,7 +26,5 @@ package object ProjectIO {
                 "schema" -> p.schema
             )
         }
-
     }
-
 }
