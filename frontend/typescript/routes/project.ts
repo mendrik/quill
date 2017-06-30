@@ -12,6 +12,7 @@ module quill {
     export class ProjectPage extends Widget {
 
         @Bind() nodes: Array<TreeNode<any>> = []
+        @Bind() schemaNodes: Array<TreeNode<any>> = []
 
         projectId: string
         currentTreeNode: TreeNode<Node>
@@ -97,6 +98,7 @@ module quill {
                           <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
                           <ul class="tree-view is-marginless" {{nodes}}></ul>
                           <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
+                          <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
                         </aside>
                       </scroll-pane>
                     </sidebar>

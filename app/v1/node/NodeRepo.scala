@@ -25,6 +25,10 @@ class NodeRepo @Inject()(
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
+    def findByProject(project: Long): Future[List[Node]] = db.run {
+        Nodes.filter(_.project === project).result.map(toNodes)
+    }
+
     def createNode(project: Long, node: Node, parent: Option[Long]): Future[Option[Node]] =
         db.run(Nodes returning Nodes.map(_.id) += NodesRow(
             node.id,
@@ -42,6 +46,8 @@ class NodeRepo @Inject()(
 
     def remove(node: Node) =
         db.run(Nodes.filter(_.id === node.id).delete)
+
+    def toNodes(row: Seq[NodesRow]): List[Node] = row.map(toNode).toList
 
     def toNode(row: NodesRow): Node = {
         Node(row.id, row.name, row.nodeRoot, row.nodeType, row.sort, Nil)

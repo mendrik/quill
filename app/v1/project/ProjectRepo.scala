@@ -14,6 +14,7 @@ import scala.concurrent.Future
 @Singleton
 class ProjectRepo @Inject()(dcp: DatabaseConfigProvider) {
 
+
     private val dbConfig = dcp.get[MySQLProfile]
     private val db = dbConfig.db
 
