@@ -25,8 +25,8 @@ class NodeRepo @Inject()(
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
-    def findByProject(project: Long): Future[List[Node]] = db.run {
-        Nodes.filter(_.project === project).result.map(toNodes)
+    def findByProjectAndType(project: Long, nodeRoot: NodeRoot): Future[List[Node]] = db.run {
+        Nodes.filter(p => p.project === project && p.nodeRoot === (nodeRoot: String)).result.map(toNodes)
     }
 
     def createNode(project: Long, node: Node, parent: Option[Long]): Future[Option[Node]] =

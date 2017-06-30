@@ -12,7 +12,7 @@ class NodeService @Inject()(repo: NodeRepo) {
         repo.createNode(project, node, parent)
 
     def getStructureNodes(project: Long): Future[List[Node]] = {
-        repo.findByProject(project)
+        repo.findByProjectAndType(project, Structure)
     }
 
     def schemaNodes(project: Project): Seq[Node] = {
