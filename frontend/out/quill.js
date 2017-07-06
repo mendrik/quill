@@ -7,6 +7,7 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
+    var TreeNodeIcon = feather.ui.tree.TreeNodeIcon;
     quill.findParentValue = function (widget, key) {
         var parent = widget, val;
         while (typeof (parent = parent.parentWidget) !== 'undefined') {
@@ -18,7 +19,9 @@ var quill;
     };
     var urlParams = {};
     var popstate = function () {
-        var pl = /\+/g, search = /([^&=]+)=?([^&]*)/g, decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); }, query = window.location.search.substring(1);
+        var pl = /\+/g, search = /([^&=]+)=?([^&]*)/g, decode = function (s) {
+            return decodeURIComponent(s.replace(pl, " "));
+        }, query = window.location.search.substring(1);
         var match;
         while (match = search.exec(query))
             urlParams[decode(match[1])] = decode(match[2]);
@@ -26,6 +29,22 @@ var quill;
     window.addEventListener('popstate', popstate);
     popstate();
     quill.getQueryStringParam = function (key) { return urlParams[key]; };
+    quill.iconFor = function (type) {
+        switch (type) {
+            case 'string':
+                return TreeNodeIcon.html;
+            case 'number':
+                return TreeNodeIcon.number;
+            case 'enum':
+                return TreeNodeIcon.enum;
+            case 'list':
+                return TreeNodeIcon.array;
+            case 'node':
+                return TreeNodeIcon.object;
+            case 'boolean':
+                return TreeNodeIcon.boolean;
+        }
+    };
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
@@ -298,6 +317,7 @@ var quill;
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
     var Subscribe = feather.hub.Subscribe;
+    var TreeNode = feather.ui.tree.TreeNode;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
     var ProjectPage = (function (_super) {
@@ -319,6 +339,8 @@ var quill;
         };
         ProjectPage.prototype.fetchProject = function (project) {
             console.log(project);
+            (_a = this.nodes).push.apply(_a, project.structure.map(function (n) { return new TreeNode(n.name, n, quill.iconFor(n.type)); }));
+            var _a;
         };
         ProjectPage.prototype.nodeDeselected = function (node) {
             this.currentTreeNode = undefined;

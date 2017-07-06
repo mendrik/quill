@@ -34,6 +34,7 @@ module quill {
         @Rest({url: '/projects/{{projectId}}', headers: quill.headers})
         fetchProject(project?: Project) {
             console.log(project)
+            this.nodes.push(...project.structure.map(n => new TreeNode(n.name, n, quill.iconFor(n.type))))
         }
 
         @Subscribe('node-defocused')

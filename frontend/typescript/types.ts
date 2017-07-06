@@ -27,7 +27,9 @@ module quill {
 
     export interface Project {
         id: number,
-        name: string
+        name: string,
+        structure: Node[],
+        schema: Node[]
     }
 
     export interface Node {
