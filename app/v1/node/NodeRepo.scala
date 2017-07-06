@@ -25,8 +25,8 @@ class NodeRepo @Inject()(
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
-    def findByProjectAndType(project: Long, nodeRoot: NodeRoot): Future[List[Node]] = db.run {
-        Nodes.filter(p => p.project === project && p.nodeRoot === (nodeRoot: String)).result.map(toNodes)
+    def findByProjectAndType(project: Long, nodeRoot: NodeRoot): Future[Seq[Node]] = {
+        db.run(Nodes.filter(p => p.project === project && p.nodeRoot === (nodeRoot: String)).result).map(toTree(None, _))
     }
 
     def createNode(project: Long, node: Node, parent: Option[Long]): Future[Option[Node]] =
@@ -51,6 +51,11 @@ class NodeRepo @Inject()(
 
     def toNode(row: NodesRow): Node = {
         Node(row.id, row.name, row.nodeRoot, row.nodeType, row.sort, Nil)
+    }
+
+    def toTree(parent: Option[NodesRow], nodes: Seq[NodesRow]): List[Node] = {
+        nodes.filter(_.parent == parent)
+            .map(nr => toNode(nr).copy(children = toTree(Some(nr), nodes))).toList
     }
 
 }

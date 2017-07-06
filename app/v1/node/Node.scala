@@ -14,7 +14,6 @@ sealed trait NodeRoot
 case object Structure extends NodeRoot
 case object Schema extends NodeRoot
 
-
 case class Node(
     id: Long,
     name: String,
