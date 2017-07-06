@@ -16,7 +16,8 @@ module quill {
     @Construct({selector: 'navigation'})
     export class Navigation extends GestureWidget {
 
-        @Bind() userName: string
+        @Bind() userName = ""
+        @Bind() projectName = ""
 
         constructor() {
             super()
@@ -69,6 +70,11 @@ module quill {
             this.route('/login')
         }
 
+        @Subscribe('project-loaded')
+        projectLoaded(project: Project) {
+            this.projectName = project.name
+        }
+
         @Template()
         markup() {
             return (`
@@ -76,7 +82,7 @@ module quill {
               <div class="nav-left">
                 <a class="nav-item" href="/" id="logo">
                     <img src="/assets/images/quill.svg" alt="Quill Logo">
-                    Quill
+                    Quill {{projectName:withDash}}
                 </a>
               </div>
               <span class="nav-toggle">
@@ -97,5 +103,7 @@ module quill {
             </nav>
             `)
         }
+
+        withDash = (txt: string) => txt.trim() ? `- ${txt}` : txt
     }
 }

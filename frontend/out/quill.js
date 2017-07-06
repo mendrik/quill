@@ -348,6 +348,7 @@ var quill;
         };
         ProjectPage.prototype.fetchProject = function (project) {
             console.log(project);
+            this.triggerDown('project-loaded', project);
             (_a = this.nodes).push.apply(_a, project.structure.map(function (n) { return new TreeNode(n.name, n, quill.iconFor(n.type)); }));
             var _a;
         };
@@ -657,6 +658,9 @@ var quill;
         __extends(Navigation, _super);
         function Navigation() {
             var _this = _super.call(this) || this;
+            _this.userName = "";
+            _this.projectName = "";
+            _this.withDash = function (txt) { return txt.trim() ? "- " + txt : txt; };
             _this.closeHandler = _this.closeHandler.bind(_this);
             return _this;
         }
@@ -696,14 +700,20 @@ var quill;
             quill.removeToken();
             this.route('/login');
         };
+        Navigation.prototype.projectLoaded = function (project) {
+            this.projectName = project.name;
+        };
         Navigation.prototype.markup = function () {
-            return ("\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    Quill\n                </a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout ({{userName}})</a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <Icon name=\"search\" align-right=\"right\"></Icon>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ");
+            return ("\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    Quill {{projectName:withDash}}\n                </a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout ({{userName}})</a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <Icon name=\"search\" align-right=\"right\"></Icon>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ");
         };
         return Navigation;
     }(GestureWidget));
     __decorate([
         Bind()
     ], Navigation.prototype, "userName", void 0);
+    __decorate([
+        Bind()
+    ], Navigation.prototype, "projectName", void 0);
     __decorate([
         On({ event: 'tap', selector: '.nav-toggle' })
     ], Navigation.prototype, "toggle", null);
@@ -716,6 +726,9 @@ var quill;
     __decorate([
         Subscribe('xhr-failure')
     ], Navigation.prototype, "logoutFailed", null);
+    __decorate([
+        Subscribe('project-loaded')
+    ], Navigation.prototype, "projectLoaded", null);
     __decorate([
         Template()
     ], Navigation.prototype, "markup", null);
