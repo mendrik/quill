@@ -22,8 +22,8 @@ package object NodeIO {
         def writes(n: Node) = Json.obj(
             "id" -> n.id,
             "name" -> n.name,
-            "type" -> n.nodeType.toString,
-            "rootType" -> n.nodeRoot.toString,
+            "type" -> asString(n.nodeType),
+            "rootType" -> asString(n.nodeRoot),
             "sort" -> n.sort
         )
     }

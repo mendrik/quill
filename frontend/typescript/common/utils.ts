@@ -35,7 +35,7 @@ module quill {
     export const iconFor = (type: NodeType): TreeNodeIcon => {
         switch (type) {
             case 'string':
-                return TreeNodeIcon.html;
+                return TreeNodeIcon.text;
             case 'number':
                 return TreeNodeIcon.number;
             case 'enum':

@@ -51,6 +51,7 @@ module quill {
         @Subscribe('root-type-selected')
         rootTypeSelected(type: NodeRoot) {
             this.currentRootType = type
+            this.triggerDown('defocus-other-nodes')
         }
 
         @Subscribe('node-action')

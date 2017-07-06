@@ -9,6 +9,7 @@ module quill.components {
     import Bind = feather.observe.Bind
     import Template = feather.annotations.Template
     import removeFromArray = feather.arrays.removeFromArray
+    import TreeNode = feather.ui.tree.TreeNode;
 
     @Construct({selector: 'selectable-tree-label', attributes: ['label', 'selected', 'type']})
     export class SelectableTreeLabel extends GestureWidget {
@@ -40,6 +41,13 @@ module quill.components {
                     l.selected = false
                 }
             })
+        }
+
+        @Subscribe('defocus-other-nodes')
+        nodeSelected(node: TreeNode<any>) {
+            if (node) {
+                this.selected = false
+            }
         }
 
         @Template()

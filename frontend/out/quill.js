@@ -32,7 +32,7 @@ var quill;
     quill.iconFor = function (type) {
         switch (type) {
             case 'string':
-                return TreeNodeIcon.html;
+                return TreeNodeIcon.text;
             case 'number':
                 return TreeNodeIcon.number;
             case 'enum':
@@ -228,6 +228,7 @@ var quill;
     (function (components) {
         var GestureWidget = feather.ui.events.GestureWidget;
         var Construct = feather.annotations.Construct;
+        var Subscribe = feather.hub.Subscribe;
         var On = feather.event.On;
         var Bind = feather.observe.Bind;
         var Template = feather.annotations.Template;
@@ -255,6 +256,11 @@ var quill;
                     }
                 });
             };
+            SelectableTreeLabel.prototype.nodeSelected = function (node) {
+                if (node) {
+                    this.selected = false;
+                }
+            };
             SelectableTreeLabel.prototype.markup = function () {
                 return ("<p class=\"menu-label clickable\" {{selected}}>\n                <span class=\"icon is-small\">\n                    <i class=\"fa fa-angle-double-right\"></i>\n                </span>\n                {{label}}\n            </p>");
             };
@@ -274,6 +280,9 @@ var quill;
         __decorate([
             On({ event: 'tap' })
         ], SelectableTreeLabel.prototype, "click", null);
+        __decorate([
+            Subscribe('defocus-other-nodes')
+        ], SelectableTreeLabel.prototype, "nodeSelected", null);
         __decorate([
             Template()
         ], SelectableTreeLabel.prototype, "markup", null);
@@ -351,6 +360,7 @@ var quill;
         };
         ProjectPage.prototype.rootTypeSelected = function (type) {
             this.currentRootType = type;
+            this.triggerDown('defocus-other-nodes');
         };
         ProjectPage.prototype.nodeAction = function (action) {
             switch (action) {
@@ -609,7 +619,7 @@ var feather;
                 this.triggerUp('node-action', el.getAttribute('action'));
             };
             TreeActions.prototype.markup = function () {
-                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <a class=\"button is-small\" action=\"node-add\"><Icon name=\"plus\"></Icon></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" action=\"node-delete\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
+                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <a class=\"button is-small\" action=\"node-add\"><Icon name=\"plus\"></Icon></a>\n                   <a class=\"button is-small\" action=\"node-edit\" {{disabled}}><Icon name=\"pencil\"></Icon></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" action=\"node-delete\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
             };
             return TreeActions;
         }(GestureWidget));
