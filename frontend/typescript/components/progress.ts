@@ -1,9 +1,9 @@
 module quill {
 
-    import Widget = feather.core.Widget
+    import Widget    = feather.core.Widget
     import Construct = feather.annotations.Construct
-    import Bind = feather.observe.Bind
-    import Template = feather.annotations.Template
+    import Bind      = feather.observe.Bind
+    import Template  = feather.annotations.Template
 
     @Construct({selector: 'progress-bar'})
     export class Progress extends Widget {

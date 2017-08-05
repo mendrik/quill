@@ -1,23 +1,21 @@
 module quill {
 
-    import Construct = feather.annotations.Construct
-    import Template = feather.annotations.Template
-    import Bind = feather.observe.Bind
-    import On = feather.event.On
-    import GestureWidget = feather.ui.events.GestureWidget
-    import Subscribe = feather.hub.Subscribe
-    import TreeNode = feather.ui.tree.TreeNode
-    import addMultipleEventListeners = feather.ui.events.addMultipleEventListeners
+    import Construct                    = feather.annotations.Construct
+    import Template                     = feather.annotations.Template
+    import Bind                         = feather.observe.Bind
+    import On                           = feather.event.On
+    import GestureWidget                = feather.ui.events.GestureWidget
+    import Subscribe                    = feather.hub.Subscribe
+    import addMultipleEventListeners    = feather.ui.events.addMultipleEventListeners
     import removeMultipleEventListeners = feather.ui.events.removeMultipleEventListeners
-    import tapEvents = feather.ui.events.tapEvents
-    import Rest = feather.xhr.Rest
-    import Method = feather.xhr.Method
+    import tapEvents                    = feather.ui.events.tapEvents
+    import Rest                         = feather.xhr.Rest
 
     @Construct({selector: 'navigation'})
     export class Navigation extends GestureWidget {
 
-        @Bind() userName = ""
-        @Bind() projectName = ""
+        @Bind() userName = ''
+        @Bind() projectName = ''
 
         constructor() {
             super()
@@ -31,7 +29,7 @@ module quill {
 
         @On({event: 'tap', selector: '.nav-toggle'})
         toggle(ev, el) {
-            this.toggleActiveState();
+            this.toggleActiveState()
             if (el.classList.contains('is-active')) {
                 addMultipleEventListeners(tapEvents, document, this.closeHandler)
             } else {
@@ -40,7 +38,7 @@ module quill {
         }
 
         closeHandler(ev) {
-            const el = this.element;
+            const el = this.element
             if (!el.contains(ev.target as Element)) {
                 this.toggleActiveState()
                 removeMultipleEventListeners(tapEvents, document, this.closeHandler)

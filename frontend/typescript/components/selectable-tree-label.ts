@@ -1,15 +1,13 @@
 module quill.components {
 
-    import GestureWidget = feather.ui.events.GestureWidget
-    import Construct = feather.annotations.Construct
-    import Subscribe = feather.hub.Subscribe
-    import On = feather.event.On
-    import TypedMap = feather.types.TypedMap
-    import Rest = feather.xhr.Rest
-    import Bind = feather.observe.Bind
-    import Template = feather.annotations.Template
+    import GestureWidget   = feather.ui.events.GestureWidget
+    import Construct       = feather.annotations.Construct
+    import Subscribe       = feather.hub.Subscribe
+    import On              = feather.event.On
+    import Bind            = feather.observe.Bind
+    import Template        = feather.annotations.Template
     import removeFromArray = feather.arrays.removeFromArray
-    import TreeNode = feather.ui.tree.TreeNode;
+    import TreeNode        = feather.ui.tree.TreeNode
 
     @Construct({selector: 'selectable-tree-label', attributes: ['label', 'selected', 'type']})
     export class SelectableTreeLabel extends GestureWidget {
@@ -58,7 +56,7 @@ module quill.components {
                     <i class="fa fa-angle-double-right"></i>
                 </span>
                 {{label}}
-            </p>`);
+            </p>`)
         }
 
         cleanUp() {

@@ -1,16 +1,15 @@
 module quill {
 
-    import Template = feather.annotations.Template
-    import Translate = quill.components.Translate
-    import On = feather.event.On
-    import Widget = feather.core.Widget
-    import GestureWidget = feather.ui.events.GestureWidget;
+    import Template      = feather.annotations.Template
+    import Translate     = quill.components.Translate
+    import On            = feather.event.On
+    import GestureWidget = feather.ui.events.GestureWidget
 
     export class NotFoundPage extends GestureWidget {
 
         @On({event: 'tap', selector: '.back-action', preventDefault: true})
         backButtonClicked() {
-            this.route("/")
+            this.route('/')
         }
 
         @Template('default', false)

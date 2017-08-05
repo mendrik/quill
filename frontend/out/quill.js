@@ -20,11 +20,12 @@ var quill;
     var urlParams = {};
     var popstate = function () {
         var pl = /\+/g, search = /([^&=]+)=?([^&]*)/g, decode = function (s) {
-            return decodeURIComponent(s.replace(pl, " "));
+            return decodeURIComponent(s.replace(pl, ' '));
         }, query = window.location.search.substring(1);
         var match;
-        while (match = search.exec(query))
+        while (match = search.exec(query)) {
             urlParams[decode(match[1])] = decode(match[2]);
+        }
     };
     window.addEventListener('popstate', popstate);
     popstate();
@@ -69,10 +70,12 @@ var quill;
 var _this = this;
 if (window['Element'] && !Element.prototype.closest) {
     Element.prototype.closest = function (s) {
-        var matches = (_this.document || _this.ownerDocument).querySelectorAll(s), i, el = _this;
+        var matches = (_this.document || _this.ownerDocument).querySelectorAll(s);
+        var i, el = _this;
         do {
             i = matches.length;
-            while (--i >= 0 && matches.item(i) !== el) { }
+            while (--i >= 0 && matches.item(i) !== el) {
+            }
         } while ((i < 0) && (el = el.parentElement));
         return el;
     };
@@ -177,7 +180,7 @@ var quill;
                 _this.translated = function (key) { return components.Translate.translations[key]; };
                 return _this;
             }
-            AjaxForm.prototype.validationFailed = function (err, xhr) {
+            AjaxForm.prototype.validationFailed = function (err) {
                 var _this = this;
                 quill.Progress.stop();
                 var messages = err.errors.map(function (e) {
@@ -187,17 +190,17 @@ var quill;
                     return e.message;
                 });
                 if (err.errors.length) {
-                    var errorType = err.errors[0].title.split(".").shift();
+                    var errorType = err.errors[0].title.split('.').shift();
                     ToastManager.showToast(new Toast(components.Translate.translations["ui." + errorType + ".failed"], messages, Theme.Warning));
                 }
             };
             AjaxForm.prototype.requestFailed = function (err, xhr) {
                 quill.Progress.stop();
-                ToastManager.showToast(new Toast(components.Translate.translations["ui.error.server"], err.errors[0].message, Theme.Error));
+                ToastManager.showToast(new Toast(components.Translate.translations['ui.error.server'], err.errors[0].message, Theme.Error));
             };
             AjaxForm.prototype.timeout = function (err, xhr) {
                 quill.Progress.stop();
-                ToastManager.showToast(new Toast(components.Translate.translations["ui.error.timeout"], components.Translate.translations["ui.error.timeout.message"], Theme.Error));
+                ToastManager.showToast(new Toast(components.Translate.translations['ui.error.timeout'], components.Translate.translations['ui.error.timeout.message'], Theme.Error));
             };
             AjaxForm.prototype.textChanged = function (ev, el) {
                 var closest = ev.target.closest('[bind]');
@@ -305,7 +308,7 @@ var quill;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         NotFoundPage.prototype.backButtonClicked = function () {
-            this.route("/");
+            this.route('/');
         };
         NotFoundPage.prototype.loginPage = function () {
             return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"small-info-page\">\n                  <h1>\u2022ui.page.notfound.title</h1>\n                  <p>\u2022ui.page.notfound.body</p>\n                  <div class=\"form-components\">\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary back-action\">\u2022ui.page.notfound.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
@@ -347,7 +350,6 @@ var quill;
             this.fetchProject();
         };
         ProjectPage.prototype.fetchProject = function (project) {
-            console.log(project);
             this.triggerDown('project-loaded', project);
             (_a = this.nodes).push.apply(_a, project.structure.map(function (n) { return new TreeNode(n.name, n, quill.iconFor(n.type)); }));
             var _a;
@@ -491,7 +493,7 @@ var quill;
             this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
-            return Translate.translate("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.login\" icon=\"key\" active>\n                    <Text label=\"\u2022ui.signin.identifier\" name=\"signin.identifier\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" autofocus bind=\"credentials.identifier\"></Text>\n                    <Text label=\"\u2022ui.signin.password\" name=\"signin.password\" type=\"password\" icon=\"lock\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">\u2022ui.signin.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"\u2022ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"\u2022ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"\u2022ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"\u2022ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">\u2022ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"\u2022ui.forgot-password.email\" name=\"forgot-password.email\"  placeholder=\"\u2022ui.forgot-password.email.placeholder\" icon=\"envelope-o\" bind=\"forgotPassword.identifier\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgot-password-action\">\u2022ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
+            return Translate.translate("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.login\" icon=\"key\" active>\n                    <Text label=\"\u2022ui.signin.identifier\" name=\"signin.identifier\"\n                          placeholder=\"john@freemail.com\" icon=\"envelope-o\" autofocus bind=\"credentials.identifier\"></Text>\n                    <Text label=\"\u2022ui.signin.password\" name=\"signin.password\" type=\"password\" icon=\"lock\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">\u2022ui.signin.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"\u2022ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"\u2022ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"\u2022ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"\u2022ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">\u2022ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"\u2022ui.forgot-password.email\" name=\"forgot-password.email\"\n                          placeholder=\"\u2022ui.forgot-password.email.placeholder\" icon=\"envelope-o\" bind=\"forgotPassword.identifier\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgot-password-action\">\u2022ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
         };
         return LoginPage;
     }(AjaxForm));
@@ -572,7 +574,7 @@ var quill;
             this.route('/login');
         };
         PassordChangePage.prototype.loginPage = function () {
-            return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"\u2022ui.change-password.password\" \n                          name=\"change-password.password\" \n                          placeholder=\"\u2022ui.change-password.placeholder\" \n                          type=\"password\" \n                          icon=\"lock\" \n                          autofocus \n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"\u2022ui.change-password.password-repeat\" \n                          name=\"change-password.password-repeat\" \n                          type=\"password\" \n                          icon=\"lock\" \n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\u2022ui.change-password.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
+            return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"\u2022ui.change-password.password\"\n                          name=\"change-password.password\"\n                          placeholder=\"\u2022ui.change-password.placeholder\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          autofocus\n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"\u2022ui.change-password.password-repeat\"\n                          name=\"change-password.password-repeat\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\u2022ui.change-password.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
         };
         return PassordChangePage;
     }(AjaxForm));
@@ -658,8 +660,8 @@ var quill;
         __extends(Navigation, _super);
         function Navigation() {
             var _this = _super.call(this) || this;
-            _this.userName = "";
-            _this.projectName = "";
+            _this.userName = '';
+            _this.projectName = '';
             _this.withDash = function (txt) { return txt.trim() ? "- " + txt : txt; };
             _this.closeHandler = _this.closeHandler.bind(_this);
             return _this;

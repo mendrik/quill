@@ -1,12 +1,14 @@
 if (window['Element'] && !Element.prototype.closest) {
     Element.prototype.closest = (s) => {
-        let matches = (this.document || this.ownerDocument).querySelectorAll(s),
-            i,
-            el = this;
+        const matches = (this.document || this.ownerDocument).querySelectorAll(s)
+        let i,
+            el = this
         do {
             i = matches.length;
-            while (--i >= 0 && matches.item(i) !== el) {}
-        } while ((i < 0) && (el = el.parentElement));
-        return el;
-    };
+            while (--i >= 0 && matches.item(i) !== el) {
+                //
+            }
+        } while ((i < 0) && (el = el.parentElement))
+        return el
+    }
 }

@@ -1,11 +1,10 @@
 module quill.components {
 
-    import Widget = feather.core.Widget
-    import Construct = feather.annotations.Construct
-    import Template = feather.annotations.Template
-    import TypedMap = feather.types.TypedMap
-    import Rest = feather.xhr.Rest
-    import Bind = feather.observe.Bind
+    import Widget    = feather.core.Widget;
+    import Construct = feather.annotations.Construct;
+    import Template  = feather.annotations.Template;
+    import TypedMap  = feather.types.TypedMap;
+    import Bind      = feather.observe.Bind;
 
     @Construct({selector: 'translate', attributes: ['key']})
     export class Translate extends Widget {
@@ -31,7 +30,7 @@ module quill.components {
         translated = (key: string) => Translate.translations[key]
 
         static translate = (text: string) => text.replace(/•([A-Z\.\-_]+)/gi, (m, g) => {
-            let translations = Translate.translations || {};
+            const translations = Translate.translations || {}
             return translations[g] || g
         })
     }

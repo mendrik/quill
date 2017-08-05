@@ -7,13 +7,11 @@ module quill.components {
     import Toast = feather.ui.toast.Toast
     import Subscribe = feather.hub.Subscribe
     import On = feather.event.On
-    import TypedMap = feather.types.TypedMap
-    import Rest = feather.xhr.Rest
 
     export class AjaxForm extends GestureWidget {
 
         @Subscribe('xhr-failure-400')
-        validationFailed(err: Errors, xhr) {
+        validationFailed(err: Errors) {
             Progress.stop()
             const messages = err.errors.map(e => {
                 if (e.type === 'validation') {
@@ -22,7 +20,7 @@ module quill.components {
                 return e.message
             })
             if (err.errors.length) {
-                const errorType = err.errors[0].title.split(".").shift()
+                const errorType = err.errors[0].title.split('.').shift()
                 ToastManager.showToast(new Toast(Translate.translations[`ui.${errorType}.failed`], messages, Theme.Warning))
             }
         }
@@ -30,18 +28,18 @@ module quill.components {
         @Subscribe('xhr-failure-500')
         requestFailed(err: Errors, xhr) {
             Progress.stop()
-            ToastManager.showToast(new Toast(Translate.translations["ui.error.server"], err.errors[0].message, Theme.Error))
+            ToastManager.showToast(new Toast(Translate.translations['ui.error.server'], err.errors[0].message, Theme.Error))
         }
 
         @Subscribe('xhr-failure-timeout')
         timeout(err: Errors, xhr) {
             Progress.stop()
-            ToastManager.showToast(new Toast(Translate.translations["ui.error.timeout"], Translate.translations["ui.error.timeout.message"], Theme.Error))
+            ToastManager.showToast(new Toast(Translate.translations['ui.error.timeout'], Translate.translations['ui.error.timeout.message'], Theme.Error))
         }
 
         @On({event: 'textchange', selector: 'input'})
         textChanged(ev: TextEvent, el: HTMLInputElement) {
-            let closest = (ev.target as HTMLElement).closest('[bind]')
+            const closest = (ev.target as HTMLElement).closest('[bind]')
             if (closest) {
                 setDeepValue(this, closest.getAttribute('bind'), el.value)
             }

@@ -1,5 +1,5 @@
 val silhouetteVersion = "4.0.0"
-val slickVersion = "3.3.0-SNAPSHOT"
+val slickVersion = "3.2.1"
 val playSlickVersion = "2.1.0"
 val scVersion = "2.11.11"
 

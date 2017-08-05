@@ -1,16 +1,15 @@
 module quill {
 
-    import Widget = feather.core.Widget
-    import Construct = feather.annotations.Construct
-    import Template = feather.annotations.Template
-    import Bind = feather.observe.Bind
-    import Route = feather.routing.Route
-    import Subscribe = feather.hub.Subscribe
-    import TreeNode = feather.ui.tree.TreeNode
-    import Rest = feather.xhr.Rest
+    import Widget       = feather.core.Widget
+    import Construct    = feather.annotations.Construct
+    import Template     = feather.annotations.Template
+    import Bind         = feather.observe.Bind
+    import Route        = feather.routing.Route
+    import Subscribe    = feather.hub.Subscribe
+    import Rest         = feather.xhr.Rest
     import ToastManager = feather.ui.toast.ToastManager
-    import Toast = feather.ui.toast.Toast
-    import Theme = feather.ui.toast.Theme
+    import Toast        = feather.ui.toast.Toast
+    import Theme        = feather.ui.toast.Theme
 
     export interface Messages {
         messages: Message[]

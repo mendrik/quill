@@ -1,18 +1,17 @@
 module quill {
 
-    import Construct = feather.annotations.Construct
-    import Template = feather.annotations.Template
-    import Bind = feather.observe.Bind
-    import Subscribe = feather.hub.Subscribe
-    import On = feather.event.On
-    import Rest = feather.xhr.Rest
-    import Method = feather.xhr.Method
-    import Theme = feather.ui.toast.Theme
-    import AjaxForm = quill.components.AjaxForm
-    import Translate = quill.components.Translate
-    import Toast = feather.ui.toast.Toast
+    import Template     = feather.annotations.Template
+    import Bind         = feather.observe.Bind
+    import Subscribe    = feather.hub.Subscribe
+    import On           = feather.event.On
+    import Rest         = feather.xhr.Rest
+    import Method       = feather.xhr.Method
+    import Theme        = feather.ui.toast.Theme
+    import AjaxForm     = quill.components.AjaxForm
+    import Translate    = quill.components.Translate
+    import Toast        = feather.ui.toast.Toast
     import ToastManager = feather.ui.toast.ToastManager
-    import Scope = feather.event.Scope
+    import Scope        = feather.event.Scope
 
     interface Credentials {
         identifier?: string,
@@ -105,7 +104,8 @@ module quill {
             <div class="login">
                 <tabs>
                   <div class="form-components" title="•ui.login.tabs.login" icon="key" active>
-                    <Text label="•ui.signin.identifier" name="signin.identifier" placeholder="john@freemail.com" icon="envelope-o" autofocus bind="credentials.identifier"></Text>
+                    <Text label="•ui.signin.identifier" name="signin.identifier"
+                          placeholder="john@freemail.com" icon="envelope-o" autofocus bind="credentials.identifier"></Text>
                     <Text label="•ui.signin.password" name="signin.password" type="password" icon="lock" bind="credentials.password"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary login-action">•ui.signin.button</a>
@@ -122,7 +122,8 @@ module quill {
                   </div>
                   <div class="form-components" title="•ui.login.tabs.forgot-password" icon="unlock">
                     <p><Translate key="ui.forgot-password.info"/></p>
-                    <Text label="•ui.forgot-password.email" name="forgot-password.email"  placeholder="•ui.forgot-password.email.placeholder" icon="envelope-o" bind="forgotPassword.identifier"></Text>
+                    <Text label="•ui.forgot-password.email" name="forgot-password.email"
+                          placeholder="•ui.forgot-password.email.placeholder" icon="envelope-o" bind="forgotPassword.identifier"></Text>
                     <div class="block has-text-right">
                          <a class="button is-primary forgot-password-action">•ui.forgot-password.button</a>
                     </div>

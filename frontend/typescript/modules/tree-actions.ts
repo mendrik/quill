@@ -1,40 +1,13 @@
 module feather.ui {
 
-    import Widget = feather.core.Widget
-    import Construct = feather.annotations.Construct
-    import Template = feather.annotations.Template
-    import Bind = feather.observe.Bind
-    import On = feather.event.On
-    import Subscribe = feather.hub.Subscribe
-    import TreeNode = feather.ui.tree.TreeNode
-    import NodeType = quill.NodeType
-    import GestureWidget = feather.ui.events.GestureWidget;
+    import Construct     = feather.annotations.Construct
+    import Template      = feather.annotations.Template
+    import Bind          = feather.observe.Bind
+    import On            = feather.event.On
+    import Subscribe     = feather.hub.Subscribe
+    import TreeNode      = feather.ui.tree.TreeNode
+    import GestureWidget = feather.ui.events.GestureWidget
 
-/*
-    const iconFor = (key: NodeTypeType): string => {
-        switch (key) {
-            case 'string': return 'font';
-            case 'number': return 'table';
-            case 'enum': return 'ellipsis-v';
-            case 'list': return 'database';
-            case 'node': return 'sitemap';
-            case 'boolean': return 'toggle-on';
-        }
-    }
-
-    const textFor = (key: NodeTypeType): string => {
-        switch (key) {
-            case 'string': return 'Text';
-            case 'number': return 'Number';
-            case 'enum': return 'Enumeration';
-            case 'list': return 'List';
-            case 'node': return 'Node';
-            case 'boolean': return 'Toggle';
-        }
-    }
-*/
-
-    // const typeConverter = (c: NodeType) => new ChooserValue<NodeType>(textFor(c.name), iconFor(c.name), c)
 
     @Construct({selector: 'tree-actions'})
     export class TreeActions extends GestureWidget {
