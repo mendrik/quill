@@ -35,7 +35,7 @@ module quill {
             this.triggerDown('project-loaded', project)
             this.nodes.push(...project.structure.map(n => new TreeNode(n.name, n, quill.iconFor(n.type))))
         }
-
+        
         @Subscribe('node-defocused')
         nodeDeselected(node: TreeNode<any>) {
             this.currentTreeNode = undefined

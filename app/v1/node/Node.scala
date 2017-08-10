@@ -23,6 +23,10 @@ case class Node(
     children: List[Node]
 ) extends Entity
 
+object Node {
+
+}
+
 case class NewNode(
     name: String,
     sort: Int

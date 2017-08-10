@@ -54,7 +54,8 @@ class NodeRepo @Inject()(
     }
 
     def toTree(parent: Option[NodesRow], nodes: Seq[NodesRow]): List[Node] = {
-        nodes.filter(_.parent == parent)
+        nodes.filter(n => parent.isEmpty   && n.parent.isEmpty ||
+                          parent.isDefined && n.parent.contains(parent.map(_.id).get))
             .map(nr => toNode(nr).copy(children = toTree(Some(nr), nodes))).toList
     }
 

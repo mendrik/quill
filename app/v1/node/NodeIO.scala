@@ -1,7 +1,7 @@
 package v1
 
 import json._
-import play.api.libs.json.{Json, Reads, Writes, __}
+import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import v1.node._
 
@@ -18,14 +18,21 @@ package object NodeIO {
         (__ \ "children").lazyRead(Reads.list[Node](nodeReads))
     )(Node.apply _)
 
-    implicit val nodeWrites: Writes[Node] = new Writes[Node] {
-        def writes(n: Node) = Json.obj(
-            "id" -> n.id,
-            "name" -> n.name,
-            "type" -> asString(n.nodeType),
-            "rootType" -> asString(n.nodeRoot),
-            "sort" -> n.sort
-        )
+    implicit val nodeWrites: Writes[Node] = (
+        (__ \ "id").write[Long] ~
+        (__ \ "name").write[String] ~
+        (__ \ "rootType").write[NodeRoot] ~
+        (__ \ "type").write[NodeType] ~
+        (__ \ "sort").write[Int] ~
+        (__ \ "children").lazyWrite[List[Node]](Writes.list(nodeWrites))
+    )(unlift(Node.unapply))
+
+    implicit def nodeRootWrites: Writes[NodeRoot] = new Writes[NodeRoot] {
+        def writes(n: NodeRoot) = JsString(asString(n))
+    }
+
+    implicit def nodeTypeWrites: Writes[NodeType] = new Writes[NodeType] {
+        def writes(n: NodeType) = JsString(asString(n))
     }
 
     implicit def toNodeType(s: String): NodeType = s.toLowerCase match {
