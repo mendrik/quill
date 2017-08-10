@@ -332,8 +332,17 @@ var quill;
     var TreeNode = feather.ui.tree.TreeNode;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
+    var CustomTreeNode = (function (_super) {
+        __extends(CustomTreeNode, _super);
+        function CustomTreeNode() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.id = function () { return "" + _this.value.id; };
+            return _this;
+        }
+        return CustomTreeNode;
+    }(TreeNode));
     var toTreeNode = function (n) {
-        var tn = new TreeNode(n.name, n, quill.iconFor(n.type));
+        var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
         (_a = tn.children).push.apply(_a, n.children.map(toTreeNode));
         return tn;
         var _a;
@@ -345,6 +354,7 @@ var quill;
             _this.nodes = [];
             _this.schemaNodes = [];
             _this.currentRootType = 'structure';
+            _this.id = function () { return _this.projectId; };
             _this.newNode = {
                 name: 'New node',
                 sort: 0

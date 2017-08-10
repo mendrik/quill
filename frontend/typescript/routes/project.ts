@@ -1,27 +1,33 @@
 module quill {
 
-    import Widget    = feather.core.Widget
-    import Template  = feather.annotations.Template
-    import Bind      = feather.observe.Bind
-    import Subscribe = feather.hub.Subscribe
-    import TreeNode  = feather.ui.tree.TreeNode
-    import Rest      = feather.xhr.Rest
-    import Method    = feather.xhr.Method
+    import Widget    = feather.core.Widget;
+    import Template  = feather.annotations.Template;
+    import Bind      = feather.observe.Bind;
+    import Subscribe = feather.hub.Subscribe;
+    import TreeNode  = feather.ui.tree.TreeNode;
+    import Rest      = feather.xhr.Rest;
+    import Method    = feather.xhr.Method;
+
+    class CustomTreeNode extends TreeNode<Node> {
+        id = () => `${this.value.id}`
+    }
 
     const toTreeNode = (n: Node) => {
-        const tn = new TreeNode(n.name, n, quill.iconFor(n.type))
+        const tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type))
         tn.children.push(...n.children.map(toTreeNode))
         return tn;
     }
-    
+
     export class ProjectPage extends Widget {
 
-        @Bind() nodes: Array<TreeNode<any>> = []
-        @Bind() schemaNodes: Array<TreeNode<any>> = []
+        @Bind() nodes: Array<CustomTreeNode> = []
+        @Bind() schemaNodes: Array<CustomTreeNode> = []
 
         projectId: string
-        currentTreeNode: TreeNode<Node>
+        currentTreeNode: CustomTreeNode
         currentRootType: NodeRoot = 'structure'
+        id = () => this.projectId
+
         newNode: NewNode = {
             name: 'New node',
             sort: 0
@@ -43,12 +49,12 @@ module quill {
         }
 
         @Subscribe('node-defocused')
-        nodeDeselected(node: TreeNode<any>) {
+        nodeDeselected(node: CustomTreeNode) {
             this.currentTreeNode = undefined
         }
 
         @Subscribe('node-focused')
-        nodeSelected(node: TreeNode<any>) {
+        nodeSelected(node: CustomTreeNode) {
             this.currentTreeNode = node
             this.triggerDown('defocus-other-nodes', node)
         }
