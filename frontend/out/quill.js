@@ -332,6 +332,12 @@ var quill;
     var TreeNode = feather.ui.tree.TreeNode;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
+    var toTreeNode = function (n) {
+        var tn = new TreeNode(n.name, n, quill.iconFor(n.type));
+        (_a = tn.children).push.apply(_a, n.children.map(toTreeNode));
+        return tn;
+        var _a;
+    };
     var ProjectPage = (function (_super) {
         __extends(ProjectPage, _super);
         function ProjectPage(projectId) {
@@ -351,7 +357,7 @@ var quill;
         };
         ProjectPage.prototype.fetchProject = function (project) {
             this.triggerDown('project-loaded', project);
-            (_a = this.nodes).push.apply(_a, project.structure.map(function (n) { return new TreeNode(n.name, n, quill.iconFor(n.type)); }));
+            (_a = this.nodes).push.apply(_a, project.structure.map(toTreeNode));
             var _a;
         };
         ProjectPage.prototype.nodeDeselected = function (node) {

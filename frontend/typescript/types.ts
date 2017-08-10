@@ -38,6 +38,7 @@ module quill {
         type: NodeType,
         root: NodeRoot,
         order: number
+        children: Node[]
     }
 
     export interface NewNode {

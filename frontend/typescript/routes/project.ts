@@ -8,6 +8,12 @@ module quill {
     import Rest      = feather.xhr.Rest
     import Method    = feather.xhr.Method
 
+    const toTreeNode = (n: Node) => {
+        const tn = new TreeNode(n.name, n, quill.iconFor(n.type))
+        tn.children.push(...n.children.map(toTreeNode))
+        return tn;
+    }
+    
     export class ProjectPage extends Widget {
 
         @Bind() nodes: Array<TreeNode<any>> = []
@@ -33,9 +39,9 @@ module quill {
         @Rest({url: '/projects/{{projectId}}', headers: quill.headers})
         fetchProject(project?: Project) {
             this.triggerDown('project-loaded', project)
-            this.nodes.push(...project.structure.map(n => new TreeNode(n.name, n, quill.iconFor(n.type))))
+            this.nodes.push(...project.structure.map(toTreeNode))
         }
-        
+
         @Subscribe('node-defocused')
         nodeDeselected(node: TreeNode<any>) {
             this.currentTreeNode = undefined
