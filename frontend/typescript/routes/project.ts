@@ -1,12 +1,12 @@
 module quill {
 
-    import Widget    = feather.core.Widget;
-    import Template  = feather.annotations.Template;
-    import Bind      = feather.observe.Bind;
-    import Subscribe = feather.hub.Subscribe;
-    import TreeNode  = feather.ui.tree.TreeNode;
-    import Rest      = feather.xhr.Rest;
-    import Method    = feather.xhr.Method;
+    import Widget    = feather.core.Widget
+    import Template  = feather.annotations.Template
+    import Bind      = feather.observe.Bind
+    import Subscribe = feather.hub.Subscribe
+    import TreeNode  = feather.ui.tree.TreeNode
+    import Rest      = feather.xhr.Rest
+    import Method    = feather.xhr.Method
 
     class CustomTreeNode extends TreeNode<Node> {
         id = () => `${this.value.id}`
@@ -22,6 +22,12 @@ module quill {
 
         @Bind() nodes: Array<CustomTreeNode> = []
         @Bind() schemaNodes: Array<CustomTreeNode> = []
+        @Bind({bequeath: true}) project: Project = {
+            id: 0,
+            name: '',
+            structure: [],
+            schema: []
+        }
 
         projectId: string
         currentTreeNode: CustomTreeNode
@@ -44,7 +50,7 @@ module quill {
 
         @Rest({url: '/projects/{{projectId}}', headers: quill.headers})
         fetchProject(project?: Project) {
-            this.triggerDown('project-loaded', project)
+            this.project = project
             this.nodes.push(...project.structure.map(toTreeNode))
         }
 

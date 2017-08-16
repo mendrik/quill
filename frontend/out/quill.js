@@ -8,15 +8,6 @@ var quill;
 var quill;
 (function (quill) {
     var TreeNodeIcon = feather.ui.tree.TreeNodeIcon;
-    quill.findParentValue = function (widget, key) {
-        var parent = widget, val;
-        while (typeof (parent = parent.parentWidget) !== 'undefined') {
-            val = parent[key];
-            if (typeof val !== 'undefined') {
-                return val;
-            }
-        }
-    };
     var urlParams = {};
     var popstate = function () {
         var pl = /\+/g, search = /([^&=]+)=?([^&]*)/g, decode = function (s) {
@@ -353,6 +344,12 @@ var quill;
             var _this = _super.call(this) || this;
             _this.nodes = [];
             _this.schemaNodes = [];
+            _this.project = {
+                id: 0,
+                name: '',
+                structure: [],
+                schema: []
+            };
             _this.currentRootType = 'structure';
             _this.id = function () { return _this.projectId; };
             _this.newNode = {
@@ -366,7 +363,7 @@ var quill;
             this.fetchProject();
         };
         ProjectPage.prototype.fetchProject = function (project) {
-            this.triggerDown('project-loaded', project);
+            this.project = project;
             (_a = this.nodes).push.apply(_a, project.structure.map(toTreeNode));
             var _a;
         };
@@ -415,6 +412,9 @@ var quill;
     __decorate([
         Bind()
     ], ProjectPage.prototype, "schemaNodes", void 0);
+    __decorate([
+        Bind({ bequeath: true })
+    ], ProjectPage.prototype, "project", void 0);
     __decorate([
         Rest({ url: '/projects/{{projectId}}', headers: quill.headers })
     ], ProjectPage.prototype, "fetchProject", null);
@@ -664,7 +664,6 @@ var quill;
 (function (quill) {
     var Construct = feather.annotations.Construct;
     var Template = feather.annotations.Template;
-    var Bind = feather.observe.Bind;
     var On = feather.event.On;
     var GestureWidget = feather.ui.events.GestureWidget;
     var Subscribe = feather.hub.Subscribe;
@@ -676,14 +675,10 @@ var quill;
         __extends(Navigation, _super);
         function Navigation() {
             var _this = _super.call(this) || this;
-            _this.userName = '';
-            _this.projectName = '';
-            _this.withDash = function (txt) { return txt.trim() ? "- " + txt : txt; };
             _this.closeHandler = _this.closeHandler.bind(_this);
             return _this;
         }
         Navigation.prototype.init = function () {
-            this.userName = quill.findParentValue(this, 'user').firstname;
             this.render();
         };
         Navigation.prototype.toggle = function (ev, el) {
@@ -718,20 +713,11 @@ var quill;
             quill.removeToken();
             this.route('/login');
         };
-        Navigation.prototype.projectLoaded = function (project) {
-            this.projectName = project.name;
-        };
         Navigation.prototype.markup = function () {
-            return ("\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    Quill {{projectName:withDash}}\n                </a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout ({{userName}})</a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <Icon name=\"search\" align-right=\"right\"></Icon>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ");
+            return ("\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    <span>Quill</span><span>{{project.name}}</span>\n                </a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout <span class=\"username\">{{user.firstname}}</span></a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <Icon name=\"search\" align-right=\"right\"></Icon>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ");
         };
         return Navigation;
     }(GestureWidget));
-    __decorate([
-        Bind()
-    ], Navigation.prototype, "userName", void 0);
-    __decorate([
-        Bind()
-    ], Navigation.prototype, "projectName", void 0);
     __decorate([
         On({ event: 'tap', selector: '.nav-toggle' })
     ], Navigation.prototype, "toggle", null);
@@ -745,13 +731,10 @@ var quill;
         Subscribe('xhr-failure')
     ], Navigation.prototype, "logoutFailed", null);
     __decorate([
-        Subscribe('project-loaded')
-    ], Navigation.prototype, "projectLoaded", null);
-    __decorate([
         Template()
     ], Navigation.prototype, "markup", null);
     Navigation = __decorate([
-        Construct({ selector: 'navigation' })
+        Construct({ selector: 'navigation', singleton: true })
     ], Navigation);
     quill.Navigation = Navigation;
 })(quill || (quill = {}));
@@ -798,6 +781,7 @@ var quill;
         function QuillApplication() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.pages = [];
+            _this.user = null;
             return _this;
         }
         QuillApplication.prototype.init = function () {
@@ -848,6 +832,9 @@ var quill;
     __decorate([
         Bind()
     ], QuillApplication.prototype, "pages", void 0);
+    __decorate([
+        Bind({ bequeath: true })
+    ], QuillApplication.prototype, "user", void 0);
     __decorate([
         Rest({ url: '/translations', headers: quill.headers })
     ], QuillApplication.prototype, "fetchTranslations", null);

@@ -834,12 +834,18 @@
 }navigation{
     border-bottom:1px solid lightgray;
     z-index:64;
+}navigation .username:after {
+        content:')';
 }navigation #search{
         width:100%;
 }navigation #search input{
         border-radius:25px;
 }navigation #search .icon{
         margin-right:5px;
+}navigation .username{
+        margin-left:5px
+}navigation .username:before {
+        content:'(';
 }#logo{
     font-weight:bold;
     color:black;
@@ -847,6 +853,10 @@
         width:2rem;
         height:2rem;
         margin-right:10px;
+}#logo span + span:not(:empty):before{
+        content:'-';
+        display:inline-block;
+        margin:0 5px;
 }sidebar .level{
         padding:5px;
 }sidebar .level .level-left > .button, sidebar .level .level-left > .toggler, sidebar .level .level-right > .button, sidebar .level .level-right > .toggler{

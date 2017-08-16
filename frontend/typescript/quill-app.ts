@@ -24,7 +24,7 @@ module quill {
     export class QuillApplication extends Widget {
 
         @Bind() pages: Array<Widget> = []
-        user: User
+        @Bind({bequeath: true}) user: User = null
 
         init() {
             this.fetchTranslations()

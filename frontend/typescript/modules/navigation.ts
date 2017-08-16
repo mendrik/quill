@@ -2,7 +2,6 @@ module quill {
 
     import Construct                    = feather.annotations.Construct
     import Template                     = feather.annotations.Template
-    import Bind                         = feather.observe.Bind
     import On                           = feather.event.On
     import GestureWidget                = feather.ui.events.GestureWidget
     import Subscribe                    = feather.hub.Subscribe
@@ -11,11 +10,8 @@ module quill {
     import tapEvents                    = feather.ui.events.tapEvents
     import Rest                         = feather.xhr.Rest
 
-    @Construct({selector: 'navigation'})
+    @Construct({selector: 'navigation', singleton: true})
     export class Navigation extends GestureWidget {
-
-        @Bind() userName = ''
-        @Bind() projectName = ''
 
         constructor() {
             super()
@@ -23,7 +19,6 @@ module quill {
         }
 
         init() {
-            this.userName = findParentValue<User>(this, 'user').firstname
             this.render()
         }
 
@@ -68,11 +63,6 @@ module quill {
             this.route('/login')
         }
 
-        @Subscribe('project-loaded')
-        projectLoaded(project: Project) {
-            this.projectName = project.name
-        }
-
         @Template()
         markup() {
             return (`
@@ -80,7 +70,7 @@ module quill {
               <div class="nav-left">
                 <a class="nav-item" href="/" id="logo">
                     <img src="/assets/images/quill.svg" alt="Quill Logo">
-                    Quill {{projectName:withDash}}
+                    <span>Quill</span><span>{{project.name}}</span>
                 </a>
               </div>
               <span class="nav-toggle">
@@ -89,7 +79,7 @@ module quill {
                 <span></span>
               </span>
               <div class="nav-right nav-menu">
-                <a class="nav-item logout">Logout ({{userName}})</a>
+                <a class="nav-item logout">Logout <span class="username">{{user.firstname}}</span></a>
                 <a class="nav-item">Documentation</a>
                 <div  class="nav-item">
                     <p class="control has-icons-right" id="search">
@@ -101,7 +91,5 @@ module quill {
             </nav>
             `)
         }
-
-        withDash = (txt: string) => txt.trim() ? `- ${txt}` : txt
     }
 }

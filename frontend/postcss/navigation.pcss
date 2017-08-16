@@ -13,6 +13,17 @@ navigation {
             margin-right: 5px;
         }
     }
+
+    .username {
+        margin-left: 5px;
+
+        &:before {
+            content: '(';
+        }
+        &:after {
+            content: ')';
+        }
+    }
 }
 
 #logo {
@@ -23,5 +34,11 @@ navigation {
         width: 2rem;
         height: 2rem;
         margin-right: var(--pad);
+    }
+
+    span + span:not(:empty):before {
+        content: '-';
+        display: inline-block;
+        margin: 0 5px;
     }
 }
