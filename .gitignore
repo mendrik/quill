@@ -71,6 +71,8 @@ Icon?
 Thumbs.db
 
 /public/dev
+/public/*.js
+/public/*.css
 
 # general
 *~

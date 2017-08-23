@@ -82,7 +82,7 @@ module quill {
 
         @Template()
         applicationHTML() {
-            return (`<progress-bar></progress-bar><panel class="fullscreen v-flex" {{pages}}></panel>`)
+            return `<progress-bar></progress-bar><panel class="fullscreen v-flex" {{pages}}></panel>`
         }
     }
 }

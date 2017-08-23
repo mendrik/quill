@@ -18,16 +18,18 @@ module quill {
         return tn;
     }
 
+    const dummyProject: Project = {
+        id: 0,
+        name: '',
+        structure: [],
+        schema: []
+    }
+
     export class ProjectPage extends Widget {
 
         @Bind() nodes: Array<CustomTreeNode> = []
         @Bind() schemaNodes: Array<CustomTreeNode> = []
-        @Bind({bequeath: true}) project: Project = {
-            id: 0,
-            name: '',
-            structure: [],
-            schema: []
-        }
+        @Bind({bequeath: true}) project: Project = dummyProject
 
         projectId: string
         currentTreeNode: CustomTreeNode
@@ -106,7 +108,7 @@ module quill {
 
         @Template()
         projectPage() {
-            return (`
+            return `
               <panel class="fullscreen v-flex">  
                   <navigation class="no-grow"></navigation>
                   <horizontal-split class="grow" id="app-split">
@@ -128,7 +130,7 @@ module quill {
                   </horizontal-split>
                   <footer class="no-grow"/>
               </panel>
-            `)
+            `
         }
     }
 }

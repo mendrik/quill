@@ -26,3 +26,4 @@ fs.createReadStream('out/quill.min.js.gz').pipe(fs.createWriteStream('../public/
 fs.createReadStream('out/styles.css.gz').pipe(fs.createWriteStream('../public/styles.css.gz'));
 fs.createReadStream('out/quill.min.js').pipe(fs.createWriteStream('../public/quill.min.js'));
 fs.createReadStream('out/styles.css').pipe(fs.createWriteStream('../public/styles.css'));
+fs.createReadStream('node_modules/bulma/css/bulma.css').pipe(fs.createWriteStream('../public/bulma.css'));

@@ -65,7 +65,7 @@ module quill {
 
         @Template()
         markup() {
-            return (`
+            return `
             <nav class="nav">
               <div class="nav-left">
                 <a class="nav-item" href="/" id="logo">
@@ -89,7 +89,7 @@ module quill {
                 </div>
               </div>
             </nav>
-            `)
+            `
         }
     }
 }
