@@ -8,6 +8,6 @@ module.exports = {
     require('postcss-custom-properties')({}),
     require('postcss-discard-comments')({}),
     require('autoprefixer')({}),
-    // require('postcss-clean')({})
+    require('postcss-clean')({})
   ]
 }
