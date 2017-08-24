@@ -8,7 +8,7 @@ module quill {
     import Rest      = feather.xhr.Rest
     import Method    = feather.xhr.Method
 
-    class CustomTreeNode extends TreeNode<Node> {
+    export class CustomTreeNode extends TreeNode<Node> {
         id = () => `${this.value.id}`
     }
 

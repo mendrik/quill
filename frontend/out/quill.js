@@ -332,6 +332,7 @@ var quill;
         }
         return CustomTreeNode;
     }(TreeNode));
+    quill.CustomTreeNode = CustomTreeNode;
     var toTreeNode = function (n) {
         var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
         (_a = tn.children).push.apply(_a, n.children.map(toTreeNode));
@@ -633,7 +634,7 @@ var feather;
                 this.render();
             };
             TreeActions.prototype.nodeSelected = function (node) {
-                this.disabled = false;
+                this.disabled = typeof node === 'undefined';
             };
             TreeActions.prototype.buttonClicked = function (ev, el) {
                 this.triggerUp('node-action', el.getAttribute('action'));

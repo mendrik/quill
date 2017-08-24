@@ -20,7 +20,7 @@ module feather.ui {
 
         @Subscribe('defocus-other-nodes')
         nodeSelected(node: TreeNode<any>) {
-            this.disabled = false
+            this.disabled = typeof node === 'undefined'
         }
 
         @On({event: 'tap', selector: 'a[action]:not([disabled])'})
