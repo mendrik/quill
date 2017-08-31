@@ -91,12 +91,12 @@ module quill {
             }
         }
 
-        @Rest({url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.POST, headers: quill.headers})
+        @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, headers: quill.headers})
         createChildNode() {
 
         }
 
-        @Rest({url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.DELETE, headers: quill.headers})
+        @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers})
         deleteNode() {
 
         }

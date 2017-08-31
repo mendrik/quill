@@ -23,7 +23,7 @@ module quill {
 
         @Template()
         markup() {
-            return '<div class="progress-runner {{fetching:runningClass}}"></div>'
+            return `<div class="progress-runner {{fetching:runningClass}}"></div>`
         }
 
         static start() {

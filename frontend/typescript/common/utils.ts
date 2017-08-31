@@ -1,6 +1,5 @@
 module quill {
 
-    import Widget       = feather.core.Widget
     import TreeNodeIcon = feather.ui.tree.TreeNodeIcon
 
     const urlParams = {}

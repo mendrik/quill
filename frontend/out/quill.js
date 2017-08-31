@@ -90,7 +90,7 @@ var quill;
             this.render();
         };
         Progress.prototype.markup = function () {
-            return '<div class="progress-runner {{fetching:runningClass}}"></div>';
+            return "<div class=\"progress-runner {{fetching:runningClass}}\"></div>";
         };
         Progress.start = function () {
             Progress_1.instance.fetching = true;
@@ -167,9 +167,7 @@ var quill;
         var AjaxForm = (function (_super) {
             __extends(AjaxForm, _super);
             function AjaxForm() {
-                var _this = _super !== null && _super.apply(this, arguments) || this;
-                _this.translated = function (key) { return components.Translate.translations[key]; };
-                return _this;
+                return _super !== null && _super.apply(this, arguments) || this;
             }
             AjaxForm.prototype.validationFailed = function (err) {
                 var _this = this;
@@ -433,10 +431,10 @@ var quill;
         Subscribe('node-action')
     ], ProjectPage.prototype, "nodeAction", null);
     __decorate([
-        Rest({ url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.POST, headers: quill.headers })
+        Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, headers: quill.headers })
     ], ProjectPage.prototype, "createChildNode", null);
     __decorate([
-        Rest({ url: '/projects/{{projectId}}/node/{{currentNode.id}}', method: Method.DELETE, headers: quill.headers })
+        Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers })
     ], ProjectPage.prototype, "deleteNode", null);
     __decorate([
         Rest({ url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers })
@@ -640,7 +638,7 @@ var feather;
                 this.triggerUp('node-action', el.getAttribute('action'));
             };
             TreeActions.prototype.markup = function () {
-                return ("\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <a class=\"button is-small\" action=\"node-add\"><Icon name=\"plus\"></Icon></a>\n                   <a class=\"button is-small\" action=\"node-edit\" {{disabled}}><Icon name=\"pencil\"></Icon></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" action=\"node-delete\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ");
+                return "\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <a class=\"button is-small\" action=\"node-add\"><Icon name=\"plus\"></Icon></a>\n                   <a class=\"button is-small\" action=\"node-edit\" {{disabled}}><Icon name=\"pencil\"></Icon></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" action=\"node-delete\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ";
             };
             return TreeActions;
         }(GestureWidget));
@@ -754,7 +752,7 @@ var quill;
             this.render();
         };
         Content.prototype.markup = function () {
-            return '';
+            return "";
         };
         return Content;
     }(GestureWidget));
