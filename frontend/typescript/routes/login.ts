@@ -30,7 +30,7 @@ module quill {
     }
 
     interface ForgotPassword {
-        email?: string
+        identifier?: string
     }
 
     export class LoginPage extends AjaxForm {
@@ -84,8 +84,10 @@ module quill {
 
         @On({event: 'tap', selector: '.forgot-password-action'})
         forgotPasswordClicked() {
-            Progress.start()
-            this.requestPasswordChange()
+           // if (this.forgotPassword.identifier) {
+                Progress.start()
+                this.requestPasswordChange()
+           // }
         }
 
         @Rest({url: '/account', method: Method.PUT, body: 'forgotPassword', headers: quill.headers})

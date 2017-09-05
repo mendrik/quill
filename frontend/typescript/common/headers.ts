@@ -1,7 +1,7 @@
 module quill {
 
     import TypedMap      = feather.types.TypedMap
-    import StringFactory = feather.xhr.StringFactory
+    import StringFactory = feather.types.StringFactory
 
     const AUTH_HEADER = 'X-Auth-Token'
 
