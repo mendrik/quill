@@ -15,7 +15,8 @@ module quill {
             this.key = key
         }
 
-        init() {
+        init(element: HTMLElement) {
+            element.classList.remove('key')
             this.render()
         }
 

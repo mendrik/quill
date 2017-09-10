@@ -99,6 +99,7 @@ module quill {
 
         identifierConfig: TextInputConfig = {
             label: 'ui.signin.identifier',
+            name: 'signin.identifier',
             placeholder: 'john@freemail.com',
             icon: 'envelope-o',
             autofocus: true,
@@ -107,6 +108,7 @@ module quill {
 
         passwordConfig: TextInputConfig = {
             label: 'ui.signin.password',
+            name: 'signin.password',
             icon: 'lock',
             type: 'password',
             onChange: (p: string) => this.credentials.password = p
@@ -115,6 +117,7 @@ module quill {
         firstnameConfig = {
             label: 'ui.signup.firstname',
             icon: 'user-o',
+            name: 'signup.firstname',
             placeholder: 'John',
             onChange: (p: string) => this.signup.firstname = p
         }
@@ -122,12 +125,14 @@ module quill {
         lastnameConfig = {
             label: 'ui.signup.lastname',
             icon: 'user-o',
+            name: 'signup.lastname',
             placeholder: 'Smith',
             onChange: (p: string) => this.signup.firstname = p
         }
 
         emailConfig = {
             label: 'ui.signup.email',
+            name: 'signup.email',
             icon: 'envelope-o',
             placeholder: 'john@mail,com',
             onChange: (p: string) => this.signup.email = p
@@ -135,13 +140,15 @@ module quill {
 
         signupPasswordConfig = {
             label: 'ui.signup.password',
+            name: 'signup.password',
             icon: 'lock',
             onChange: (p: string) => this.signup.password = p
         }
 
         forgotPasswordConfig = {
             label: 'ui.forgot-password.email',
-            icon: 'envelop-o',
+            name: 'forgot-password.identifier',
+            icon: 'envelope-o',
             onChange: (p: string) => this.forgotPassword.identifier = p
         }
 
@@ -152,24 +159,24 @@ module quill {
                 <div class="login">
                     <tabs>
                       <div class="form-components" title="ui.login.tabs.login" icon="key" active>
-                        <Text config={identifierConfig}/>
-                        <Text config={passwordConfig}/>
+                        <Text config="{identifierConfig}"/>
+                        <Text config="{passwordConfig}"/>
                         <div class="block has-text-right">
                             <a class="button is-primary login-action" key="ui.signin.button"/>
                         </div>
                       </div>
                       <div class="form-components" title="ui.login.tabs.signup" icon="pencil-square-o">
-                        <Text config={firstnameConfig}/>
-                        <Text config={lastnameConfig}/>
-                        <Text config={emailConfig}/>
-                        <Text config={signupPasswordConfig}/>
+                        <Text config="{firstnameConfig}"/>
+                        <Text config="{lastnameConfig}"/>
+                        <Text config="{emailConfig}"/>
+                        <Text config="{signupPasswordConfig}"/>
                         <div class="block has-text-right">
                              <a class="button is-primary signup-action" key="ui.signup.button"/>
                         </div>
                       </div>
                       <div class="form-components" title="ui.login.tabs.forgot-password" icon="unlock">
-                        <html-fragement key="ui.forgot-password.info"></html-fragement>
-                        <Text config={forgotPasswordConfig}/>
+                        <html-fragment html-key="ui.forgot-password.info"></html-fragment>
+                        <Text config="{forgotPasswordConfig}"/>
                         <div class="block has-text-right">
                              <a class="button is-primary forgot-password-action" key="ui.forgot-password.button"/>
                         </div>

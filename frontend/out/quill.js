@@ -84,7 +84,8 @@ var quill;
             _this.key = key;
             return _this;
         }
-        Translate.prototype.init = function () {
+        Translate.prototype.init = function (element) {
+            element.classList.remove('key');
             this.render();
         };
         Translate.prototype.markup = function () {
@@ -159,11 +160,12 @@ var quill;
                 _this.key = key;
                 return _this;
             }
-            HtmlFragment.prototype.init = function () {
+            HtmlFragment.prototype.init = function (element) {
+                element.classList.remove('html-key');
                 this.render();
             };
             HtmlFragment.prototype.text = function () {
-                return '<span>{{key:translate}}</span>';
+                return '{{key:translate}}';
             };
             return HtmlFragment;
         }(Widget));
@@ -174,7 +176,7 @@ var quill;
             Template()
         ], HtmlFragment.prototype, "text", null);
         HtmlFragment = __decorate([
-            Construct({ selector: 'html-fragement', attributes: ['key'] })
+            Construct({ selector: 'html-fragment', attributes: ['html-key'] })
         ], HtmlFragment);
         components.HtmlFragment = HtmlFragment;
     })(components = quill.components || (quill.components = {}));
@@ -559,6 +561,7 @@ var quill;
             _this.forgotPasswordInfo = 'forgot-password.info';
             _this.identifierConfig = {
                 label: 'ui.signin.identifier',
+                name: 'signin.identifier',
                 placeholder: 'john@freemail.com',
                 icon: 'envelope-o',
                 autofocus: true,
@@ -566,6 +569,7 @@ var quill;
             };
             _this.passwordConfig = {
                 label: 'ui.signin.password',
+                name: 'signin.password',
                 icon: 'lock',
                 type: 'password',
                 onChange: function (p) { return _this.credentials.password = p; }
@@ -573,29 +577,34 @@ var quill;
             _this.firstnameConfig = {
                 label: 'ui.signup.firstname',
                 icon: 'user-o',
+                name: 'signup.firstname',
                 placeholder: 'John',
                 onChange: function (p) { return _this.signup.firstname = p; }
             };
             _this.lastnameConfig = {
                 label: 'ui.signup.lastname',
                 icon: 'user-o',
+                name: 'signup.lastname',
                 placeholder: 'Smith',
                 onChange: function (p) { return _this.signup.firstname = p; }
             };
             _this.emailConfig = {
                 label: 'ui.signup.email',
+                name: 'signup.email',
                 icon: 'envelope-o',
                 placeholder: 'john@mail,com',
                 onChange: function (p) { return _this.signup.email = p; }
             };
             _this.signupPasswordConfig = {
                 label: 'ui.signup.password',
+                name: 'signup.password',
                 icon: 'lock',
                 onChange: function (p) { return _this.signup.password = p; }
             };
             _this.forgotPasswordConfig = {
                 label: 'ui.forgot-password.email',
-                icon: 'envelop-o',
+                name: 'forgot-password.identifier',
+                icon: 'envelope-o',
                 onChange: function (p) { return _this.forgotPassword.identifier = p; }
             };
             return _this;
@@ -639,7 +648,7 @@ var quill;
             this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
-            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config={identifierConfig}/>\n                        <Text config={passwordConfig}/>\n                        <div class=\"block has-text-right\">\n                            <a class=\"button is-primary login-action\" key=\"ui.signin.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config={firstnameConfig}/>\n                        <Text config={lastnameConfig}/>\n                        <Text config={emailConfig}/>\n                        <Text config={signupPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\" key=\"ui.signup.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <html-fragement key=\"ui.forgot-password.info\"></html-fragement>\n                        <Text config={forgotPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\" key=\"ui.forgot-password.button\"/>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config=\"{identifierConfig}\"/>\n                        <Text config=\"{passwordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                            <a class=\"button is-primary login-action\" key=\"ui.signin.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config=\"{firstnameConfig}\"/>\n                        <Text config=\"{lastnameConfig}\"/>\n                        <Text config=\"{emailConfig}\"/>\n                        <Text config=\"{signupPasswordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\" key=\"ui.signup.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <html-fragment html-key=\"ui.forgot-password.info\"></html-fragment>\n                        <Text config=\"{forgotPasswordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\" key=\"ui.forgot-password.button\"/>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
         };
         return LoginPage;
     }(AjaxForm));
