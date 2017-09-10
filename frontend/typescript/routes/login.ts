@@ -155,9 +155,7 @@ module quill {
                         <Text config={identifierConfig}/>
                         <Text config={passwordConfig}/>
                         <div class="block has-text-right">
-                             <a class="button is-primary login-action">
-                                <translate key="ui.signin.button"/>
-                            </a>
+                            <a class="button is-primary login-action" key="ui.signin.button"/>
                         </div>
                       </div>
                       <div class="form-components" title="ui.login.tabs.signup" icon="pencil-square-o">
@@ -166,18 +164,14 @@ module quill {
                         <Text config={emailConfig}/>
                         <Text config={signupPasswordConfig}/>
                         <div class="block has-text-right">
-                             <a class="button is-primary signup-action">
-                                <translate key="ui.signup.button"/>
-                            </a>
+                             <a class="button is-primary signup-action" key="ui.signup.button"/>
                         </div>
                       </div>
                       <div class="form-components" title="ui.login.tabs.forgot-password" icon="unlock">
                         <p><Translate key="ui.forgot-password.info"/></p>
                         <Text config={forgotPasswordConfig}/>
                         <div class="block has-text-right">
-                             <a class="button is-primary forgot-password-action">
-                                <translate key="ui.forgot-password.button"/>
-                            </a>
+                             <a class="button is-primary forgot-password-action" key="ui.forgot-password.button"/>
                         </div>
                       </div>
                   </tabs>

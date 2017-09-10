@@ -77,6 +77,38 @@ var quill;
     var Construct = feather.annotations.Construct;
     var Bind = feather.observe.Bind;
     var Template = feather.annotations.Template;
+    var Link = (function (_super) {
+        __extends(Link, _super);
+        function Link(key) {
+            var _this = _super.call(this) || this;
+            _this.key = key;
+            return _this;
+        }
+        Link.prototype.init = function () {
+            this.render();
+        };
+        Link.prototype.markup = function () {
+            return "{{key:translate}}";
+        };
+        return Link;
+    }(Widget));
+    __decorate([
+        Bind()
+    ], Link.prototype, "key", void 0);
+    __decorate([
+        Template()
+    ], Link.prototype, "markup", null);
+    Link = __decorate([
+        Construct({ selector: 'a[key]', attributes: ['key'] })
+    ], Link);
+    quill.Link = Link;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var Widget = feather.core.Widget;
+    var Construct = feather.annotations.Construct;
+    var Bind = feather.observe.Bind;
+    var Template = feather.annotations.Template;
     var Progress = Progress_1 = (function (_super) {
         __extends(Progress, _super);
         function Progress() {
@@ -607,7 +639,7 @@ var quill;
             this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
-            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config={identifierConfig}/>\n                        <Text config={passwordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary login-action\">\n                                <translate key=\"ui.signin.button\"/>\n                            </a>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config={firstnameConfig}/>\n                        <Text config={lastnameConfig}/>\n                        <Text config={emailConfig}/>\n                        <Text config={signupPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\">\n                                <translate key=\"ui.signup.button\"/>\n                            </a>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <p><Translate key=\"ui.forgot-password.info\"/></p>\n                        <Text config={forgotPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\">\n                                <translate key=\"ui.forgot-password.button\"/>\n                            </a>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config={identifierConfig}/>\n                        <Text config={passwordConfig}/>\n                        <div class=\"block has-text-right\">\n                            <a class=\"button is-primary login-action\" key=\"ui.signin.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config={firstnameConfig}/>\n                        <Text config={lastnameConfig}/>\n                        <Text config={emailConfig}/>\n                        <Text config={signupPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\" key=\"ui.signup.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <p><Translate key=\"ui.forgot-password.info\"/></p>\n                        <Text config={forgotPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\" key=\"ui.forgot-password.button\"/>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
         };
         return LoginPage;
     }(AjaxForm));
@@ -796,22 +828,25 @@ var quill;
     var ToastManager = feather.ui.toast.ToastManager;
     var Toast = feather.ui.toast.Toast;
     var Theme = feather.ui.toast.Theme;
+    var setDeepValue = feather.objects.setDeepValue;
     var QuillApplication = (function (_super) {
         __extends(QuillApplication, _super);
         function QuillApplication() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.pages = [];
             _this.user = null;
+            _this.translations = {};
             return _this;
         }
         QuillApplication.prototype.init = function () {
             this.fetchTranslations();
         };
         QuillApplication.prototype.fetchTranslations = function (translations) {
-            this.translations = translations.messages.reduce(function (p, c) {
-                return (__assign({}, p, (_a = {}, _a[c.key] = c.value, _a)));
-                var _a;
-            }, {});
+            var _this = this;
+            translations.messages
+                .forEach(function (c) {
+                return setDeepValue(_this.translations, c.key, c.value);
+            });
             this.render();
         };
         QuillApplication.prototype.checkLogin = function (resp) {

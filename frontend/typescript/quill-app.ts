@@ -11,6 +11,7 @@ module quill {
     import Toast        = feather.ui.toast.Toast
     import Theme        = feather.ui.toast.Theme
     import TypedMap     = feather.types.TypedMap
+    import setDeepValue = feather.objects.setDeepValue;
 
     export interface Messages {
         messages: Message[]
@@ -27,7 +28,7 @@ module quill {
         @Bind() pages: Array<Widget> = []
         @Bind({bequeath: true}) user: User = null
 
-        translations: TypedMap<any>
+        translations: TypedMap<any> = {}
 
         init() {
             this.fetchTranslations()
@@ -35,7 +36,9 @@ module quill {
 
         @Rest({url: '/translations', headers: quill.headers})
         fetchTranslations(translations?: Messages) {
-            this.translations = translations.messages.reduce((p, c) => ({...p, [c.key]: c.value}), {})
+            translations.messages
+                .forEach(c =>
+                    setDeepValue(this.translations, c.key, c.value))
             this.render()
         }
 
