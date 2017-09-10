@@ -120,11 +120,10 @@ var quill;
         var Construct = feather.annotations.Construct;
         var Template = feather.annotations.Template;
         var Bind = feather.observe.Bind;
-        var Translate = Translate_1 = (function (_super) {
+        var Translate = (function (_super) {
             __extends(Translate, _super);
             function Translate(key) {
                 var _this = _super.call(this) || this;
-                _this.translated = function (key) { return Translate_1.translations[key]; };
                 _this.key = key;
                 return _this;
             }
@@ -132,25 +131,20 @@ var quill;
                 this.render();
             };
             Translate.prototype.text = function () {
-                return '<span>{{key:translated}}</span>';
+                return '<span>{{key:translate}}</span>';
             };
             return Translate;
         }(Widget));
-        Translate.translate = function (text) { return text.replace(/•([A-Z\.\-_]+)/gi, function (m, g) {
-            var translations = Translate_1.translations || {};
-            return translations[g] || g;
-        }); };
         __decorate([
             Bind({ html: true })
         ], Translate.prototype, "key", void 0);
         __decorate([
             Template()
         ], Translate.prototype, "text", null);
-        Translate = Translate_1 = __decorate([
+        Translate = __decorate([
             Construct({ selector: 'translate', attributes: ['key'] })
         ], Translate);
         components.Translate = Translate;
-        var Translate_1;
     })(components = quill.components || (quill.components = {}));
 })(quill || (quill = {}));
 var quill;
@@ -288,7 +282,6 @@ var quill;
 var quill;
 (function (quill) {
     var Template = feather.annotations.Template;
-    var Translate = quill.components.Translate;
     var On = feather.event.On;
     var GestureWidget = feather.ui.events.GestureWidget;
     var NotFoundPage = (function (_super) {
@@ -300,7 +293,7 @@ var quill;
             this.route('/');
         };
         NotFoundPage.prototype.loginPage = function () {
-            return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"small-info-page\">\n                  <h1>\u2022ui.page.notfound.title</h1>\n                  <p>\u2022ui.page.notfound.body</p>\n                  <div class=\"form-components\">\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary back-action\">\u2022ui.page.notfound.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"small-info-page\">\n                  <h1><translate key=\"ui.page.notfound.title\"/></h1>\n                  <p><translate key=\"ui.page.notfound.body\"/></p>\n                  <div class=\"form-components\">\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary back-action\"><translate key=\"ui.page.notfound.button\"/></a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ";
         };
         return NotFoundPage;
     }(GestureWidget));
@@ -308,9 +301,87 @@ var quill;
         On({ event: 'tap', selector: '.back-action', preventDefault: true })
     ], NotFoundPage.prototype, "backButtonClicked", null);
     __decorate([
-        Template('default', false)
+        Template('default')
     ], NotFoundPage.prototype, "loginPage", null);
     quill.NotFoundPage = NotFoundPage;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var Construct = feather.annotations.Construct;
+    var Template = feather.annotations.Template;
+    var On = feather.event.On;
+    var GestureWidget = feather.ui.events.GestureWidget;
+    var Subscribe = feather.hub.Subscribe;
+    var addMultipleEventListeners = feather.ui.events.addMultipleEventListeners;
+    var removeMultipleEventListeners = feather.ui.events.removeMultipleEventListeners;
+    var tapEvents = feather.ui.events.tapEvents;
+    var Rest = feather.xhr.Rest;
+    var Navigation = (function (_super) {
+        __extends(Navigation, _super);
+        function Navigation() {
+            var _this = _super.call(this) || this;
+            _this.closeHandler = _this.closeHandler.bind(_this);
+            return _this;
+        }
+        Navigation.prototype.init = function () {
+            this.render();
+        };
+        Navigation.prototype.toggle = function (ev, el) {
+            this.toggleActiveState();
+            if (el.classList.contains('is-active')) {
+                addMultipleEventListeners(tapEvents, document, this.closeHandler);
+            }
+            else {
+                removeMultipleEventListeners(tapEvents, document, this.closeHandler);
+            }
+        };
+        Navigation.prototype.closeHandler = function (ev) {
+            var el = this.element;
+            if (!el.contains(ev.target)) {
+                this.toggleActiveState();
+                removeMultipleEventListeners(tapEvents, document, this.closeHandler);
+            }
+        };
+        Navigation.prototype.toggleActiveState = function () {
+            var el = this.element.querySelector('.nav-toggle');
+            el.classList.toggle('is-active');
+            el.nextElementSibling.classList.toggle('is-active');
+        };
+        Navigation.prototype.logoutClicked = function () {
+            this.doLogout();
+        };
+        Navigation.prototype.doLogout = function () {
+            quill.removeToken();
+            this.route('/login');
+        };
+        Navigation.prototype.logoutFailed = function () {
+            quill.removeToken();
+            this.route('/login');
+        };
+        Navigation.prototype.markup = function () {
+            return "\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    <span>Quill</span><span>{{project.name}}</span>\n                </a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout <span class=\"username\">{{user.firstname}}</span></a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <Icon name=\"search\" align-right=\"right\"></Icon>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ";
+        };
+        return Navigation;
+    }(GestureWidget));
+    __decorate([
+        On({ event: 'tap', selector: '.nav-toggle' })
+    ], Navigation.prototype, "toggle", null);
+    __decorate([
+        On({ event: 'tap', selector: 'a.logout' })
+    ], Navigation.prototype, "logoutClicked", null);
+    __decorate([
+        Rest({ url: '/signout', headers: quill.headers })
+    ], Navigation.prototype, "doLogout", null);
+    __decorate([
+        Subscribe('xhr-failure')
+    ], Navigation.prototype, "logoutFailed", null);
+    __decorate([
+        Template()
+    ], Navigation.prototype, "markup", null);
+    Navigation = __decorate([
+        Construct({ selector: 'navigation', singleton: true })
+    ], Navigation);
+    quill.Navigation = Navigation;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
@@ -454,7 +525,6 @@ var quill;
     var Method = feather.xhr.Method;
     var Theme = feather.ui.toast.Theme;
     var AjaxForm = quill.components.AjaxForm;
-    var Translate = quill.components.Translate;
     var Toast = feather.ui.toast.Toast;
     var ToastManager = feather.ui.toast.ToastManager;
     var Scope = feather.event.Scope;
@@ -466,6 +536,18 @@ var quill;
             _this.signup = {};
             _this.forgotPassword = {};
             _this.forgotPasswordInfo = 'forgot-password.info';
+            _this.identifier = {
+                label: 'ui.signin.identifier',
+                placeholder: 'john@freemail.com',
+                icon: 'envelope-o',
+                autofocus: true,
+                onChange: function (l) { return _this.credentials.identifier = l; }
+            };
+            _this.password = {
+                label: 'ui.signin.password',
+                icon: 'lock',
+                onChange: function (p) { return _this.credentials.password = p; }
+            };
             return _this;
         }
         LoginPage.prototype.loginClicked = function () {
@@ -503,13 +585,11 @@ var quill;
         };
         LoginPage.prototype.requestPasswordChange = function () {
             quill.Progress.stop();
-            var title = Translate.translations['ui.forgot-password.email-sent'];
-            var message = Translate.translations['ui.forgot-password.email-sent.message'];
-            ToastManager.showToast(new Toast(title, message, Theme.Info));
+            ToastManager.showToast(new Toast('ui.forgot-password.email-sent', 'ui.forgot-password.email-sent.message', Theme.Info));
             this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
-            return Translate.translate("\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.login\" icon=\"key\" active>\n                    <Text label=\"\u2022ui.signin.identifier\" name=\"signin.identifier\"\n                          placeholder=\"john@freemail.com\" icon=\"envelope-o\" autofocus bind=\"credentials.identifier\"></Text>\n                    <Text label=\"\u2022ui.signin.password\" name=\"signin.password\" type=\"password\" icon=\"lock\" bind=\"credentials.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\">\u2022ui.signin.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"\u2022ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"\u2022ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"\u2022ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"\u2022ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">\u2022ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"\u2022ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"\u2022ui.forgot-password.email\" name=\"forgot-password.email\"\n                          placeholder=\"\u2022ui.forgot-password.email.placeholder\" icon=\"envelope-o\" bind=\"forgotPassword.identifier\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgot-password-action\">\u2022ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ");
+            return "\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                    <Text config={identifier}/>\n                    <Text config={password}/>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\"><translate key=\"ui.signin.button\"/></a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"ui.forgot-password.email\" name=\"forgot-password.email\"\n                          placeholder=\"ui.forgot-password.email.placeholder\" icon=\"envelope-o\" bind=\"forgotPassword.identifier\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgot-password-action\">ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ";
         };
         return LoginPage;
     }(AjaxForm));
@@ -541,7 +621,7 @@ var quill;
         Rest({ url: '/account', method: Method.PUT, body: 'forgotPassword', headers: quill.headers })
     ], LoginPage.prototype, "requestPasswordChange", null);
     __decorate([
-        Template('default', false)
+        Template('default')
     ], LoginPage.prototype, "loginPage", null);
     quill.LoginPage = LoginPage;
 })(quill || (quill = {}));
@@ -590,7 +670,7 @@ var quill;
             this.route('/login');
         };
         PassordChangePage.prototype.loginPage = function () {
-            return Translate.translate("\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"\u2022ui.change-password.password\"\n                          name=\"change-password.password\"\n                          placeholder=\"\u2022ui.change-password.placeholder\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          autofocus\n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"\u2022ui.change-password.password-repeat\"\n                          name=\"change-password.password-repeat\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\u2022ui.change-password.button</a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ");
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"ui.change-password.password\"\n                          name=\"change-password.password\"\n                          placeholder=\"ui.change-password.placeholder\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          autofocus\n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"ui.change-password.password-repeat\"\n                          name=\"change-password.password-repeat\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\n                            <translate key=\"ui.change-password.button\"/>\n                        </a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ";
         };
         return PassordChangePage;
     }(AjaxForm));
@@ -607,7 +687,7 @@ var quill;
         Subscribe('xhr-failure-401')
     ], PassordChangePage.prototype, "unauthorized", null);
     __decorate([
-        Template('default', false)
+        Template('default')
     ], PassordChangePage.prototype, "loginPage", null);
     quill.PassordChangePage = PassordChangePage;
 })(quill || (quill = {}));
@@ -664,84 +744,6 @@ var quill;
 (function (quill) {
     var Construct = feather.annotations.Construct;
     var Template = feather.annotations.Template;
-    var On = feather.event.On;
-    var GestureWidget = feather.ui.events.GestureWidget;
-    var Subscribe = feather.hub.Subscribe;
-    var addMultipleEventListeners = feather.ui.events.addMultipleEventListeners;
-    var removeMultipleEventListeners = feather.ui.events.removeMultipleEventListeners;
-    var tapEvents = feather.ui.events.tapEvents;
-    var Rest = feather.xhr.Rest;
-    var Navigation = (function (_super) {
-        __extends(Navigation, _super);
-        function Navigation() {
-            var _this = _super.call(this) || this;
-            _this.closeHandler = _this.closeHandler.bind(_this);
-            return _this;
-        }
-        Navigation.prototype.init = function () {
-            this.render();
-        };
-        Navigation.prototype.toggle = function (ev, el) {
-            this.toggleActiveState();
-            if (el.classList.contains('is-active')) {
-                addMultipleEventListeners(tapEvents, document, this.closeHandler);
-            }
-            else {
-                removeMultipleEventListeners(tapEvents, document, this.closeHandler);
-            }
-        };
-        Navigation.prototype.closeHandler = function (ev) {
-            var el = this.element;
-            if (!el.contains(ev.target)) {
-                this.toggleActiveState();
-                removeMultipleEventListeners(tapEvents, document, this.closeHandler);
-            }
-        };
-        Navigation.prototype.toggleActiveState = function () {
-            var el = this.element.querySelector('.nav-toggle');
-            el.classList.toggle('is-active');
-            el.nextElementSibling.classList.toggle('is-active');
-        };
-        Navigation.prototype.logoutClicked = function () {
-            this.doLogout();
-        };
-        Navigation.prototype.doLogout = function () {
-            quill.removeToken();
-            this.route('/login');
-        };
-        Navigation.prototype.logoutFailed = function () {
-            quill.removeToken();
-            this.route('/login');
-        };
-        Navigation.prototype.markup = function () {
-            return "\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    <span>Quill</span><span>{{project.name}}</span>\n                </a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout <span class=\"username\">{{user.firstname}}</span></a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <Icon name=\"search\" align-right=\"right\"></Icon>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ";
-        };
-        return Navigation;
-    }(GestureWidget));
-    __decorate([
-        On({ event: 'tap', selector: '.nav-toggle' })
-    ], Navigation.prototype, "toggle", null);
-    __decorate([
-        On({ event: 'tap', selector: 'a.logout' })
-    ], Navigation.prototype, "logoutClicked", null);
-    __decorate([
-        Rest({ url: '/signout', headers: quill.headers })
-    ], Navigation.prototype, "doLogout", null);
-    __decorate([
-        Subscribe('xhr-failure')
-    ], Navigation.prototype, "logoutFailed", null);
-    __decorate([
-        Template()
-    ], Navigation.prototype, "markup", null);
-    Navigation = __decorate([
-        Construct({ selector: 'navigation', singleton: true })
-    ], Navigation);
-    quill.Navigation = Navigation;
-})(quill || (quill = {}));
-var quill;
-(function (quill) {
-    var Construct = feather.annotations.Construct;
-    var Template = feather.annotations.Template;
     var GestureWidget = feather.ui.events.GestureWidget;
     var Content = (function (_super) {
         __extends(Content, _super);
@@ -788,7 +790,7 @@ var quill;
             this.fetchTranslations();
         };
         QuillApplication.prototype.fetchTranslations = function (translations) {
-            quill.components.Translate.translations = translations.messages.reduce(function (p, c) {
+            this.translations = translations.messages.reduce(function (p, c) {
                 return (__assign({}, p, (_a = {}, _a[c.key] = c.value, _a)));
                 var _a;
             }, {});
@@ -825,7 +827,7 @@ var quill;
             this.checkLogin();
         };
         QuillApplication.prototype.applicationHTML = function () {
-            return "<progress-bar></progress-bar><panel class=\"fullscreen v-flex\" {{pages}}></panel>";
+            return "<progress-bar></progress-bar>\n                    <panel class=\"fullscreen v-flex\" {{pages}}></panel>\n                    <localization translations={translations}/>\n            ";
         };
         return QuillApplication;
     }(Widget));

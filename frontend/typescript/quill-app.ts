@@ -10,6 +10,7 @@ module quill {
     import ToastManager = feather.ui.toast.ToastManager
     import Toast        = feather.ui.toast.Toast
     import Theme        = feather.ui.toast.Theme
+    import TypedMap     = feather.types.TypedMap
 
     export interface Messages {
         messages: Message[]
@@ -26,13 +27,15 @@ module quill {
         @Bind() pages: Array<Widget> = []
         @Bind({bequeath: true}) user: User = null
 
+        translations: TypedMap<any>
+
         init() {
             this.fetchTranslations()
         }
 
         @Rest({url: '/translations', headers: quill.headers})
         fetchTranslations(translations?: Messages) {
-            quill.components.Translate.translations = translations.messages.reduce((p, c) => ({...p, [c.key]: c.value}), {})
+            this.translations = translations.messages.reduce((p, c) => ({...p, [c.key]: c.value}), {})
             this.render()
         }
 
@@ -82,7 +85,10 @@ module quill {
 
         @Template()
         applicationHTML() {
-            return `<progress-bar></progress-bar><panel class="fullscreen v-flex" {{pages}}></panel>`
+            return `<progress-bar></progress-bar>
+                    <panel class="fullscreen v-flex" {{pages}}></panel>
+                    <localization translations={translations}/>
+            `
         }
     }
 }

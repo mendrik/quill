@@ -1,7 +1,6 @@
 module quill {
 
     import Template      = feather.annotations.Template
-    import Translate     = quill.components.Translate
     import On            = feather.event.On
     import GestureWidget = feather.ui.events.GestureWidget
 
@@ -12,21 +11,21 @@ module quill {
             this.route('/')
         }
 
-        @Template('default', false)
+        @Template('default')
         loginPage() {
-            return Translate.translate(`
+            return `
             <scroll-pane class="grow">
                 <div class="small-info-page">
-                  <h1>•ui.page.notfound.title</h1>
-                  <p>•ui.page.notfound.body</p>
+                  <h1><translate key="ui.page.notfound.title"/></h1>
+                  <p><translate key="ui.page.notfound.body"/></p>
                   <div class="form-components">
                     <div class="block has-text-right">
-                        <a class="button is-primary back-action">•ui.page.notfound.button</a>
+                        <a class="button is-primary back-action"><translate key="ui.page.notfound.button"/></a>
                     </div>
                   </div>
                 </div>
             </scroll-pane>
-            `)
+            `
         }
     }
 }

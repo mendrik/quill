@@ -21,7 +21,8 @@
             "feather-ts"
         ],
         "typeRoots": [
-            "node_modules/@types"
+            "node_modules/@types",
+            "node_modules"
         ]
     },
     "files": [
@@ -35,11 +36,11 @@
         "typescript/components/ajax-form.ts",
         "typescript/components/selectable-tree-label.ts",
         "typescript/routes/notfound.ts",
+        "typescript/modules/navigation.ts",
         "typescript/routes/project.ts",
         "typescript/routes/login.ts",
         "typescript/routes/password-change.ts",
         "typescript/modules/tree-actions.ts",
-        "typescript/modules/navigation.ts",
         "typescript/modules/content.ts",
         "typescript/quill-app.ts",
         "typescript/start.ts"

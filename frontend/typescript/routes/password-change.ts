@@ -54,32 +54,34 @@ module quill {
             this.route('/login')
         }
 
-        @Template('default', false)
+        @Template('default')
         loginPage() {
-            return Translate.translate(`
+            return `
             <scroll-pane class="grow">
                 <div class="change-password">
                   <p><Translate key="ui.change-password.info"/></p>
                   <div class="form-components">
-                    <Text label="•ui.change-password.password"
+                    <Text label="ui.change-password.password"
                           name="change-password.password"
-                          placeholder="•ui.change-password.placeholder"
+                          placeholder="ui.change-password.placeholder"
                           type="password"
                           icon="lock"
                           autofocus
                           bind="newPassword.password"></Text>
-                    <Text label="•ui.change-password.password-repeat"
+                    <Text label="ui.change-password.password-repeat"
                           name="change-password.password-repeat"
                           type="password"
                           icon="lock"
                           bind="newPassword.passwordRepeat"></Text>
                     <div class="block has-text-right">
-                         <a class="button is-primary change-action">•ui.change-password.button</a>
+                         <a class="button is-primary change-action">
+                            <translate key="ui.change-password.button"/>
+                        </a>
                     </div>
                   </div>
                 </div>
             </scroll-pane>
-            `)
+            `
         }
     }
 }
