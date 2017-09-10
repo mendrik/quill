@@ -153,11 +153,9 @@ var quill;
     (function (components) {
         var GestureWidget = feather.ui.events.GestureWidget;
         var Theme = feather.ui.toast.Theme;
-        var setDeepValue = feather.objects.setDeepValue;
         var ToastManager = feather.ui.toast.ToastManager;
         var Toast = feather.ui.toast.Toast;
         var Subscribe = feather.hub.Subscribe;
-        var On = feather.event.On;
         var AjaxForm = (function (_super) {
             __extends(AjaxForm, _super);
             function AjaxForm() {
@@ -174,22 +172,16 @@ var quill;
                 });
                 if (err.errors.length) {
                     var errorType = err.errors[0].title.split('.').shift();
-                    ToastManager.showToast(new Toast(components.Translate.translations["ui." + errorType + ".failed"], messages, Theme.Warning));
+                    ToastManager.showToast(new Toast("ui." + errorType + ".failed", messages, Theme.Warning));
                 }
             };
-            AjaxForm.prototype.requestFailed = function (err, xhr) {
+            AjaxForm.prototype.requestFailed = function (err) {
                 quill.Progress.stop();
-                ToastManager.showToast(new Toast(components.Translate.translations['ui.error.server'], err.errors[0].message, Theme.Error));
+                ToastManager.showToast(new Toast('ui.error.server', err.errors[0].message, Theme.Error));
             };
-            AjaxForm.prototype.timeout = function (err, xhr) {
+            AjaxForm.prototype.timeout = function () {
                 quill.Progress.stop();
-                ToastManager.showToast(new Toast(components.Translate.translations['ui.error.timeout'], components.Translate.translations['ui.error.timeout.message'], Theme.Error));
-            };
-            AjaxForm.prototype.textChanged = function (ev, el) {
-                var closest = ev.target.closest('[bind]');
-                if (closest) {
-                    setDeepValue(this, closest.getAttribute('bind'), el.value);
-                }
+                ToastManager.showToast(new Toast('ui.error.timeout', 'ui.error.timeout.message', Theme.Error));
             };
             return AjaxForm;
         }(GestureWidget));
@@ -202,9 +194,6 @@ var quill;
         __decorate([
             Subscribe('xhr-failure-timeout')
         ], AjaxForm.prototype, "timeout", null);
-        __decorate([
-            On({ event: 'textchange', selector: 'input' })
-        ], AjaxForm.prototype, "textChanged", null);
         components.AjaxForm = AjaxForm;
     })(components = quill.components || (quill.components = {}));
 })(quill || (quill = {}));
@@ -536,17 +525,46 @@ var quill;
             _this.signup = {};
             _this.forgotPassword = {};
             _this.forgotPasswordInfo = 'forgot-password.info';
-            _this.identifier = {
+            _this.identifierConfig = {
                 label: 'ui.signin.identifier',
                 placeholder: 'john@freemail.com',
                 icon: 'envelope-o',
                 autofocus: true,
                 onChange: function (l) { return _this.credentials.identifier = l; }
             };
-            _this.password = {
+            _this.passwordConfig = {
                 label: 'ui.signin.password',
                 icon: 'lock',
+                type: 'password',
                 onChange: function (p) { return _this.credentials.password = p; }
+            };
+            _this.firstnameConfig = {
+                label: 'ui.signup.firstname',
+                icon: 'user-o',
+                placeholder: 'John',
+                onChange: function (p) { return _this.signup.firstname = p; }
+            };
+            _this.lastnameConfig = {
+                label: 'ui.signup.lastname',
+                icon: 'user-o',
+                placeholder: 'Smith',
+                onChange: function (p) { return _this.signup.firstname = p; }
+            };
+            _this.emailConfig = {
+                label: 'ui.signup.email',
+                icon: 'envelope-o',
+                placeholder: 'john@mail,com',
+                onChange: function (p) { return _this.signup.email = p; }
+            };
+            _this.signupPasswordConfig = {
+                label: 'ui.signup.password',
+                icon: 'lock',
+                onChange: function (p) { return _this.signup.password = p; }
+            };
+            _this.forgotPasswordConfig = {
+                label: 'ui.forgot-password.email',
+                icon: 'envelop-o',
+                onChange: function (p) { return _this.forgotPassword.identifier = p; }
             };
             return _this;
         }
@@ -565,7 +583,7 @@ var quill;
             this.route('/ ');
             quill.Progress.stop();
         };
-        LoginPage.prototype.unauthorized = function (err, xhr) {
+        LoginPage.prototype.unauthorized = function (err) {
             quill.Progress.stop();
             ToastManager.showToast(new Toast(err.errors[0].title, err.errors[0].message, Theme.Error));
         };
@@ -589,7 +607,7 @@ var quill;
             this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
-            return "\n            <scroll-pane class=\"grow\">\n            <div class=\"login\">\n                <tabs>\n                  <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                    <Text config={identifier}/>\n                    <Text config={password}/>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary login-action\"><translate key=\"ui.signin.button\"/></a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                    <Text label=\"ui.signup.firstname\" name=\"signup.firstname\" placeholder=\"John\" type=\"text\" icon=\"user-o\" bind=\"signup.firstname\"></Text>\n                    <Text label=\"ui.signup.lastname\" name=\"signup.lastname\" placeholder=\"Smith\" type=\"text\" icon=\"user-o\" bind=\"signup.lastname\"></Text>\n                    <Text label=\"ui.signup.email\" name=\"signup.email\" placeholder=\"john@freemail.com\" icon=\"envelope-o\" bind=\"signup.email\"></Text>\n                    <Text label=\"ui.signup.password\" name=\"signup.password\" type=\"text\" icon=\"lock\" bind=\"signup.password\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary signup-action\">ui.signup.button</a>\n                    </div>\n                  </div>\n                  <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                    <p><Translate key=\"ui.forgot-password.info\"/></p>\n                    <Text label=\"ui.forgot-password.email\" name=\"forgot-password.email\"\n                          placeholder=\"ui.forgot-password.email.placeholder\" icon=\"envelope-o\" bind=\"forgotPassword.identifier\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary forgot-password-action\">ui.forgot-password.button</a>\n                    </div>\n                  </div>\n              </tabs>\n            </div>\n            </scroll-pane>\n            ";
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config={identifierConfig}/>\n                        <Text config={passwordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary login-action\">\n                                <translate key=\"ui.signin.button\"/>\n                            </a>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config={firstnameConfig}/>\n                        <Text config={lastnameConfig}/>\n                        <Text config={emailConfig}/>\n                        <Text config={signupPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\">\n                                <translate key=\"ui.signup.button\"/>\n                            </a>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <p><Translate key=\"ui.forgot-password.info\"/></p>\n                        <Text config={forgotPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\">\n                                <translate key=\"ui.forgot-password.button\"/>\n                            </a>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
         };
         return LoginPage;
     }(AjaxForm));
