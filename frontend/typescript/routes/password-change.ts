@@ -8,7 +8,6 @@ module quill {
     import Method       = feather.xhr.Method
     import Theme        = feather.ui.toast.Theme
     import AjaxForm     = quill.components.AjaxForm
-    import Translate    = quill.components.Translate
     import Toast        = feather.ui.toast.Toast
     import ToastManager = feather.ui.toast.ToastManager
 
@@ -40,17 +39,17 @@ module quill {
         doPasswordChange() {
             Progress.stop()
             this.route('/login')
-            const title = Translate.translations['ui.change-password.success.title']
-            const message = Translate.translations['ui.change-password.success.message']
-            ToastManager.showToast(new Toast(title, message, Theme.Error))
+            ToastManager.showToast(
+                new Toast('ui.change-password.success.title', 'ui.change-password.success.message', Theme.Error)
+            )
         }
 
         @Subscribe('xhr-failure-401')
         unauthorized(err: Errors, xhr) {
             Progress.stop()
-            const title = Translate.translations['ui.change-password.fail.title']
-            const message = Translate.translations['ui.change-password.fail.message']
-            ToastManager.showToast(new Toast(title, message, Theme.Error))
+            ToastManager.showToast(
+                new Toast('ui.change-password.fail.title', 'ui.change-password.fail.message', Theme.Error)
+            )
             this.route('/login')
         }
 
@@ -59,7 +58,7 @@ module quill {
             return `
             <scroll-pane class="grow">
                 <div class="change-password">
-                  <p><Translate key="ui.change-password.info"/></p>
+                  <p key="ui.change-password.info"/>
                   <div class="form-components">
                     <Text label="ui.change-password.password"
                           name="change-password.password"
@@ -74,9 +73,7 @@ module quill {
                           icon="lock"
                           bind="newPassword.passwordRepeat"></Text>
                     <div class="block has-text-right">
-                         <a class="button is-primary change-action">
-                            <translate key="ui.change-password.button"/>
-                        </a>
+                        <a class="button is-primary change-action" key="ui.change-password.button"/>
                     </div>
                   </div>
                 </div>

@@ -1,17 +1,14 @@
-module quill.components {
+module quill {
 
     import Widget    = feather.core.Widget
     import Construct = feather.annotations.Construct
-    import Template  = feather.annotations.Template
-    import TypedMap  = feather.types.TypedMap
     import Bind      = feather.observe.Bind
+    import Template  = feather.annotations.Template
 
-    @Construct({selector: 'translate', attributes: ['key']})
+    @Construct({selector: '[key]', attributes: ['key']})
     export class Translate extends Widget {
 
-        static translations: TypedMap<string>
-
-        @Bind({html: true}) key: string
+        @Bind() key: string
 
         constructor(key: string) {
             super()
@@ -23,9 +20,8 @@ module quill.components {
         }
 
         @Template()
-        text() {
-            return '<span>{{key:translate}}</span>'
+        markup() {
+            return `{{key:translate}}`
         }
-
     }
 }

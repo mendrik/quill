@@ -16,11 +16,11 @@ module quill {
             return `
             <scroll-pane class="grow">
                 <div class="small-info-page">
-                  <h1><translate key="ui.page.notfound.title"/></h1>
-                  <p><translate key="ui.page.notfound.body"/></p>
+                  <h1 key="ui.page.notfound.title"/>
+                  <p key="ui.page.notfound.body"/>
                   <div class="form-components">
                     <div class="block has-text-right">
-                        <a class="button is-primary back-action"><translate key="ui.page.notfound.button"/></a>
+                        <a class="button is-primary back-action" key="ui.page.notfound.button"/>
                     </div>
                   </div>
                 </div>

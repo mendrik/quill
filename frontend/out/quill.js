@@ -77,31 +77,31 @@ var quill;
     var Construct = feather.annotations.Construct;
     var Bind = feather.observe.Bind;
     var Template = feather.annotations.Template;
-    var Link = (function (_super) {
-        __extends(Link, _super);
-        function Link(key) {
+    var Translate = (function (_super) {
+        __extends(Translate, _super);
+        function Translate(key) {
             var _this = _super.call(this) || this;
             _this.key = key;
             return _this;
         }
-        Link.prototype.init = function () {
+        Translate.prototype.init = function () {
             this.render();
         };
-        Link.prototype.markup = function () {
+        Translate.prototype.markup = function () {
             return "{{key:translate}}";
         };
-        return Link;
+        return Translate;
     }(Widget));
     __decorate([
         Bind()
-    ], Link.prototype, "key", void 0);
+    ], Translate.prototype, "key", void 0);
     __decorate([
         Template()
-    ], Link.prototype, "markup", null);
-    Link = __decorate([
-        Construct({ selector: 'a[key]', attributes: ['key'] })
-    ], Link);
-    quill.Link = Link;
+    ], Translate.prototype, "markup", null);
+    Translate = __decorate([
+        Construct({ selector: '[key]', attributes: ['key'] })
+    ], Translate);
+    quill.Translate = Translate;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
@@ -152,31 +152,31 @@ var quill;
         var Construct = feather.annotations.Construct;
         var Template = feather.annotations.Template;
         var Bind = feather.observe.Bind;
-        var Translate = (function (_super) {
-            __extends(Translate, _super);
-            function Translate(key) {
+        var HtmlFragment = (function (_super) {
+            __extends(HtmlFragment, _super);
+            function HtmlFragment(key) {
                 var _this = _super.call(this) || this;
                 _this.key = key;
                 return _this;
             }
-            Translate.prototype.init = function () {
+            HtmlFragment.prototype.init = function () {
                 this.render();
             };
-            Translate.prototype.text = function () {
+            HtmlFragment.prototype.text = function () {
                 return '<span>{{key:translate}}</span>';
             };
-            return Translate;
+            return HtmlFragment;
         }(Widget));
         __decorate([
             Bind({ html: true })
-        ], Translate.prototype, "key", void 0);
+        ], HtmlFragment.prototype, "key", void 0);
         __decorate([
             Template()
-        ], Translate.prototype, "text", null);
-        Translate = __decorate([
-            Construct({ selector: 'translate', attributes: ['key'] })
-        ], Translate);
-        components.Translate = Translate;
+        ], HtmlFragment.prototype, "text", null);
+        HtmlFragment = __decorate([
+            Construct({ selector: 'html-fragement', attributes: ['key'] })
+        ], HtmlFragment);
+        components.HtmlFragment = HtmlFragment;
     })(components = quill.components || (quill.components = {}));
 })(quill || (quill = {}));
 var quill;
@@ -314,7 +314,7 @@ var quill;
             this.route('/');
         };
         NotFoundPage.prototype.loginPage = function () {
-            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"small-info-page\">\n                  <h1><translate key=\"ui.page.notfound.title\"/></h1>\n                  <p><translate key=\"ui.page.notfound.body\"/></p>\n                  <div class=\"form-components\">\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary back-action\"><translate key=\"ui.page.notfound.button\"/></a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ";
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"small-info-page\">\n                  <h1 key=\"ui.page.notfound.title\"/>\n                  <p key=\"ui.page.notfound.body\"/>\n                  <div class=\"form-components\">\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary back-action\" key=\"ui.page.notfound.button\"/>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ";
         };
         return NotFoundPage;
     }(GestureWidget));
@@ -639,7 +639,7 @@ var quill;
             this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
-            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config={identifierConfig}/>\n                        <Text config={passwordConfig}/>\n                        <div class=\"block has-text-right\">\n                            <a class=\"button is-primary login-action\" key=\"ui.signin.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config={firstnameConfig}/>\n                        <Text config={lastnameConfig}/>\n                        <Text config={emailConfig}/>\n                        <Text config={signupPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\" key=\"ui.signup.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <p><Translate key=\"ui.forgot-password.info\"/></p>\n                        <Text config={forgotPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\" key=\"ui.forgot-password.button\"/>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config={identifierConfig}/>\n                        <Text config={passwordConfig}/>\n                        <div class=\"block has-text-right\">\n                            <a class=\"button is-primary login-action\" key=\"ui.signin.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config={firstnameConfig}/>\n                        <Text config={lastnameConfig}/>\n                        <Text config={emailConfig}/>\n                        <Text config={signupPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\" key=\"ui.signup.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <html-fragement key=\"ui.forgot-password.info\"></html-fragement>\n                        <Text config={forgotPasswordConfig}/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\" key=\"ui.forgot-password.button\"/>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
         };
         return LoginPage;
     }(AjaxForm));
@@ -685,7 +685,6 @@ var quill;
     var Method = feather.xhr.Method;
     var Theme = feather.ui.toast.Theme;
     var AjaxForm = quill.components.AjaxForm;
-    var Translate = quill.components.Translate;
     var Toast = feather.ui.toast.Toast;
     var ToastManager = feather.ui.toast.ToastManager;
     var PassordChangePage = (function (_super) {
@@ -708,19 +707,15 @@ var quill;
         PassordChangePage.prototype.doPasswordChange = function () {
             quill.Progress.stop();
             this.route('/login');
-            var title = Translate.translations['ui.change-password.success.title'];
-            var message = Translate.translations['ui.change-password.success.message'];
-            ToastManager.showToast(new Toast(title, message, Theme.Error));
+            ToastManager.showToast(new Toast('ui.change-password.success.title', 'ui.change-password.success.message', Theme.Error));
         };
         PassordChangePage.prototype.unauthorized = function (err, xhr) {
             quill.Progress.stop();
-            var title = Translate.translations['ui.change-password.fail.title'];
-            var message = Translate.translations['ui.change-password.fail.message'];
-            ToastManager.showToast(new Toast(title, message, Theme.Error));
+            ToastManager.showToast(new Toast('ui.change-password.fail.title', 'ui.change-password.fail.message', Theme.Error));
             this.route('/login');
         };
         PassordChangePage.prototype.loginPage = function () {
-            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p><Translate key=\"ui.change-password.info\"/></p>\n                  <div class=\"form-components\">\n                    <Text label=\"ui.change-password.password\"\n                          name=\"change-password.password\"\n                          placeholder=\"ui.change-password.placeholder\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          autofocus\n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"ui.change-password.password-repeat\"\n                          name=\"change-password.password-repeat\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                         <a class=\"button is-primary change-action\">\n                            <translate key=\"ui.change-password.button\"/>\n                        </a>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ";
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p key=\"ui.change-password.info\"/>\n                  <div class=\"form-components\">\n                    <Text label=\"ui.change-password.password\"\n                          name=\"change-password.password\"\n                          placeholder=\"ui.change-password.placeholder\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          autofocus\n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"ui.change-password.password-repeat\"\n                          name=\"change-password.password-repeat\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary change-action\" key=\"ui.change-password.button\"/>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ";
         };
         return PassordChangePage;
     }(AjaxForm));
