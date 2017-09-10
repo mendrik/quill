@@ -51,11 +51,11 @@ ui.forgot-password.failed=Request failed
 ui.forgot-password.email=Send instructions to
 ui.forgot-password.email.placeholder=Fill in your email
 ui.forgot-password.button=Request
-ui.forgot-password.info=<div>\
+ui.forgot-password.info=\
 If you have forgotten your password fill in your e-mail below \
 and we will send you further instructions. If you need \
 additional help, feel free to contact us at \
-<a href="mailto:help@json.services">help@json.services</a></div>.
+<a href="mailto:help@json.services">help@json.services</a>.
 ui.forgot-password.email-sent=Check your mailbox
 ui.forgot-password.email-sent.message=An email with further instructions has been sent
 
