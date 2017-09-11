@@ -158,6 +158,7 @@ var quill;
             function HtmlFragment(key) {
                 var _this = _super.call(this) || this;
                 _this.key = key;
+                window['h'] = _this;
                 return _this;
             }
             HtmlFragment.prototype.init = function (element) {
