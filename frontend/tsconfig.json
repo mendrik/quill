@@ -15,10 +15,11 @@
         "sourceRoot": "./typescript",
         "rootDir": "./",
         "out": "./out/quill.js",
+        "lib": ["es2015", "dom"],
         "types": [
-            "es6-shim",
             "node",
-            "feather-ts"
+            "feather-ts",
+            "feather-components"
         ],
         "typeRoots": [
             "node_modules/@types",
@@ -26,7 +27,6 @@
         ]
     },
     "files": [
-        "feather-components/feather-components.d.ts",
         "typescript/types.ts",
         "typescript/common/utils.ts",
         "typescript/common/headers.ts",
