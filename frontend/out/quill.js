@@ -588,7 +588,7 @@ var quill;
                 icon: 'user-o',
                 name: 'signup.lastname',
                 placeholder: 'Smith',
-                onChange: function (p) { return _this.signup.firstname = p; }
+                onChange: function (p) { return _this.signup.lastname = p; }
             };
             _this.emailConfig = {
                 label: 'ui.signup.email',

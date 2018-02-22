@@ -127,7 +127,7 @@ module quill {
             icon: 'user-o',
             name: 'signup.lastname',
             placeholder: 'Smith',
-            onChange: (p: string) => this.signup.firstname = p
+            onChange: (p: string) => this.signup.lastname = p
         }
 
         emailConfig = {
