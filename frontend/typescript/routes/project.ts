@@ -94,6 +94,10 @@ module quill {
                     }
                     break
                 }
+                case 'node-edited': {
+                    console.log('edit');
+                    break
+                }
                 case 'node-delete': {
                     this.deleteNode()
                     break
@@ -111,6 +115,7 @@ module quill {
             const node = this.currentTreeNode
             const nodes = isDef(node.parent) ? node.parent.children : this.nodes
             removeFromArray(nodes, [node])
+            this.currentTreeNode = undefined
             this.triggerDown('defocus-other-nodes');
         }
 

@@ -501,6 +501,10 @@ var quill;
                     }
                     break;
                 }
+                case 'node-edited': {
+                    console.log('edit');
+                    break;
+                }
                 case 'node-delete': {
                     this.deleteNode();
                     break;
@@ -514,6 +518,7 @@ var quill;
             var node = this.currentTreeNode;
             var nodes = isDef(node.parent) ? node.parent.children : this.nodes;
             removeFromArray(nodes, [node]);
+            this.currentTreeNode = undefined;
             this.triggerDown('defocus-other-nodes');
         };
         ProjectPage.prototype.createNode = function () {
