@@ -47,11 +47,11 @@ class ErrorHandler @Inject()(
                 BadRequest(Json.toJson(
                     Errors(e.errors(messagesApi))
                 ))
-            case e: IdentityNotFoundException =>
+            case _: IdentityNotFoundException =>
                 Unauthorized(Json.toJson(
                     Errors(Seq(ServerError("signin.failed", "signin.error.notfound").translate(messagesApi)))
                 ))
-            case e: InvalidPasswordException =>
+            case _: InvalidPasswordException =>
                 Unauthorized(Json.toJson(
                     Errors(Seq(ServerError("signin.failed", "signin.error.password").translate(messagesApi)))
                 ))

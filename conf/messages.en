@@ -27,8 +27,10 @@ errors.unauthorized.message=You don't have sufficient rights to access this reso
 joins.and= and 
 
 ui.error.server=Something went wrong
-ui.error.timeout=Connection has timed out
+ui.error.timeout.title=Connection has timed out
 ui.error.timeout.message=Please try again later
+ui.error.generic.title=Connection has failed
+ui.error.generic.message=Please try again later
 ui.login.tabs.login=Login
 ui.login.tabs.signup=Sign up
 ui.login.tabs.forgot-password=Unlock

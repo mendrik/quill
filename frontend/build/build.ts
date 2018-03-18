@@ -1,6 +1,5 @@
 import * as UglifyJS from 'uglify-js'
 import * as fs from 'fs'
-import * as zlib from 'zlib'
 
 console.log(' *** building frontend ***')
 

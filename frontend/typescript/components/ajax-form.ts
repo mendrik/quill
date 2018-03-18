@@ -32,7 +32,13 @@ module quill.components {
         @Subscribe('xhr-failure-timeout')
         timeout() {
             Progress.stop()
-            ToastManager.showToast(new Toast('ui.error.timeout', 'ui.error.timeout.message', Theme.Error))
+            ToastManager.showToast(new Toast('ui.error.timeout.title', 'ui.error.timeout.message', Theme.Error))
+        }
+
+        @Subscribe('xhr-failure-error')
+        genericError() {
+            Progress.stop()
+            ToastManager.showToast(new Toast('ui.error.generic.title', 'ui.error.generic.message', Theme.Error))
         }
     }
 }

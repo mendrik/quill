@@ -216,7 +216,11 @@ var quill;
             };
             AjaxForm.prototype.timeout = function () {
                 quill.Progress.stop();
-                ToastManager.showToast(new Toast('ui.error.timeout', 'ui.error.timeout.message', Theme.Error));
+                ToastManager.showToast(new Toast('ui.error.timeout.title', 'ui.error.timeout.message', Theme.Error));
+            };
+            AjaxForm.prototype.genericError = function () {
+                quill.Progress.stop();
+                ToastManager.showToast(new Toast('ui.error.generic.title', 'ui.error.generic.message', Theme.Error));
             };
             __decorate([
                 Subscribe('xhr-failure-400')
@@ -227,6 +231,9 @@ var quill;
             __decorate([
                 Subscribe('xhr-failure-timeout')
             ], AjaxForm.prototype, "timeout", null);
+            __decorate([
+                Subscribe('xhr-failure-error')
+            ], AjaxForm.prototype, "genericError", null);
             return AjaxForm;
         }(GestureWidget));
         components.AjaxForm = AjaxForm;
