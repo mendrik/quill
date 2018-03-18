@@ -425,6 +425,7 @@ var quill;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
     var isDef = feather.functions.isDef;
+    var removeFromArray = feather.arrays.removeFromArray;
     var CustomTreeNode = (function (_super) {
         __extends(CustomTreeNode, _super);
         function CustomTreeNode() {
@@ -437,7 +438,11 @@ var quill;
     quill.CustomTreeNode = CustomTreeNode;
     var toTreeNode = function (n) {
         var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
-        (_a = tn.children).push.apply(_a, n.children.map(toTreeNode));
+        (_a = tn.children).push.apply(_a, n.children.map(function (n) {
+            var child = toTreeNode(n);
+            child.parent = tn;
+            return child;
+        }));
         return tn;
         var _a;
     };
@@ -464,12 +469,13 @@ var quill;
             return _this;
         }
         ProjectPage.prototype.init = function () {
+            quill.Progress.start();
             this.fetchProject();
         };
         ProjectPage.prototype.fetchProject = function (project) {
             this.project = project;
-            console.log(this.project);
             (_a = this.nodes).splice.apply(_a, [0, this.nodes.length].concat(project.structure.map(toTreeNode)));
+            quill.Progress.stop();
             var _a;
         };
         ProjectPage.prototype.nodeDeselected = function (node) {
@@ -477,7 +483,6 @@ var quill;
         };
         ProjectPage.prototype.nodeSelected = function (node) {
             this.currentTreeNode = node;
-            console.log(node);
             this.triggerDown('defocus-other-nodes', node);
         };
         ProjectPage.prototype.rootTypeSelected = function (type) {
@@ -485,6 +490,7 @@ var quill;
             this.triggerDown('defocus-other-nodes');
         };
         ProjectPage.prototype.nodeAction = function (action) {
+            console.log(action);
             switch (action) {
                 case 'node-add': {
                     if (isDef(this.currentTreeNode)) {
@@ -505,14 +511,16 @@ var quill;
             this.fetchProject();
         };
         ProjectPage.prototype.deleteNode = function () {
+            var node = this.currentTreeNode;
+            var nodes = isDef(node.parent) ? node.parent.children : this.nodes;
+            removeFromArray(nodes, [node]);
             this.triggerDown('defocus-other-nodes');
-            this.fetchProject();
         };
         ProjectPage.prototype.createNode = function () {
             this.fetchProject();
         };
         ProjectPage.prototype.projectPage = function () {
-            return "\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-actions></tree-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ";
+            return "\n            <panel class=\"fullscreen v-flex\">  \n                <navigation class=\"no-grow\"></navigation>\n                <horizontal-split class=\"grow\" id=\"app-split\">\n                  <sidebar class=\"v-flex\">\n                    <tree-actions></tree-actions>\n                    <scroll-pane class=\"grow\">\n                      <aside class=\"menu\">\n                        <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                        <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                      </aside>\n                    </scroll-pane>\n                  </sidebar>\n                  <section class=\"v-flex\">\n                    <scroll-pane class=\"grow\">\n                    </scroll-pane>\n                  </section>\n                </horizontal-split>\n                <footer class=\"no-grow\"/>\n            </panel>";
         };
         __decorate([
             Bind()
@@ -802,7 +810,7 @@ var feather;
                 this.triggerUp('node-action', el.getAttribute('action'));
             };
             TreeActions.prototype.markup = function () {
-                return "\n              <div class=\"level is-mobile is-marginless\">\n                <div class=\"level-left\">\n                   <a class=\"button is-small\" action=\"node-add\"><Icon name=\"plus\"></Icon></a>\n                   <a class=\"button is-small\" action=\"node-edit\" {{disabled}}><Icon name=\"pencil\"></Icon></a>\n                </div>\n                <div class=\"level-right\">\n                   <a class=\"button is-small\" action=\"node-delete\" {{disabled}}><Icon name=\"trash-o\"/></a>\n                </div>\n              </div>\n            ";
+                return "\n            <div class=\"level is-mobile is-marginless\">\n              <div class=\"level-left\">\n                 <a class=\"button is-small\" action=\"node-add\"><Icon name=\"plus\"></Icon></a>\n                 <a class=\"button is-small\" action=\"node-edit\" {{disabled}}><Icon name=\"pencil\"></Icon></a>\n              </div>\n              <div class=\"level-right\">\n                 <a class=\"button is-small\" action=\"node-delete\" {{disabled}}><Icon name=\"trash-o\"/></a>\n              </div>\n            </div>";
             };
             __decorate([
                 Bind()

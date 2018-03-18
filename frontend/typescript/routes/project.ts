@@ -8,15 +8,21 @@ module quill {
     import Rest      = feather.xhr.Rest
     import Method    = feather.xhr.Method
     import isDef     = feather.functions.isDef
+    import removeFromArray = feather.arrays.removeFromArray;
 
     export class CustomTreeNode extends TreeNode<Node> {
         id = () => `${this.value.id}`
+        parent: CustomTreeNode
     }
 
     const toTreeNode = (n: Node) => {
         const tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type))
-        tn.children.push(...n.children.map(toTreeNode))
-        return tn;
+        tn.children.push(...n.children.map(n => {
+            let child = toTreeNode(n)
+            child.parent = tn
+            return child
+        }))
+        return tn
     }
 
     const dummyProject: Project = {
@@ -48,14 +54,15 @@ module quill {
         }
 
         init() {
+            Progress.start()
             this.fetchProject()
         }
 
         @Rest({url: '/projects/{{projectId}}', headers: quill.headers})
         fetchProject(project?: Project) {
             this.project = project
-            console.log(this.project)
             this.nodes.splice(0, this.nodes.length, ...project.structure.map(toTreeNode))
+            Progress.stop()
         }
 
         @Subscribe('node-defocused')
@@ -66,7 +73,6 @@ module quill {
         @Subscribe('node-focused')
         nodeSelected(node: CustomTreeNode) {
             this.currentTreeNode = node
-            console.log(node)
             this.triggerDown('defocus-other-nodes', node)
         }
 
@@ -78,6 +84,7 @@ module quill {
 
         @Subscribe('node-action')
         nodeAction(action: string) {
+            console.log(action);
             switch (action) {
                 case 'node-add': {
                     if (isDef(this.currentTreeNode)) {
@@ -101,8 +108,10 @@ module quill {
 
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers})
         deleteNode() {
+            const node = this.currentTreeNode
+            const nodes = isDef(node.parent) ? node.parent.children : this.nodes
+            removeFromArray(nodes, [node])
             this.triggerDown('defocus-other-nodes');
-            this.fetchProject()
         }
 
         @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
@@ -113,28 +122,27 @@ module quill {
         @Template()
         projectPage() {
             return `
-              <panel class="fullscreen v-flex">  
-                  <navigation class="no-grow"></navigation>
-                  <horizontal-split class="grow" id="app-split">
-                    <sidebar class="v-flex">
-                      <tree-actions></tree-actions>
-                      <scroll-pane class="grow">
-                        <aside class="menu">
-                          <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
-                          <ul class="tree-view is-marginless" {{nodes}}></ul>
-                          <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
-                          <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
-                        </aside>
-                      </scroll-pane>
-                    </sidebar>
-                    <section class="v-flex">
-                      <scroll-pane class="grow">
-                      </scroll-pane>
-                    </section>
-                  </horizontal-split>
-                  <footer class="no-grow"/>
-              </panel>
-            `
+            <panel class="fullscreen v-flex">  
+                <navigation class="no-grow"></navigation>
+                <horizontal-split class="grow" id="app-split">
+                  <sidebar class="v-flex">
+                    <tree-actions></tree-actions>
+                    <scroll-pane class="grow">
+                      <aside class="menu">
+                        <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
+                        <ul class="tree-view is-marginless" {{nodes}}></ul>
+                        <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
+                        <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
+                      </aside>
+                    </scroll-pane>
+                  </sidebar>
+                  <section class="v-flex">
+                    <scroll-pane class="grow">
+                    </scroll-pane>
+                  </section>
+                </horizontal-split>
+                <footer class="no-grow"/>
+            </panel>`
         }
     }
 }
