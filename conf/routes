@@ -11,6 +11,7 @@ POST		/projects/:id/structure                         controllers.Node.createStr
 POST		/projects/:id/schema                            controllers.Node.createSchemaNode(id)
 POST		/projects/:id/node/:nodeId                      controllers.Node.createChildNode(id, nodeId: Long)
 DELETE	/projects/:id/node/:nodeId                      controllers.Node.deleteNode(id: String, nodeId: Long)
+PUT	    /projects/:id/node/:nodeId                      controllers.Node.renameNode(id: String, nodeId: Long)
 
 # AUTHENTICATION
 POST		/signin							                            controllers.Security.signIn

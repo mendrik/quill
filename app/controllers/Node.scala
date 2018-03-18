@@ -45,11 +45,12 @@ class Node @Inject()(
         Ok(Json.toJson(""))
     }
 
-    def deleteNode(projectHash: String, node: Long) = silhouette.SecuredAction.async { implicit request =>
-        for {
-            _ <- nodeService.deleteNode(projectHash, node)
-        } yield {
-            Ok("")
-        }
+    def deleteNode(projectHash: String, nodeId: Long) = silhouette.SecuredAction.async { implicit request =>
+        nodeService.deleteNode(nodeId).flatMap(_ => Ok(""))
+    }
+
+    def renameNode(projectHash: String, nodeId: Long) = Actions.securedJson[RenameNode](Some("rename-node")) {
+        (node, request) =>
+            nodeService.renameNode(nodeId, node.name).flatMap(_ => Ok(""))
     }
 }

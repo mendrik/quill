@@ -11,8 +11,11 @@ class NodeService @Inject()(repo: NodeRepo) {
     def createNode(project: Long, node: Node, parent: Option[Long]) =
         repo.createNode(project, node, parent)
 
-    def deleteNode(project: String, nodeId: Long) = // todo check node belongs to project
+    def deleteNode(nodeId: Long) =
         repo.remove(nodeId)
+
+    def renameNode(nodeId: Long, name: String) =
+        repo.rename(nodeId, name)
 
     def structureNodes(project: Long): Future[Seq[Node]] =
         repo.findByProjectAndType(project, Structure)

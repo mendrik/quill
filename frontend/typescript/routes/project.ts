@@ -15,6 +15,10 @@ module quill {
         parent: CustomTreeNode
     }
 
+    interface RenameNode {
+        name: string
+    }
+
     const toTreeNode = (n: Node) => {
         const tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type))
         tn.children.push(...n.children.map(n => {
@@ -46,6 +50,10 @@ module quill {
         newNode: NewNode = {
             name: 'New node',
             sort: 0
+        }
+
+        renameNode: RenameNode = {
+            name: undefined
         }
 
         constructor(projectId: string) {
@@ -84,7 +92,6 @@ module quill {
 
         @Subscribe('node-action')
         nodeAction(action: string) {
-            console.log(action);
             switch (action) {
                 case 'node-add': {
                     if (isDef(this.currentTreeNode)) {
@@ -92,10 +99,6 @@ module quill {
                     } else {
                         this.createNode()
                     }
-                    break
-                }
-                case 'node-edited': {
-                    console.log('edit');
                     break
                 }
                 case 'node-delete': {
@@ -122,6 +125,18 @@ module quill {
         @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
         createNode() {
             this.fetchProject()
+        }
+
+        @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers})
+        renameNodeCall() {
+            Progress.stop()
+        }
+
+        @Subscribe('node-edited')
+        editNode(node: CustomTreeNode) {
+            Progress.start()
+            this.renameNode.name = node.text
+            this.renameNodeCall()
         }
 
         @Template()

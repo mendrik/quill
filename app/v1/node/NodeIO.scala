@@ -1,13 +1,14 @@
 package v1
 
-import json._
-import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
 import v1.node._
 
 package object NodeIO {
 
     implicit val newNodeReads = Json.reads[NewNode]
+
+    implicit val renameNodeReads = Json.reads[RenameNode]
 
     implicit val nodeReads: Reads[Node] = (
         (__ \ "id").read[Long] ~

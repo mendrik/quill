@@ -465,6 +465,9 @@ var quill;
                 name: 'New node',
                 sort: 0
             };
+            _this.renameNode = {
+                name: undefined
+            };
             _this.projectId = projectId;
             return _this;
         }
@@ -490,7 +493,6 @@ var quill;
             this.triggerDown('defocus-other-nodes');
         };
         ProjectPage.prototype.nodeAction = function (action) {
-            console.log(action);
             switch (action) {
                 case 'node-add': {
                     if (isDef(this.currentTreeNode)) {
@@ -499,10 +501,6 @@ var quill;
                     else {
                         this.createNode();
                     }
-                    break;
-                }
-                case 'node-edited': {
-                    console.log('edit');
                     break;
                 }
                 case 'node-delete': {
@@ -523,6 +521,14 @@ var quill;
         };
         ProjectPage.prototype.createNode = function () {
             this.fetchProject();
+        };
+        ProjectPage.prototype.renameNodeCall = function () {
+            quill.Progress.stop();
+        };
+        ProjectPage.prototype.editNode = function (node) {
+            quill.Progress.start();
+            this.renameNode.name = node.text;
+            this.renameNodeCall();
         };
         ProjectPage.prototype.projectPage = function () {
             return "\n            <panel class=\"fullscreen v-flex\">  \n                <navigation class=\"no-grow\"></navigation>\n                <horizontal-split class=\"grow\" id=\"app-split\">\n                  <sidebar class=\"v-flex\">\n                    <tree-actions></tree-actions>\n                    <scroll-pane class=\"grow\">\n                      <aside class=\"menu\">\n                        <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                        <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                      </aside>\n                    </scroll-pane>\n                  </sidebar>\n                  <section class=\"v-flex\">\n                    <scroll-pane class=\"grow\">\n                    </scroll-pane>\n                  </section>\n                </horizontal-split>\n                <footer class=\"no-grow\"/>\n            </panel>";
@@ -560,6 +566,12 @@ var quill;
         __decorate([
             Rest({ url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers })
         ], ProjectPage.prototype, "createNode", null);
+        __decorate([
+            Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers })
+        ], ProjectPage.prototype, "renameNodeCall", null);
+        __decorate([
+            Subscribe('node-edited')
+        ], ProjectPage.prototype, "editNode", null);
         __decorate([
             Template()
         ], ProjectPage.prototype, "projectPage", null);

@@ -47,6 +47,11 @@ class NodeRepo @Inject()(
     def remove(id: Long) =
         db.run(Nodes.filter(_.id === id).delete)
 
+    def rename(id: Long, name: String) =
+        db.run(Nodes.filter(_.id === id)
+            .map(n => n.name)
+            .update(name))
+
     def toNodes(row: Seq[NodesRow]): List[Node] = row.map(toNode).toList
 
     def toNode(row: NodesRow): Node = {

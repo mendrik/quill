@@ -31,3 +31,7 @@ case class NewNode(
     name: String,
     sort: Int
 )
+
+case class RenameNode(
+    name: String
+)
