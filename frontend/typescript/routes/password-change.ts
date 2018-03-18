@@ -10,6 +10,7 @@ module quill {
     import AjaxForm     = quill.components.AjaxForm
     import Toast        = feather.ui.toast.Toast
     import ToastManager = feather.ui.toast.ToastManager
+    import TextInputConfig = feather.ui.TextInputConfig;
 
     interface NewPassword {
         id: string,
@@ -60,18 +61,8 @@ module quill {
                 <div class="change-password">
                   <p key="ui.change-password.info"/>
                   <div class="form-components">
-                    <Text label="ui.change-password.password"
-                          name="change-password.password"
-                          placeholder="ui.change-password.placeholder"
-                          type="password"
-                          icon="lock"
-                          autofocus
-                          bind="newPassword.password"></Text>
-                    <Text label="ui.change-password.password-repeat"
-                          name="change-password.password-repeat"
-                          type="password"
-                          icon="lock"
-                          bind="newPassword.passwordRepeat"></Text>
+                    <Text config="{passwordConfig}"/>
+                    <Text config="{passwordRepeatConfig}"/>
                     <div class="block has-text-right">
                         <a class="button is-primary change-action" key="ui.change-password.button"/>
                     </div>
@@ -80,5 +71,22 @@ module quill {
             </scroll-pane>
             `
         }
+
+        passwordConfig: TextInputConfig = {
+            label: 'ui.change-password.password',
+            name: 'new-password.password',
+            icon: 'lock',
+            type: 'password',
+            onChange: (p: string) => this.newPassword.password = p
+        }
+
+        passwordRepeatConfig: TextInputConfig = {
+            label: 'ui.change-password.password-repeat',
+            name: 'new-password.passwordRepeat',
+            icon: 'lock',
+            type: 'password',
+            onChange: (p: string) => this.newPassword.passwordRepeat = p
+        }
+
     }
 }

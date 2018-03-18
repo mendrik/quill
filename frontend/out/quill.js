@@ -653,7 +653,7 @@ var quill;
         };
         LoginPage.prototype.requestPasswordChange = function () {
             quill.Progress.stop();
-            ToastManager.showToast(new Toast('ui.forgot-password.email-sent', 'ui.forgot-password.email-sent.message', Theme.Info));
+            ToastManager.showToast(new Toast('ui.forgot-password.email-sent.title', 'ui.forgot-password.email-sent.message', Theme.Info));
             this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
@@ -713,6 +713,20 @@ var quill;
                 id: quill.getQueryStringParam('id')
             };
             _this.changePasswordInfo = 'ui.change-password.info';
+            _this.passwordConfig = {
+                label: 'ui.change-password.password',
+                name: 'new-password.password',
+                icon: 'lock',
+                type: 'password',
+                onChange: function (p) { return _this.newPassword.password = p; }
+            };
+            _this.passwordRepeatConfig = {
+                label: 'ui.change-password.password-repeat',
+                name: 'new-password.passwordRepeat',
+                icon: 'lock',
+                type: 'password',
+                onChange: function (p) { return _this.newPassword.passwordRepeat = p; }
+            };
             return _this;
         }
         PassordChangePage.prototype.init = function () {
@@ -733,7 +747,7 @@ var quill;
             this.route('/login');
         };
         PassordChangePage.prototype.loginPage = function () {
-            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p key=\"ui.change-password.info\"/>\n                  <div class=\"form-components\">\n                    <Text label=\"ui.change-password.password\"\n                          name=\"change-password.password\"\n                          placeholder=\"ui.change-password.placeholder\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          autofocus\n                          bind=\"newPassword.password\"></Text>\n                    <Text label=\"ui.change-password.password-repeat\"\n                          name=\"change-password.password-repeat\"\n                          type=\"password\"\n                          icon=\"lock\"\n                          bind=\"newPassword.passwordRepeat\"></Text>\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary change-action\" key=\"ui.change-password.button\"/>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ";
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"change-password\">\n                  <p key=\"ui.change-password.info\"/>\n                  <div class=\"form-components\">\n                    <Text config=\"{passwordConfig}\"/>\n                    <Text config=\"{passwordRepeatConfig}\"/>\n                    <div class=\"block has-text-right\">\n                        <a class=\"button is-primary change-action\" key=\"ui.change-password.button\"/>\n                    </div>\n                  </div>\n                </div>\n            </scroll-pane>\n            ";
         };
         __decorate([
             Bind()
