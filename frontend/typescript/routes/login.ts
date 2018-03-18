@@ -92,7 +92,7 @@ module quill {
         requestPasswordChange() {
             Progress.stop()
             ToastManager.showToast(
-                new Toast('ui.forgot-password.email-sent', 'ui.forgot-password.email-sent.message', Theme.Info)
+                new Toast('ui.forgot-password.email-sent.title', 'ui.forgot-password.email-sent.message', Theme.Info)
             )
             this.route('/login')
         }
