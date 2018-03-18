@@ -7,6 +7,7 @@ module quill {
     import TreeNode  = feather.ui.tree.TreeNode
     import Rest      = feather.xhr.Rest
     import Method    = feather.xhr.Method
+    import isDef     = feather.functions.isDef
 
     export class CustomTreeNode extends TreeNode<Node> {
         id = () => `${this.value.id}`
@@ -53,7 +54,8 @@ module quill {
         @Rest({url: '/projects/{{projectId}}', headers: quill.headers})
         fetchProject(project?: Project) {
             this.project = project
-            this.nodes.push(...project.structure.map(toTreeNode))
+            console.log(this.project)
+            this.nodes.splice(0, this.nodes.length, ...project.structure.map(toTreeNode))
         }
 
         @Subscribe('node-defocused')
@@ -64,6 +66,7 @@ module quill {
         @Subscribe('node-focused')
         nodeSelected(node: CustomTreeNode) {
             this.currentTreeNode = node
+            console.log(node)
             this.triggerDown('defocus-other-nodes', node)
         }
 
@@ -77,33 +80,34 @@ module quill {
         nodeAction(action: string) {
             switch (action) {
                 case 'node-add': {
-                    if (this.currentTreeNode) {
+                    if (isDef(this.currentTreeNode)) {
                         this.createChildNode()
                     } else {
                         this.createNode()
                     }
-                    break;
+                    break
                 }
                 case 'node-delete': {
                     this.deleteNode()
-                    break;
+                    break
                 }
             }
         }
 
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, headers: quill.headers})
         createChildNode() {
-
+            this.fetchProject()
         }
 
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers})
         deleteNode() {
-
+            this.triggerDown('defocus-other-nodes');
+            this.fetchProject()
         }
 
         @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
         createNode() {
-
+            this.fetchProject()
         }
 
         @Template()

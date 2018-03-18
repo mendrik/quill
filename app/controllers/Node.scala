@@ -44,4 +44,12 @@ class Node @Inject()(
     def createChildNode(hash: String, parent: Long) = silhouette.SecuredAction.async { implicit request =>
         Ok(Json.toJson(""))
     }
+
+    def deleteNode(projectHash: String, node: Long) = silhouette.SecuredAction.async { implicit request =>
+        for {
+            _ <- nodeService.deleteNode(projectHash, node)
+        } yield {
+            Ok("")
+        }
+    }
 }

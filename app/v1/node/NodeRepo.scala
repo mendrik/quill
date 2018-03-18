@@ -44,8 +44,8 @@ class NodeRepo @Inject()(
             .map(n => (n.name, n.parent, n.project, n.nodeRoot, n.nodeType, n.sort))
             .update((node.name, parent.map(_.id), project.id, node.nodeRoot, node.nodeType, node.sort)))
 
-    def remove(node: Node) =
-        db.run(Nodes.filter(_.id === node.id).delete)
+    def remove(id: Long) =
+        db.run(Nodes.filter(_.id === id).delete)
 
     def toNodes(row: Seq[NodesRow]): List[Node] = row.map(toNode).toList
 

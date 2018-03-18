@@ -424,6 +424,7 @@ var quill;
     var TreeNode = feather.ui.tree.TreeNode;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
+    var isDef = feather.functions.isDef;
     var CustomTreeNode = (function (_super) {
         __extends(CustomTreeNode, _super);
         function CustomTreeNode() {
@@ -467,7 +468,8 @@ var quill;
         };
         ProjectPage.prototype.fetchProject = function (project) {
             this.project = project;
-            (_a = this.nodes).push.apply(_a, project.structure.map(toTreeNode));
+            console.log(this.project);
+            (_a = this.nodes).splice.apply(_a, [0, this.nodes.length].concat(project.structure.map(toTreeNode)));
             var _a;
         };
         ProjectPage.prototype.nodeDeselected = function (node) {
@@ -475,6 +477,7 @@ var quill;
         };
         ProjectPage.prototype.nodeSelected = function (node) {
             this.currentTreeNode = node;
+            console.log(node);
             this.triggerDown('defocus-other-nodes', node);
         };
         ProjectPage.prototype.rootTypeSelected = function (type) {
@@ -484,7 +487,7 @@ var quill;
         ProjectPage.prototype.nodeAction = function (action) {
             switch (action) {
                 case 'node-add': {
-                    if (this.currentTreeNode) {
+                    if (isDef(this.currentTreeNode)) {
                         this.createChildNode();
                     }
                     else {
@@ -499,10 +502,14 @@ var quill;
             }
         };
         ProjectPage.prototype.createChildNode = function () {
+            this.fetchProject();
         };
         ProjectPage.prototype.deleteNode = function () {
+            this.triggerDown('defocus-other-nodes');
+            this.fetchProject();
         };
         ProjectPage.prototype.createNode = function () {
+            this.fetchProject();
         };
         ProjectPage.prototype.projectPage = function () {
             return "\n              <panel class=\"fullscreen v-flex\">  \n                  <navigation class=\"no-grow\"></navigation>\n                  <horizontal-split class=\"grow\" id=\"app-split\">\n                    <sidebar class=\"v-flex\">\n                      <tree-actions></tree-actions>\n                      <scroll-pane class=\"grow\">\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                        </aside>\n                      </scroll-pane>\n                    </sidebar>\n                    <section class=\"v-flex\">\n                      <scroll-pane class=\"grow\">\n                      </scroll-pane>\n                    </section>\n                  </horizontal-split>\n                  <footer class=\"no-grow\"/>\n              </panel>\n            ";
