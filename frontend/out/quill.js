@@ -191,6 +191,53 @@ var quill;
         var ToastManager = feather.ui.toast.ToastManager;
         var Toast = feather.ui.toast.Toast;
         var Subscribe = feather.hub.Subscribe;
+        var AjaxWidget = (function (_super) {
+            __extends(AjaxWidget, _super);
+            function AjaxWidget() {
+                return _super !== null && _super.apply(this, arguments) || this;
+            }
+            AjaxWidget.prototype.requestFailed = function (err) {
+                quill.Progress.stop();
+                ToastManager.showToast(new Toast('ui.error.server', err.errors[0].message, Theme.Error));
+            };
+            AjaxWidget.prototype.requestForbidden = function () {
+                console.log('failure');
+                quill.Progress.stop();
+                ToastManager.showToast(new Toast('ui.errors.unauthorized.title', 'ui.errors.unauthorized.message', Theme.Error));
+            };
+            AjaxWidget.prototype.timeout = function () {
+                quill.Progress.stop();
+                ToastManager.showToast(new Toast('ui.error.timeout.title', 'ui.error.timeout.message', Theme.Error));
+            };
+            AjaxWidget.prototype.genericError = function () {
+                quill.Progress.stop();
+                ToastManager.showToast(new Toast('ui.error.generic.title', 'ui.error.generic.message', Theme.Error));
+            };
+            __decorate([
+                Subscribe('xhr-failure-500')
+            ], AjaxWidget.prototype, "requestFailed", null);
+            __decorate([
+                Subscribe('xhr-failure-403')
+            ], AjaxWidget.prototype, "requestForbidden", null);
+            __decorate([
+                Subscribe('xhr-failure-timeout')
+            ], AjaxWidget.prototype, "timeout", null);
+            __decorate([
+                Subscribe('xhr-failure-error')
+            ], AjaxWidget.prototype, "genericError", null);
+            return AjaxWidget;
+        }(GestureWidget));
+        components.AjaxWidget = AjaxWidget;
+    })(components = quill.components || (quill.components = {}));
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var components;
+    (function (components) {
+        var Theme = feather.ui.toast.Theme;
+        var ToastManager = feather.ui.toast.ToastManager;
+        var Toast = feather.ui.toast.Toast;
+        var Subscribe = feather.hub.Subscribe;
         var AjaxForm = (function (_super) {
             __extends(AjaxForm, _super);
             function AjaxForm() {
@@ -210,32 +257,11 @@ var quill;
                     ToastManager.showToast(new Toast("ui." + errorType + ".failed", messages, Theme.Warning));
                 }
             };
-            AjaxForm.prototype.requestFailed = function (err) {
-                quill.Progress.stop();
-                ToastManager.showToast(new Toast('ui.error.server', err.errors[0].message, Theme.Error));
-            };
-            AjaxForm.prototype.timeout = function () {
-                quill.Progress.stop();
-                ToastManager.showToast(new Toast('ui.error.timeout.title', 'ui.error.timeout.message', Theme.Error));
-            };
-            AjaxForm.prototype.genericError = function () {
-                quill.Progress.stop();
-                ToastManager.showToast(new Toast('ui.error.generic.title', 'ui.error.generic.message', Theme.Error));
-            };
             __decorate([
                 Subscribe('xhr-failure-400')
             ], AjaxForm.prototype, "validationFailed", null);
-            __decorate([
-                Subscribe('xhr-failure-500')
-            ], AjaxForm.prototype, "requestFailed", null);
-            __decorate([
-                Subscribe('xhr-failure-timeout')
-            ], AjaxForm.prototype, "timeout", null);
-            __decorate([
-                Subscribe('xhr-failure-error')
-            ], AjaxForm.prototype, "genericError", null);
             return AjaxForm;
-        }(GestureWidget));
+        }(components.AjaxWidget));
         components.AjaxForm = AjaxForm;
     })(components = quill.components || (quill.components = {}));
 })(quill || (quill = {}));
@@ -417,7 +443,6 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
-    var Widget = feather.core.Widget;
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
     var Subscribe = feather.hub.Subscribe;
@@ -426,6 +451,7 @@ var quill;
     var Method = feather.xhr.Method;
     var isDef = feather.functions.isDef;
     var removeFromArray = feather.arrays.removeFromArray;
+    var AjaxWidget = quill.components.AjaxWidget;
     var CustomTreeNode = (function (_super) {
         __extends(CustomTreeNode, _super);
         function CustomTreeNode() {
@@ -576,7 +602,7 @@ var quill;
             Template()
         ], ProjectPage.prototype, "projectPage", null);
         return ProjectPage;
-    }(Widget));
+    }(AjaxWidget));
     quill.ProjectPage = ProjectPage;
 })(quill || (quill = {}));
 var quill;

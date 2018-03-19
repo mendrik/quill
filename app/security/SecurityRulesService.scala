@@ -1,8 +1,9 @@
 package security
 
+import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import javax.inject.Inject
 import play.api.Configuration
-import security.rules.{NodeOwner, ProjectOwner, SecurityRule}
+import security.rules.{NodeOwner, ProjectOwner, SecurityException, SecurityRule}
 import v1.node.NodeRepo
 import v1.project.ProjectRepo
 import v1.user.{User, UserRepo}
@@ -18,18 +19,22 @@ case class SecurityRulesService @Inject()(
     projectRepo: ProjectRepo
 ) extends SecurityRules {
 
-    def checkProjectOwner(hash: String): Unit = {
-
+    def checkProjectOwner(user: User, hash: String): Unit = {
+        // todo
     }
 
-    def checkNodeOwner(nodeId: Long): Unit = {
+    def checkNodeOwner(user: User, nodeId: Long): Unit = {
+        // todo
     }
 
     def checkRules(user: Option[User], rules: Seq[SecurityRule]): Unit = {
-        rules.foreach({
-            case ProjectOwner(hash: String) => checkProjectOwner(hash)
-            case NodeOwner(nodeId: Long) => checkNodeOwner(nodeId)
-        })
+        user match {
+            case Some(user: User) => rules.foreach({
+                case ProjectOwner(hash: String) => checkProjectOwner(user, hash)
+                case NodeOwner(nodeId: Long) => checkNodeOwner(user, nodeId)
+            })
+            case _ => throw SecurityException()
+        }
     }
 
 }

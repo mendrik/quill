@@ -34,6 +34,7 @@
         "typescript/components/translate.ts",
         "typescript/components/progress.ts",
         "typescript/components/html-fragment.ts",
+        "typescript/components/ajax-widget.ts",
         "typescript/components/ajax-form.ts",
         "typescript/components/selectable-tree-label.ts",
         "typescript/routes/notfound.ts",

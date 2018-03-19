@@ -21,9 +21,6 @@ forgot-password.identifier=Email
 email.forgot-password.title=Reset your json.services password
 email.forgot-password.message=Click <a href="{0}">here</a> to reset your password.
 
-errors.unauthorized=Unauthorized access
-errors.unauthorized.message=You don't have sufficient rights to access this resource
-
 joins.and= and 
 
 ui.error.server=Something went wrong
@@ -31,6 +28,8 @@ ui.error.timeout.title=Connection has timed out
 ui.error.timeout.message=Please try again later
 ui.error.generic.title=Connection has failed
 ui.error.generic.message=Please try again later
+ui.errors.unauthorized.title=Unauthorized access
+ui.errors.unauthorized.message=You don't have sufficient rights to access this resource
 ui.login.tabs.login=Login
 ui.login.tabs.signup=Sign up
 ui.login.tabs.forgot-password=Unlock

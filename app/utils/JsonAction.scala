@@ -1,7 +1,6 @@
 package utils
 
 import com.mohiva.play.silhouette.api.Silhouette
-import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
 import error.ReadError
 import play.api.data.validation.ValidationError
 import play.api.i18n.MessagesApi

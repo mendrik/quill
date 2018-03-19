@@ -1,14 +1,14 @@
 module quill {
 
-    import Widget    = feather.core.Widget
-    import Template  = feather.annotations.Template
-    import Bind      = feather.observe.Bind
-    import Subscribe = feather.hub.Subscribe
-    import TreeNode  = feather.ui.tree.TreeNode
-    import Rest      = feather.xhr.Rest
-    import Method    = feather.xhr.Method
-    import isDef     = feather.functions.isDef
+    import Template        = feather.annotations.Template
+    import Bind            = feather.observe.Bind
+    import Subscribe       = feather.hub.Subscribe
+    import TreeNode        = feather.ui.tree.TreeNode
+    import Rest            = feather.xhr.Rest
+    import Method          = feather.xhr.Method
+    import isDef           = feather.functions.isDef
     import removeFromArray = feather.arrays.removeFromArray;
+    import AjaxWidget      = quill.components.AjaxWidget;
 
     export class CustomTreeNode extends TreeNode<Node> {
         id = () => `${this.value.id}`
@@ -36,7 +36,7 @@ module quill {
         schema: []
     }
 
-    export class ProjectPage extends Widget {
+    export class ProjectPage extends AjaxWidget {
 
         @Bind() nodes: Array<CustomTreeNode> = []
         @Bind() schemaNodes: Array<CustomTreeNode> = []

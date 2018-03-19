@@ -1,7 +1,6 @@
 package error
 
 import javax.inject._
-
 import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import com.mohiva.play.silhouette.impl.exceptions.{IdentityNotFoundException, InvalidPasswordException}
 import error.ErrorIO._
@@ -11,6 +10,7 @@ import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.api.routing.Router
+import security.rules.SecurityException
 import utils.BodyParseException
 
 import scala.concurrent.Future
@@ -29,7 +29,9 @@ class ErrorHandler @Inject()(
 
     // 403 - Forbidden
     override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = Future.successful {
-        Forbidden(Json.toJson(Errors(Seq(ReadError("errors.unauthorized", "errors.unauthorized.message")))))
+        Forbidden(Json.toJson(
+            Errors(Seq(ReadError("ui.errors.unauthorized.title", "ui.errors.unauthorized.message")))
+        ))
     }
 
     def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
@@ -46,6 +48,10 @@ class ErrorHandler @Inject()(
             case e: BodyParseException =>
                 BadRequest(Json.toJson(
                     Errors(e.errors(messagesApi))
+                ))
+            case _: SecurityException =>
+                Forbidden(Json.toJson(
+                    Errors(Seq(ReadError("ui.errors.unauthorized.title", "ui.errors.unauthorized.message")))
                 ))
             case _: IdentityNotFoundException =>
                 Unauthorized(Json.toJson(
