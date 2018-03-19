@@ -529,7 +529,6 @@ var quill;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
     var isDef = feather.functions.isDef;
-    var removeFromArray = feather.arrays.removeFromArray;
     var AjaxWidget = quill.components.AjaxWidget;
     var dummyProject = {
         id: 0,
@@ -596,18 +595,15 @@ var quill;
                 }
             }
         };
-        ProjectPage.prototype.createChildNode = function () {
+        ProjectPage.prototype.createChildNode = function (node) {
+            this.currentTreeNode.open = true;
             this.fetchProject();
         };
         ProjectPage.prototype.createNode = function () {
             this.fetchProject();
         };
         ProjectPage.prototype.deleteNode = function () {
-            var node = this.currentTreeNode;
-            var nodes = isDef(node.parent) ? node.parent.children : this.nodes;
-            removeFromArray(nodes, [node]);
-            this.currentTreeNode = undefined;
-            this.triggerDown('defocus-other-nodes');
+            this.fetchProject();
         };
         ProjectPage.prototype.renameNodeCall = function () {
             quill.Progress.stop();
