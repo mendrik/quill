@@ -86,4 +86,4 @@ Thumbs.db
 /.idea
 /.idea_modules
 
-./package-lock.json
+package-lock.json

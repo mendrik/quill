@@ -66,9 +66,9 @@ object Actions extends Results {
     }
 
     def secured(rules: SecurityRule*)
-               (block: (SecuredRequest[QuillEnv, JsValue]) => Future[Result])
+               (block: RequestHeader => Future[Result])
                (implicit silhouette: Silhouette[QuillEnv], securityRules: SecurityRules) =
-        silhouette.SecuredAction.async(BodyParsers.parse.json) { request =>
+        silhouette.SecuredAction.async { request =>
             securityRules.checkRules(rules)
             block(request)
     }
