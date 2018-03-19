@@ -342,6 +342,12 @@ var quill;
     var TreeNode = feather.ui.tree.TreeNode;
     var On = feather.event.On;
     var Scope = feather.event.Scope;
+    var DropPostion;
+    (function (DropPostion) {
+        DropPostion["inside"] = "inside";
+        DropPostion["above"] = "above";
+        DropPostion["below"] = "below";
+    })(DropPostion = quill.DropPostion || (quill.DropPostion = {}));
     var NODE_DATA_TYPE = 'quill/node-id';
     var CustomTreeNode = (function (_super) {
         __extends(CustomTreeNode, _super);
@@ -359,13 +365,13 @@ var quill;
         CustomTreeNode.prototype.dragover = function (ev) {
             var relY = ev.clientY - this.element.getBoundingClientRect().top;
             if (relY < 6) {
-                this.element.setAttribute('data-dragover', 'above');
+                this.element.setAttribute('data-dragover', DropPostion.above);
             }
             else if (relY > 18) {
-                this.element.setAttribute('data-dragover', 'below');
+                this.element.setAttribute('data-dragover', DropPostion.below);
             }
             else {
-                this.element.setAttribute('data-dragover', 'inside');
+                this.element.setAttribute('data-dragover', DropPostion.inside);
             }
         };
         CustomTreeNode.prototype.dragleave = function () {
@@ -380,7 +386,8 @@ var quill;
             if (id) {
                 this.triggerUp('node-drop', {
                     from: id,
-                    to: this.id()
+                    to: this.id(),
+                    position: this.element.getAttribute('data-dragover')
                 });
             }
         };
@@ -538,7 +545,6 @@ var quill;
             _this.schemaNodes = [];
             _this.project = dummyProject;
             _this.currentRootType = 'structure';
-            _this.id = function () { return _this.projectId; };
             _this.newNode = {
                 name: 'New node',
                 sort: 0
@@ -546,6 +552,7 @@ var quill;
             _this.renameNode = {
                 name: undefined
             };
+            _this.id = function () { return _this.projectId; };
             _this.projectId = projectId;
             return _this;
         }
@@ -612,7 +619,7 @@ var quill;
             console.log(drop);
         };
         ProjectPage.prototype.projectPage = function () {
-            return "\n            <panel class=\"fullscreen v-flex\">  \n                <navigation class=\"no-grow\"></navigation>\n                <horizontal-split class=\"grow\" id=\"app-split\">\n                  <sidebar class=\"v-flex\">\n                    <tree-actions></tree-actions>\n                    <scroll-pane class=\"grow\">\n                      <aside class=\"menu\">\n                        <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                        <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                      </aside>\n                    </scroll-pane>\n                  </sidebar>\n                  <section class=\"v-flex\">\n                    <scroll-pane class=\"grow\">\n                    </scroll-pane>\n                  </section>\n                </horizontal-split>\n                <footer class=\"no-grow\"/>\n            </panel>";
+            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                <horizontal-split class=\"grow\" id=\"app-split\">\n                  <sidebar class=\"v-flex\">\n                    <tree-actions></tree-actions>\n                    <scroll-pane class=\"grow\">\n                      <aside class=\"menu\">\n                        <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                        <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                      </aside>\n                    </scroll-pane>\n                  </sidebar>\n                  <section class=\"v-flex\">\n                    <scroll-pane class=\"grow\">\n                    </scroll-pane>\n                  </section>\n                </horizontal-split>\n                <footer class=\"no-grow\"/>\n            </panel>";
         };
         __decorate([
             Bind()

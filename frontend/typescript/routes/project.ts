@@ -29,7 +29,6 @@ module quill {
         projectId: string
         currentTreeNode: CustomTreeNode
         currentRootType: NodeRoot = 'structure'
-        id = () => this.projectId
 
         newNode: NewNode = {
             name: 'New node',
@@ -39,6 +38,8 @@ module quill {
         renameNode: RenameNode = {
             name: undefined
         }
+
+        id = () => this.projectId
 
         constructor(projectId: string) {
             super()
@@ -104,7 +105,7 @@ module quill {
             const nodes = isDef(node.parent) ? node.parent.children : this.nodes
             removeFromArray(nodes, [node])
             this.currentTreeNode = undefined
-            this.triggerDown('defocus-other-nodes');
+            this.triggerDown('defocus-other-nodes')
         }
 
         @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
@@ -132,7 +133,7 @@ module quill {
         @Template()
         projectPage() {
             return `
-            <panel class="fullscreen v-flex">  
+            <panel class="fullscreen v-flex">
                 <navigation class="no-grow"></navigation>
                 <horizontal-split class="grow" id="app-split">
                   <sidebar class="v-flex">

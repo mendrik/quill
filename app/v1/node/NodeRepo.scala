@@ -25,19 +25,25 @@ class NodeRepo @Inject()(
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
-    def findByProjectAndType(project: Long, nodeRoot: NodeRoot): Future[Seq[Node]] = {
-        db.run(Nodes.filter(p => p.project === project && p.nodeRoot === (nodeRoot: String)).result).map(toTree(None, _))
+    def findByProjectAndType(project: Long, nodeRoot: NodeRoot): Future[Seq[Node]] = db.run {
+        Nodes.filter(p => p.project === project && p.nodeRoot === (nodeRoot: String)).result
+    }.map(toTree(None, _))
+
+    def getHighestSort(parent: Option[Long]): Future[Option[Int]] = db.run {
+        Nodes.filter(n => parent.map(id => n.parent.get === id).getOrElse(n.parent.isEmpty))
+            .sortBy(_.sort.desc)
+            .take(1)
+            .map(_.sort)
+            .result
+            .headOption
     }
 
     def createNode(project: Long, node: Node, parent: Option[Long]): Future[Option[Node]] =
-        db.run(Nodes returning Nodes.map(_.id) += NodesRow(
-            node.id,
-            parent,
-            project,
-            node.name,
-            node.nodeRoot,
-            node.nodeType
-        )).flatMap(findById)
+        getHighestSort(parent).flatMap(sort => db.run {
+            Nodes returning Nodes.map(_.id) +=
+                NodesRow(node.id, parent, project, node.name, node.nodeRoot,
+                    node.nodeType, sort.map(_ + 1).getOrElse(0))
+        }).flatMap(findById)
 
     def update(project: Project, node: Node, parent: Option[Node]) =
         db.run(Nodes.filter(_.id === node.id)

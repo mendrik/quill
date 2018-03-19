@@ -4,9 +4,16 @@ module quill {
     import On       = feather.event.On
     import Scope    = feather.event.Scope
 
+    export enum DropPostion {
+        inside = 'inside',
+        above = 'above',
+        below = 'below'
+    }
+
     export interface NodeDrop {
         from: string
-        to: string
+        to: string,
+        position: DropPostion
     }
 
     const NODE_DATA_TYPE = 'quill/node-id'
@@ -29,11 +36,11 @@ module quill {
         dragover(ev: DragEvent) {
             const relY = ev.clientY - this.element.getBoundingClientRect().top
             if (relY < 6) {
-                this.element.setAttribute('data-dragover', 'above')
+                this.element.setAttribute('data-dragover', DropPostion.above)
             } else if (relY > 18) {
-                this.element.setAttribute('data-dragover', 'below')
+                this.element.setAttribute('data-dragover', DropPostion.below)
             } else {
-                this.element.setAttribute('data-dragover', 'inside')
+                this.element.setAttribute('data-dragover', DropPostion.inside)
             }
         }
 
@@ -50,7 +57,8 @@ module quill {
             if (id) {
                 this.triggerUp('node-drop', {
                     from: id,
-                    to: this.id()
+                    to: this.id(),
+                    position: this.element.getAttribute('data-dragover')
                 } as NodeDrop)
             }
         }
