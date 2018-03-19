@@ -9,6 +9,8 @@ module quill {
         to: string;
     }
 
+    const NODE_DATA_TYPE = "quill/node-id"
+
     export class CustomTreeNode extends TreeNode<Node> {
         id = () => `${this.value.id}`
         parent: CustomTreeNode
@@ -18,20 +20,34 @@ module quill {
         }
 
         @On({event: 'dragstart', scope: Scope.Direct})
-        drag(ev: DragEvent) {
-            ev.dataTransfer.setData("text", this.id());
+        dragstart(ev: DragEvent) {
+            ev.dataTransfer.setData(NODE_DATA_TYPE, this.id())
         }
 
         @On({event: 'dragover', scope: Scope.Direct, preventDefault: true})
-        dragover() {}
+        dragover(ev: DragEvent) {
+        }
+
+        @On({event: 'dragenter', scope: Scope.Direct})
+        dragenter(ev: DragEvent) {
+            this.element.setAttribute('data-dragover', 'true');
+        }
+
+        @On({event: 'dragleave', scope: Scope.Direct})
+        dragleave(ev: DragEvent) {
+            this.element.removeAttribute('data-dragover');
+        }
 
         @On({event: 'drop', scope: Scope.Direct})
         drop(ev: DragEvent) {
-            const id = ev.dataTransfer.getData("text");
-            this.triggerUp('node-drop', {
-                from: id,
-                to: this.id()
-            } as NodeDrop)
+            const id = ev.dataTransfer.getData(NODE_DATA_TYPE);
+            this.dragleave(ev)
+            if (id) {
+                this.triggerUp('node-drop', {
+                    from: id,
+                    to: this.id()
+                } as NodeDrop)
+            }
         }
 
         static toTreeNode = (n: Node) => {

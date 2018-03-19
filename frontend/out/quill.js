@@ -342,6 +342,7 @@ var quill;
     var TreeNode = feather.ui.tree.TreeNode;
     var On = feather.event.On;
     var Scope = feather.event.Scope;
+    var NODE_DATA_TYPE = "quill/node-id";
     var CustomTreeNode = (function (_super) {
         __extends(CustomTreeNode, _super);
         function CustomTreeNode() {
@@ -352,16 +353,26 @@ var quill;
         CustomTreeNode.prototype.init = function (el) {
             el.setAttribute('draggable', 'true');
         };
-        CustomTreeNode.prototype.drag = function (ev) {
-            ev.dataTransfer.setData("text", this.id());
+        CustomTreeNode.prototype.dragstart = function (ev) {
+            ev.dataTransfer.setData(NODE_DATA_TYPE, this.id());
         };
-        CustomTreeNode.prototype.dragover = function () { };
+        CustomTreeNode.prototype.dragover = function (ev) {
+        };
+        CustomTreeNode.prototype.dragenter = function (ev) {
+            this.element.setAttribute('data-dragover', 'true');
+        };
+        CustomTreeNode.prototype.dragleave = function (ev) {
+            this.element.removeAttribute('data-dragover');
+        };
         CustomTreeNode.prototype.drop = function (ev) {
-            var id = ev.dataTransfer.getData("text");
-            this.triggerUp('node-drop', {
-                from: id,
-                to: this.id()
-            });
+            var id = ev.dataTransfer.getData(NODE_DATA_TYPE);
+            this.dragleave(ev);
+            if (id) {
+                this.triggerUp('node-drop', {
+                    from: id,
+                    to: this.id()
+                });
+            }
         };
         CustomTreeNode.toTreeNode = function (n) {
             var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
@@ -375,10 +386,16 @@ var quill;
         };
         __decorate([
             On({ event: 'dragstart', scope: Scope.Direct })
-        ], CustomTreeNode.prototype, "drag", null);
+        ], CustomTreeNode.prototype, "dragstart", null);
         __decorate([
             On({ event: 'dragover', scope: Scope.Direct, preventDefault: true })
         ], CustomTreeNode.prototype, "dragover", null);
+        __decorate([
+            On({ event: 'dragenter', scope: Scope.Direct })
+        ], CustomTreeNode.prototype, "dragenter", null);
+        __decorate([
+            On({ event: 'dragleave', scope: Scope.Direct })
+        ], CustomTreeNode.prototype, "dragleave", null);
         __decorate([
             On({ event: 'drop', scope: Scope.Direct })
         ], CustomTreeNode.prototype, "drop", null);
