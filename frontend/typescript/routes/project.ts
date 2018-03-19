@@ -124,6 +124,11 @@ module quill {
             this.renameNodeCall()
         }
 
+        @Subscribe('node-drop')
+        dragNode(drop: NodeDrop) {
+            console.log(drop)
+        }
+
         @Template()
         projectPage() {
             return `

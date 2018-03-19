@@ -4,6 +4,11 @@ module quill {
     import On       = feather.event.On
     import Scope    = feather.event.Scope
 
+    export interface NodeDrop {
+        from: string;
+        to: string;
+    }
+
     export class CustomTreeNode extends TreeNode<Node> {
         id = () => `${this.value.id}`
         parent: CustomTreeNode
@@ -12,9 +17,21 @@ module quill {
             el.setAttribute('draggable', 'true')
         }
 
-        @On({event: 'drag', scope: Scope.Direct})
+        @On({event: 'dragstart', scope: Scope.Direct})
         drag(ev: DragEvent) {
-            console.log(ev)
+            ev.dataTransfer.setData("text", this.id());
+        }
+
+        @On({event: 'dragover', scope: Scope.Direct, preventDefault: true})
+        dragover() {}
+
+        @On({event: 'drop', scope: Scope.Direct})
+        drop(ev: DragEvent) {
+            const id = ev.dataTransfer.getData("text");
+            this.triggerUp('node-drop', {
+                from: id,
+                to: this.id()
+            } as NodeDrop)
         }
 
         static toTreeNode = (n: Node) => {

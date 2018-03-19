@@ -353,7 +353,15 @@ var quill;
             el.setAttribute('draggable', 'true');
         };
         CustomTreeNode.prototype.drag = function (ev) {
-            console.log(ev);
+            ev.dataTransfer.setData("text", this.id());
+        };
+        CustomTreeNode.prototype.dragover = function () { };
+        CustomTreeNode.prototype.drop = function (ev) {
+            var id = ev.dataTransfer.getData("text");
+            this.triggerUp('node-drop', {
+                from: id,
+                to: this.id()
+            });
         };
         CustomTreeNode.toTreeNode = function (n) {
             var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
@@ -366,8 +374,14 @@ var quill;
             var _a;
         };
         __decorate([
-            On({ event: 'drag', scope: Scope.Direct })
+            On({ event: 'dragstart', scope: Scope.Direct })
         ], CustomTreeNode.prototype, "drag", null);
+        __decorate([
+            On({ event: 'dragover', scope: Scope.Direct, preventDefault: true })
+        ], CustomTreeNode.prototype, "dragover", null);
+        __decorate([
+            On({ event: 'drop', scope: Scope.Direct })
+        ], CustomTreeNode.prototype, "drop", null);
         return CustomTreeNode;
     }(TreeNode));
     quill.CustomTreeNode = CustomTreeNode;
@@ -570,6 +584,9 @@ var quill;
             this.renameNode.name = node.text;
             this.renameNodeCall();
         };
+        ProjectPage.prototype.dragNode = function (drop) {
+            console.log(drop);
+        };
         ProjectPage.prototype.projectPage = function () {
             return "\n            <panel class=\"fullscreen v-flex\">  \n                <navigation class=\"no-grow\"></navigation>\n                <horizontal-split class=\"grow\" id=\"app-split\">\n                  <sidebar class=\"v-flex\">\n                    <tree-actions></tree-actions>\n                    <scroll-pane class=\"grow\">\n                      <aside class=\"menu\">\n                        <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                        <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                      </aside>\n                    </scroll-pane>\n                  </sidebar>\n                  <section class=\"v-flex\">\n                    <scroll-pane class=\"grow\">\n                    </scroll-pane>\n                  </section>\n                </horizontal-split>\n                <footer class=\"no-grow\"/>\n            </panel>";
         };
@@ -612,6 +629,9 @@ var quill;
         __decorate([
             Subscribe('node-edited')
         ], ProjectPage.prototype, "editNode", null);
+        __decorate([
+            Subscribe('node-drop')
+        ], ProjectPage.prototype, "dragNode", null);
         __decorate([
             Template()
         ], ProjectPage.prototype, "projectPage", null);
