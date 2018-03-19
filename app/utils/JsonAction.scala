@@ -1,14 +1,14 @@
 package utils
 
 import com.mohiva.play.silhouette.api.Silhouette
-import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
 import error.ReadError
 import play.api.data.validation.ValidationError
 import play.api.i18n.MessagesApi
 import play.api.libs.json._
 import play.api.mvc._
-import security.{QuillEnv, SecurityRules}
 import security.rules.SecurityRule
+import security.{QuillEnv, SecurityRules}
 
 import scala.concurrent.Future
 
@@ -53,13 +53,13 @@ object Actions extends Results {
     }
 
     def securedJson[C](prefix: Option[String], rules: SecurityRule*)
-               (block: (C, SecuredRequest[QuillEnv, JsValue]) => Future[Result])
+               (block: (C, RequestHeader) => Future[Result])
                (implicit reads: Reads[C], silhouette: Silhouette[QuillEnv], securityRules: SecurityRules) =
-        silhouette.SecuredAction.async(BodyParsers.parse.json) { request =>
+        silhouette.UserAwareAction.async(BodyParsers.parse.json) { request =>
             request.body.validate[C] match {
                 case JsSuccess(json, _) =>
-                    securityRules.checkRules(rules)
-                    block(json, request)
+                    securityRules.checkRules(request.identity, rules)
+                    block(json, request.request)
                 case JsError(errors) =>
                     throw BodyParseException(prefix, errors)
             }
@@ -68,9 +68,9 @@ object Actions extends Results {
     def secured(rules: SecurityRule*)
                (block: RequestHeader => Future[Result])
                (implicit silhouette: Silhouette[QuillEnv], securityRules: SecurityRules) =
-        silhouette.SecuredAction.async { request =>
-            securityRules.checkRules(rules)
-            block(request)
+        silhouette.UserAwareAction.async { request =>
+            securityRules.checkRules(request.identity, rules)
+            block(request.request)
     }
 
 }
