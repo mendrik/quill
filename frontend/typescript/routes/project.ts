@@ -73,6 +73,7 @@ module quill {
         @Subscribe('root-type-selected')
         rootTypeSelected(type: NodeRoot) {
             this.currentRootType = type
+            this.currentTreeNode = undefined
             this.triggerDown('defocus-other-nodes')
         }
 
@@ -80,6 +81,7 @@ module quill {
         nodeAction(action: string) {
             switch (action) {
                 case 'node-add': {
+                    Progress.start()
                     if (isDef(this.currentTreeNode)) {
                         this.createChildNode()
                     } else {
@@ -94,8 +96,13 @@ module quill {
             }
         }
 
-        @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, headers: quill.headers})
+        @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, body: 'newNode', headers: quill.headers})
         createChildNode() {
+            this.fetchProject()
+        }
+
+        @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
+        createNode() {
             this.fetchProject()
         }
 
@@ -106,11 +113,6 @@ module quill {
             removeFromArray(nodes, [node])
             this.currentTreeNode = undefined
             this.triggerDown('defocus-other-nodes')
-        }
-
-        @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
-        createNode() {
-            this.fetchProject()
         }
 
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers})

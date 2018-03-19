@@ -575,11 +575,13 @@ var quill;
         };
         ProjectPage.prototype.rootTypeSelected = function (type) {
             this.currentRootType = type;
+            this.currentTreeNode = undefined;
             this.triggerDown('defocus-other-nodes');
         };
         ProjectPage.prototype.nodeAction = function (action) {
             switch (action) {
                 case 'node-add': {
+                    quill.Progress.start();
                     if (isDef(this.currentTreeNode)) {
                         this.createChildNode();
                     }
@@ -597,15 +599,15 @@ var quill;
         ProjectPage.prototype.createChildNode = function () {
             this.fetchProject();
         };
+        ProjectPage.prototype.createNode = function () {
+            this.fetchProject();
+        };
         ProjectPage.prototype.deleteNode = function () {
             var node = this.currentTreeNode;
             var nodes = isDef(node.parent) ? node.parent.children : this.nodes;
             removeFromArray(nodes, [node]);
             this.currentTreeNode = undefined;
             this.triggerDown('defocus-other-nodes');
-        };
-        ProjectPage.prototype.createNode = function () {
-            this.fetchProject();
         };
         ProjectPage.prototype.renameNodeCall = function () {
             quill.Progress.stop();
@@ -646,14 +648,14 @@ var quill;
             Subscribe('node-action')
         ], ProjectPage.prototype, "nodeAction", null);
         __decorate([
-            Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, headers: quill.headers })
+            Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, body: 'newNode', headers: quill.headers })
         ], ProjectPage.prototype, "createChildNode", null);
-        __decorate([
-            Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers })
-        ], ProjectPage.prototype, "deleteNode", null);
         __decorate([
             Rest({ url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers })
         ], ProjectPage.prototype, "createNode", null);
+        __decorate([
+            Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers })
+        ], ProjectPage.prototype, "deleteNode", null);
         __decorate([
             Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers })
         ], ProjectPage.prototype, "renameNodeCall", null);

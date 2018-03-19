@@ -27,11 +27,11 @@ class Node @Inject()(
 
     def newNodeName = messagesApi.translate("node.default-name", Nil).get
 
-    def createStructureNode(hash: String) = Actions.securedJson[NewNode](Some("new-node"), ProjectOwner(hash)) {
-        (node, request) =>
+    def createStructureNode(hash: String) = Actions.securedJson[NewNode](
+        Some("new-node"), ProjectOwner(hash)) { (node, request) =>
             val newNode = Node(0, node.name, Structure, StringType, node.sort, Nil)
             for {
-                Some(id) <- Future.successful(decodeHash(hash))
+                Some(id)   <- decodeHash(hash)
                 Some(node) <- nodeService.createNode(id, newNode, None)
             } yield {
                 Ok(Json.toJson(node))
@@ -42,8 +42,15 @@ class Node @Inject()(
         Ok(Json.toJson(""))
     }
 
-    def createChildNode(hash: String, parentNodeId: Long) = Actions.secured(NodeOwner(parentNodeId)) { implicit request =>
-        Ok(Json.toJson(""))
+    def createChildNode(hash: String, parentNodeId: Long) = Actions.securedJson[NewNode](
+        Some("new-child-node"), ProjectOwner(hash), NodeOwner(parentNodeId)) { (node, request) =>
+            val newNode = Node(0, node.name, Structure, StringType, node.sort, Nil)
+            for {
+                Some(id)   <- decodeHash(hash)
+                Some(node) <- nodeService.createNode(id, newNode, Some(parentNodeId))
+            } yield {
+                Ok(Json.toJson(node))
+            }
     }
 
     def deleteNode(projectHash: String, nodeId: Long) = Actions.secured(NodeOwner(nodeId)) { implicit request =>

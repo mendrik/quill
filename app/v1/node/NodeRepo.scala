@@ -26,16 +26,23 @@ class NodeRepo @Inject()(
     }
 
     def findByProjectAndType(project: Long, nodeRoot: NodeRoot): Future[Seq[Node]] = db.run {
-        Nodes.filter(p => p.project === project && p.nodeRoot === (nodeRoot: String)).result
+        Nodes
+            .filter(p => p.project === project && p.nodeRoot === (nodeRoot: String))
+            .sortBy(_.sort.asc)
+            .result
     }.map(toTree(None, _))
 
     def getHighestSort(parent: Option[Long]): Future[Option[Int]] = db.run {
-        Nodes.filter(n => parent.map(id => n.parent.get === id).getOrElse(n.parent.isEmpty))
-            .sortBy(_.sort.desc)
-            .take(1)
-            .map(_.sort)
-            .result
-            .headOption
+        val select = parent match {
+            case Some(id) => Nodes.filter(n => n.parent === id)
+            case None => Nodes.filter(n => n.parent.isEmpty)
+        }
+        select
+        .sortBy(_.sort.desc)
+        .take(1)
+        .map(_.sort)
+        .result
+        .headOption
     }
 
     def createNode(project: Long, node: Node, parent: Option[Long]): Future[Option[Node]] =
