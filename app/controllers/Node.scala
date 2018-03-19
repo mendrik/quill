@@ -1,13 +1,13 @@
 package controllers
 
 import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api._
 import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
-import security.QuillEnv
+import security.{QuillEnv, SecurityRules}
+import security.rules.{NodeOwner, ProjectOwner}
 import utils.Actions
 import utils.Implicits._
 import v1.generic.extensions.decodeHash
@@ -21,12 +21,13 @@ class Node @Inject()(
   val messagesApi: MessagesApi,
   val nodeService: NodeService,
   implicit val silhouette: Silhouette[QuillEnv],
+  implicit val securityRules: SecurityRules,
   val configuration: Configuration
 ) extends Controller {
 
     def newNodeName = messagesApi.translate("node.default-name", Nil).get
 
-    def createStructureNode(hash: String) = Actions.securedJson[NewNode](Some("new-node")) {
+    def createStructureNode(hash: String) = Actions.securedJson[NewNode](Some("new-node"), ProjectOwner(hash)) {
         (node, request) =>
             val newNode = Node(0, node.name, Structure, StringType, node.sort, Nil)
             for {
@@ -37,15 +38,15 @@ class Node @Inject()(
             }
     }
 
-    def createSchemaNode(hash: String) = silhouette.SecuredAction.async { implicit request =>
+    def createSchemaNode(hash: String) = Actions.secured(ProjectOwner(hash)) { implicit request =>
         Ok(Json.toJson(""))
     }
 
-    def createChildNode(hash: String, parent: Long) = silhouette.SecuredAction.async { implicit request =>
+    def createChildNode(hash: String, parentNodeId: Long) = Actions.secured(NodeOwner(parentNodeId)) { implicit request =>
         Ok(Json.toJson(""))
     }
 
-    def deleteNode(projectHash: String, nodeId: Long) = silhouette.SecuredAction.async { implicit request =>
+    def deleteNode(projectHash: String, nodeId: Long) = Actions.secured(NodeOwner(nodeId)) { implicit request =>
         nodeService.deleteNode(nodeId).flatMap(_ => Ok(""))
     }
 

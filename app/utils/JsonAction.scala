@@ -7,7 +7,8 @@ import play.api.data.validation.ValidationError
 import play.api.i18n.MessagesApi
 import play.api.libs.json._
 import play.api.mvc._
-import security.QuillEnv
+import security.{QuillEnv, SecurityRules}
+import security.rules.SecurityRule
 
 import scala.concurrent.Future
 
@@ -51,14 +52,25 @@ object Actions extends Results {
         }
     }
 
-    def securedJson[C](prefix: Option[String] = None)
+    def securedJson[C](prefix: Option[String], rules: SecurityRule*)
                (block: (C, SecuredRequest[QuillEnv, JsValue]) => Future[Result])
-               (implicit reads: Reads[C], silhouette: Silhouette[QuillEnv]) = silhouette.SecuredAction.async(BodyParsers.parse.json) { request =>
-        request.body.validate[C] match {
-            case JsSuccess(json, _) =>
-                block(json, request)
-            case JsError(errors) =>
-                throw BodyParseException(prefix, errors)
-        }
+               (implicit reads: Reads[C], silhouette: Silhouette[QuillEnv], securityRules: SecurityRules) =
+        silhouette.SecuredAction.async(BodyParsers.parse.json) { request =>
+            request.body.validate[C] match {
+                case JsSuccess(json, _) =>
+                    securityRules.checkRules(rules)
+                    block(json, request)
+                case JsError(errors) =>
+                    throw BodyParseException(prefix, errors)
+            }
     }
+
+    def secured(rules: SecurityRule*)
+               (block: (SecuredRequest[QuillEnv, JsValue]) => Future[Result])
+               (implicit silhouette: Silhouette[QuillEnv], securityRules: SecurityRules) =
+        silhouette.SecuredAction.async(BodyParsers.parse.json) { request =>
+            securityRules.checkRules(rules)
+            block(request)
+    }
+
 }

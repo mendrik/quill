@@ -15,7 +15,9 @@ import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepo
 import error.ErrorHandler
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
-import v1.user.UserService
+import v1.node.NodeRepo
+import v1.project.ProjectRepo
+import v1.user.{UserRepo, UserService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -26,6 +28,7 @@ class Module extends AbstractModule with ScalaModule {
         bind[SecuredErrorHandler].to[ErrorHandler]
         bind[DelegableAuthInfoDAO[PasswordInfo]].to[SecurityService]
         bind[Silhouette[QuillEnv]].to[SilhouetteProvider[QuillEnv]]
+        bind[SecurityRules].to[SecurityRulesService]
         bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
         bind[PasswordHasher].toInstance(new BCryptPasswordHasher())
         bind[FingerprintGenerator].toInstance(new DefaultFingerprintGenerator(false))

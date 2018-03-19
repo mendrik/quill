@@ -2,8 +2,6 @@ package v1.node
 
 import javax.inject._
 
-import v1.project.Project
-
 import scala.concurrent.Future
 
 class NodeService @Inject()(repo: NodeRepo) {
