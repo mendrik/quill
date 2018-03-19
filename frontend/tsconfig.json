@@ -37,6 +37,7 @@
         "typescript/components/ajax-widget.ts",
         "typescript/components/ajax-form.ts",
         "typescript/components/selectable-tree-label.ts",
+        "typescript/components/custom-node.ts",
         "typescript/routes/notfound.ts",
         "typescript/modules/navigation.ts",
         "typescript/routes/project.ts",

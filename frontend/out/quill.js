@@ -339,6 +339,41 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
+    var TreeNode = feather.ui.tree.TreeNode;
+    var On = feather.event.On;
+    var Scope = feather.event.Scope;
+    var CustomTreeNode = (function (_super) {
+        __extends(CustomTreeNode, _super);
+        function CustomTreeNode() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.id = function () { return "" + _this.value.id; };
+            return _this;
+        }
+        CustomTreeNode.prototype.init = function (el) {
+            el.setAttribute('draggable', 'true');
+        };
+        CustomTreeNode.prototype.drag = function (ev) {
+            console.log(ev);
+        };
+        CustomTreeNode.toTreeNode = function (n) {
+            var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
+            (_a = tn.children).push.apply(_a, n.children.map(function (n) {
+                var child = CustomTreeNode.toTreeNode(n);
+                child.parent = tn;
+                return child;
+            }));
+            return tn;
+            var _a;
+        };
+        __decorate([
+            On({ event: 'drag', scope: Scope.Direct })
+        ], CustomTreeNode.prototype, "drag", null);
+        return CustomTreeNode;
+    }(TreeNode));
+    quill.CustomTreeNode = CustomTreeNode;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
     var Template = feather.annotations.Template;
     var On = feather.event.On;
     var GestureWidget = feather.ui.events.GestureWidget;
@@ -446,32 +481,11 @@ var quill;
     var Template = feather.annotations.Template;
     var Bind = feather.observe.Bind;
     var Subscribe = feather.hub.Subscribe;
-    var TreeNode = feather.ui.tree.TreeNode;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
     var isDef = feather.functions.isDef;
     var removeFromArray = feather.arrays.removeFromArray;
     var AjaxWidget = quill.components.AjaxWidget;
-    var CustomTreeNode = (function (_super) {
-        __extends(CustomTreeNode, _super);
-        function CustomTreeNode() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.id = function () { return "" + _this.value.id; };
-            return _this;
-        }
-        return CustomTreeNode;
-    }(TreeNode));
-    quill.CustomTreeNode = CustomTreeNode;
-    var toTreeNode = function (n) {
-        var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
-        (_a = tn.children).push.apply(_a, n.children.map(function (n) {
-            var child = toTreeNode(n);
-            child.parent = tn;
-            return child;
-        }));
-        return tn;
-        var _a;
-    };
     var dummyProject = {
         id: 0,
         name: '',
@@ -503,7 +517,7 @@ var quill;
         };
         ProjectPage.prototype.fetchProject = function (project) {
             this.project = project;
-            (_a = this.nodes).splice.apply(_a, [0, this.nodes.length].concat(project.structure.map(toTreeNode)));
+            (_a = this.nodes).splice.apply(_a, [0, this.nodes.length].concat(project.structure.map(quill.CustomTreeNode.toTreeNode)));
             quill.Progress.stop();
             var _a;
         };

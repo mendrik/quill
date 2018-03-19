@@ -3,30 +3,14 @@ module quill {
     import Template        = feather.annotations.Template
     import Bind            = feather.observe.Bind
     import Subscribe       = feather.hub.Subscribe
-    import TreeNode        = feather.ui.tree.TreeNode
     import Rest            = feather.xhr.Rest
     import Method          = feather.xhr.Method
     import isDef           = feather.functions.isDef
-    import removeFromArray = feather.arrays.removeFromArray;
-    import AjaxWidget      = quill.components.AjaxWidget;
-
-    export class CustomTreeNode extends TreeNode<Node> {
-        id = () => `${this.value.id}`
-        parent: CustomTreeNode
-    }
+    import removeFromArray = feather.arrays.removeFromArray
+    import AjaxWidget      = quill.components.AjaxWidget
 
     interface RenameNode {
         name: string
-    }
-
-    const toTreeNode = (n: Node) => {
-        const tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type))
-        tn.children.push(...n.children.map(n => {
-            let child = toTreeNode(n)
-            child.parent = tn
-            return child
-        }))
-        return tn
     }
 
     const dummyProject: Project = {
@@ -69,7 +53,8 @@ module quill {
         @Rest({url: '/projects/{{projectId}}', headers: quill.headers})
         fetchProject(project?: Project) {
             this.project = project
-            this.nodes.splice(0, this.nodes.length, ...project.structure.map(toTreeNode))
+            this.nodes.splice(0, this.nodes.length,
+                ...project.structure.map(CustomTreeNode.toTreeNode))
             Progress.stop()
         }
 
