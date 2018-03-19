@@ -5,15 +5,16 @@ module quill {
     import Scope    = feather.event.Scope
 
     export interface NodeDrop {
-        from: string;
-        to: string;
+        from: string
+        to: string
     }
 
-    const NODE_DATA_TYPE = "quill/node-id"
+    const NODE_DATA_TYPE = 'quill/node-id'
 
     export class CustomTreeNode extends TreeNode<Node> {
-        id = () => `${this.value.id}`
         parent: CustomTreeNode
+
+        id = () => `${this.value.id}`
 
         init(el: Element) {
             el.setAttribute('draggable', 'true')
@@ -26,22 +27,26 @@ module quill {
 
         @On({event: 'dragover', scope: Scope.Direct, preventDefault: true})
         dragover(ev: DragEvent) {
-        }
-
-        @On({event: 'dragenter', scope: Scope.Direct})
-        dragenter(ev: DragEvent) {
-            this.element.setAttribute('data-dragover', 'true');
+            const relY = ev.clientY - this.element.getBoundingClientRect().top
+            if (relY < 6) {
+                this.element.setAttribute('data-dragover', 'above')
+            } else if (relY > 18) {
+                this.element.setAttribute('data-dragover', 'below')
+            } else {
+                this.element.setAttribute('data-dragover', 'inside')
+            }
         }
 
         @On({event: 'dragleave', scope: Scope.Direct})
-        dragleave(ev: DragEvent) {
-            this.element.removeAttribute('data-dragover');
+        dragleave() {
+            setTimeout(() => // prevent flicker between :before <-> :after toggle
+                this.element.removeAttribute('data-dragover'), 30)
         }
 
         @On({event: 'drop', scope: Scope.Direct})
         drop(ev: DragEvent) {
-            const id = ev.dataTransfer.getData(NODE_DATA_TYPE);
-            this.dragleave(ev)
+            const id = ev.dataTransfer.getData(NODE_DATA_TYPE)
+            this.dragleave()
             if (id) {
                 this.triggerUp('node-drop', {
                     from: id,
@@ -53,7 +58,7 @@ module quill {
         static toTreeNode = (n: Node) => {
             const tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type))
             tn.children.push(...n.children.map(n => {
-                let child = CustomTreeNode.toTreeNode(n)
+                const child = CustomTreeNode.toTreeNode(n)
                 child.parent = tn
                 return child
             }))

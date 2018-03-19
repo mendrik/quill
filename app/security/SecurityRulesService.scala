@@ -3,7 +3,7 @@ package security
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import javax.inject.Inject
 import play.api.Configuration
-import security.rules.{NodeOwner, ProjectOwner, SecurityException, SecurityRule}
+import security.rules._
 import v1.node.NodeRepo
 import v1.project.ProjectRepo
 import v1.user.{User, UserRepo}
@@ -27,11 +27,16 @@ case class SecurityRulesService @Inject()(
         // todo
     }
 
+    def checkNotChildNode(nodeId: Long, targetId: Long): Unit = {
+        // todo
+    }
+
     def checkRules(user: Option[User], rules: Seq[SecurityRule]): Unit = {
         user match {
             case Some(user: User) => rules.foreach({
                 case ProjectOwner(hash: String) => checkProjectOwner(user, hash)
                 case NodeOwner(nodeId: Long) => checkNodeOwner(user, nodeId)
+                case NotChildNode(nodeId: Long, targetId: Long) => checkNotChildNode(nodeId, targetId)
             })
             case _ => throw SecurityException()
         }

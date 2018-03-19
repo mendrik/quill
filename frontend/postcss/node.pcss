@@ -1,3 +1,31 @@
-.tree-node[data-dragover] > div:first-child {
+.tree-node > div:first-child {
+    position: relative;
+
+    &:after,
+    &:before {
+        content: '';
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-color: #d7f2ff;
+        pointer-events: none;
+    }
+}
+
+.tree-node[data-dragover='inside'] > div:first-child {
     background-color: #d7f2ff;
+}
+
+.tree-node[data-dragover='above']  > div:first-child:before {
+    display: block;
+    top: -2px;
+    background-color: #d7f2ff;
+}
+
+.tree-node[data-dragover='below']  > div:first-child:after {
+    display: block;
+    background-color: #d7f2ff;
+    bottom: -2px;
 }

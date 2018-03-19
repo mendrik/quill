@@ -27,6 +27,7 @@ PUT			/account/password		                            controllers.Security.change
 
 # Map static resources from the /public folder to the /assets URL path
 GET			/assets/*file				                            controllers.Assets.versioned(path="/public", file: Asset)
+GET			/out/*file				                              controllers.Assets.at(path="/public/dev/out", file: String)
 
 # TRANSLATION
 GET     /translations                                   controllers.Localization.translations()

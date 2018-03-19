@@ -1,9 +1,9 @@
 module quill.components {
 
-    import Theme = feather.ui.toast.Theme;
-    import ToastManager = feather.ui.toast.ToastManager;
-    import Toast = feather.ui.toast.Toast;
-    import Subscribe = feather.hub.Subscribe;
+    import Theme        = feather.ui.toast.Theme
+    import ToastManager = feather.ui.toast.ToastManager
+    import Toast        = feather.ui.toast.Toast
+    import Subscribe    = feather.hub.Subscribe
 
     export class AjaxForm extends AjaxWidget {
 

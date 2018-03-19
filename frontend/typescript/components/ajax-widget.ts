@@ -1,10 +1,10 @@
 module quill.components {
 
     import GestureWidget = feather.ui.events.GestureWidget
-    import Theme = feather.ui.toast.Theme
-    import ToastManager = feather.ui.toast.ToastManager
-    import Toast = feather.ui.toast.Toast
-    import Subscribe = feather.hub.Subscribe
+    import Theme         = feather.ui.toast.Theme
+    import ToastManager  = feather.ui.toast.ToastManager
+    import Toast         = feather.ui.toast.Toast
+    import Subscribe     = feather.hub.Subscribe
 
     export class AjaxWidget extends GestureWidget {
 
