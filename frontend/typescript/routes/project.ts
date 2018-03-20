@@ -99,14 +99,19 @@ module quill {
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, body: 'newNode', headers: quill.headers})
         createChildNode(node?: Node) {
             Progress.stop()
-            this.currentTreeNode.add(CustomTreeNode.toTreeNode(node))
+            const newNode = CustomTreeNode.toTreeNode(node)
+            this.currentTreeNode.add(newNode)
             this.currentTreeNode.open = true
+            this.currentTreeNode.selected = false
+            newNode.focusAndEdit()
         }
 
         @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
         createNode(node?: Node) {
             Progress.stop()
-            this.nodes.push(CustomTreeNode.toTreeNode(node))
+            const newNode = CustomTreeNode.toTreeNode(node)
+            this.nodes.push(newNode)
+            newNode.focusAndEdit()
         }
 
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers})

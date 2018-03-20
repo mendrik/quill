@@ -602,12 +602,17 @@ var quill;
         };
         ProjectPage.prototype.createChildNode = function (node) {
             quill.Progress.stop();
-            this.currentTreeNode.add(quill.CustomTreeNode.toTreeNode(node));
+            var newNode = quill.CustomTreeNode.toTreeNode(node);
+            this.currentTreeNode.add(newNode);
             this.currentTreeNode.open = true;
+            this.currentTreeNode.selected = false;
+            newNode.focusAndEdit();
         };
         ProjectPage.prototype.createNode = function (node) {
             quill.Progress.stop();
-            this.nodes.push(quill.CustomTreeNode.toTreeNode(node));
+            var newNode = quill.CustomTreeNode.toTreeNode(node);
+            this.nodes.push(newNode);
+            newNode.focusAndEdit();
         };
         ProjectPage.prototype.deleteNode = function () {
             var node = this.currentTreeNode;
