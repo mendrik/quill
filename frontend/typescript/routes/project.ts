@@ -6,6 +6,7 @@ module quill {
     import Rest            = feather.xhr.Rest
     import Method          = feather.xhr.Method
     import isDef           = feather.functions.isDef
+    import removeFromArray = feather.arrays.removeFromArray
     import AjaxWidget      = quill.components.AjaxWidget
 
     interface RenameNode {
@@ -97,18 +98,24 @@ module quill {
 
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, body: 'newNode', headers: quill.headers})
         createChildNode(node?: Node) {
+            Progress.stop()
+            this.currentTreeNode.add(CustomTreeNode.toTreeNode(node))
             this.currentTreeNode.open = true
-            this.fetchProject()
         }
 
         @Rest({url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers})
-        createNode() {
-            this.fetchProject()
+        createNode(node?: Node) {
+            Progress.stop()
+            this.nodes.push(CustomTreeNode.toTreeNode(node))
         }
 
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers})
         deleteNode() {
-            this.fetchProject()
+            const node = this.currentTreeNode
+            const nodes = isDef(node.parent) ? node.parent.children : this.nodes
+            removeFromArray(nodes, [node])
+            this.currentTreeNode = undefined
+            this.triggerDown('defocus-other-nodes')
         }
 
         @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers})

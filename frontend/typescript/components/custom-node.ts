@@ -72,5 +72,10 @@ module quill {
             }))
             return tn
         }
+
+        add(node: CustomTreeNode) {
+            this.children.push(node)
+            node.parent = this
+        }
     }
 }

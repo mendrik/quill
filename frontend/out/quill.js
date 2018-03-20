@@ -391,6 +391,10 @@ var quill;
                 });
             }
         };
+        CustomTreeNode.prototype.add = function (node) {
+            this.children.push(node);
+            node.parent = this;
+        };
         CustomTreeNode.toTreeNode = function (n) {
             var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
             (_a = tn.children).push.apply(_a, n.children.map(function (n) {
@@ -529,6 +533,7 @@ var quill;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
     var isDef = feather.functions.isDef;
+    var removeFromArray = feather.arrays.removeFromArray;
     var AjaxWidget = quill.components.AjaxWidget;
     var dummyProject = {
         id: 0,
@@ -596,14 +601,20 @@ var quill;
             }
         };
         ProjectPage.prototype.createChildNode = function (node) {
+            quill.Progress.stop();
+            this.currentTreeNode.add(quill.CustomTreeNode.toTreeNode(node));
             this.currentTreeNode.open = true;
-            this.fetchProject();
         };
-        ProjectPage.prototype.createNode = function () {
-            this.fetchProject();
+        ProjectPage.prototype.createNode = function (node) {
+            quill.Progress.stop();
+            this.nodes.push(quill.CustomTreeNode.toTreeNode(node));
         };
         ProjectPage.prototype.deleteNode = function () {
-            this.fetchProject();
+            var node = this.currentTreeNode;
+            var nodes = isDef(node.parent) ? node.parent.children : this.nodes;
+            removeFromArray(nodes, [node]);
+            this.currentTreeNode = undefined;
+            this.triggerDown('defocus-other-nodes');
         };
         ProjectPage.prototype.renameNodeCall = function () {
             quill.Progress.stop();
