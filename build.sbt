@@ -1,6 +1,6 @@
-val silhouetteVersion = "4.0.0"
-val slickVersion = "3.2.1"
-val playSlickVersion = "2.1.0"
+val silhouetteVersion = "5.0.0"
+val slickVersion = "3.2.2"
+val playSlickVersion = "3.0.1"
 val scVersion = "2.11.11"
 
 name := """Quill"""
@@ -13,6 +13,7 @@ resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 resolvers += "dl-john-ky" at "http://dl.john-ky.io/maven/releases"
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
 
 routesImport += "play.api.mvc.PathBindable._"
 
@@ -34,23 +35,25 @@ lazy val sharedSettings = Seq(
         "org.scala-lang" % "scala-reflect" % scVersion,
         "com.typesafe.slick" %% "slick" % slickVersion,
         "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
-        "joda-time" % "joda-time" % "2.9.6",
-        "org.joda" % "joda-convert" % "1.7"
+        "joda-time" % "joda-time" % "2.9.9",
+        "org.joda" % "joda-convert" % "1.8.1"
     )
 )
 
 libraryDependencies ++= Seq(
+    guice,
     filters,
     javaJdbc,
     specs2 % Test,
+    "com.typesafe.play" %% "play-json" % "2.6.7",
     "io.john-ky" %% "hashids-scala" % "1.1.2-2974446",
     "com.typesafe.play" %% "play-mailer" % "5.0.0",
     "com.mohiva" %% "play-silhouette" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion,
-    "net.codingwell" %% "scala-guice" % "4.1.0",
-    "org.scalaz" %% "scalaz-core" % "7.2.13",
+    "net.codingwell" %% "scala-guice" % "4.1.1",
+    "org.scalaz" %% "scalaz-core" % "7.2.20",
     "org.specs2" %% "specs2-matcher-extra" % "3.8.5" % Test
 )
 

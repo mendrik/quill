@@ -7,7 +7,9 @@ import play.api.mvc._
 import utils.Implicits._
 import scala.concurrent.Future
 
-class Home @Inject()(val messagesApi: MessagesApi) extends Controller {
+class Home @Inject()(
+    override val messagesApi: MessagesApi
+) extends InjectedController {
 
     def index = Action { request =>
         Ok(views.html.index())

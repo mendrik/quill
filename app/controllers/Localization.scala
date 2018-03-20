@@ -8,7 +8,9 @@ import play.api.mvc._
 import utils.MessageIO._
 import utils.{Message, Messages}
 
-class Localization @Inject()(val messagesApi: MessagesApi) extends Controller {
+class Localization @Inject()(
+    override val messagesApi: MessagesApi
+) extends InjectedController {
 
     val LanguageHeader = "Accept-Language"
 

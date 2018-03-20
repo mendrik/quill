@@ -17,13 +17,13 @@ import v1.user._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class Project @Inject()(
-  val messagesApi: MessagesApi,
+  override val messagesApi: MessagesApi,
   val projectService: ProjectService,
   val userService: UserService,
   val nodeService: NodeService,
   val silhouette: Silhouette[QuillEnv],
   val configuration: Configuration
-) extends Controller {
+) extends InjectedController {
 
     def project(hash: String) = silhouette.SecuredAction.async { implicit request =>
         val user: User = request.identity
