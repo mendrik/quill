@@ -660,16 +660,16 @@ var quill;
             Subscribe('node-action')
         ], ProjectPage.prototype, "nodeAction", null);
         __decorate([
-            Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, body: 'newNode', headers: quill.headers })
+            Rest({ url: '/node/{{currentTreeNode.id}}', method: Method.POST, body: 'newNode', headers: quill.headers })
         ], ProjectPage.prototype, "createChildNode", null);
         __decorate([
             Rest({ url: '/projects/{{projectId}}/{{currentRootType}}', method: Method.POST, body: 'newNode', headers: quill.headers })
         ], ProjectPage.prototype, "createNode", null);
         __decorate([
-            Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers })
+            Rest({ url: '/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers })
         ], ProjectPage.prototype, "deleteNode", null);
         __decorate([
-            Rest({ url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers })
+            Rest({ url: '/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers })
         ], ProjectPage.prototype, "renameNodeCall", null);
         __decorate([
             Subscribe('node-edited')

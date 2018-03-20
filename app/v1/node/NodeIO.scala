@@ -6,12 +6,19 @@ import v1.node._
 
 package object NodeIO {
 
-    implicit val newNodeReads = Json.reads[NewNode]
 
-    implicit val renameNodeReads = Json.reads[RenameNode]
+    implicit val newNodeReads: Reads[NewNode] = Json.reads[NewNode]
+
+    implicit val renameNodeReads: Reads[RenameNode] = Json.reads[RenameNode]
+
+    implicit val moveNodeReads: Reads[MoveNode] = (
+        (__ \ "open").read[Boolean] ~
+        (__ \ "position").read[String].map(toPosition)
+    )(MoveNode.apply _)
 
     implicit val nodeReads: Reads[Node] = (
         (__ \ "id").read[Long] ~
+        (__ \ "project").read[Long] ~
         (__ \ "name").read[String] ~
         (__ \ "nodeRoot").read[String].map(toNodeRoot) ~
         (__ \ "nodeType").read[String].map(toNodeType) ~
@@ -21,6 +28,7 @@ package object NodeIO {
 
     implicit val nodeWrites: Writes[Node] = (
         (__ \ "id").write[Long] ~
+        (__ \ "project").write[Long] ~
         (__ \ "name").write[String] ~
         (__ \ "rootType").write[NodeRoot] ~
         (__ \ "type").write[NodeType] ~
@@ -62,6 +70,18 @@ package object NodeIO {
     implicit def asString(nodeRoot: NodeRoot): String = nodeRoot match {
         case Structure => "structure"
         case Schema => "schema"
+    }
+
+    implicit def toPosition(s: String): Position = s.toLowerCase match {
+        case "inside" => Inside
+        case "below" => Below
+        case "above" => Above
+    }
+
+    implicit def asString(position: Position): String = position match {
+        case Inside => "inside"
+        case Above => "above"
+        case Below => "below"
     }
 }
 

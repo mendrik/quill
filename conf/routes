@@ -9,9 +9,10 @@ GET			/projects/:id                                   controllers.Project.projec
 
 POST		/projects/:id/structure                         controllers.Node.createStructureNode(id)
 POST		/projects/:id/schema                            controllers.Node.createSchemaNode(id)
-POST		/projects/:id/node/:nodeId                      controllers.Node.createChildNode(id, nodeId: Long)
-DELETE	/projects/:id/node/:nodeId                      controllers.Node.deleteNode(id: String, nodeId: Long)
-PUT	    /projects/:id/node/:nodeId                      controllers.Node.renameNode(id: String, nodeId: Long)
+POST		/node/:nodeId                                   controllers.Node.createChildNode(nodeId: Long)
+DELETE	/node/:nodeId                                   controllers.Node.deleteNode(nodeId: Long)
+PUT	    /node/:nodeId                                   controllers.Node.renameNode(nodeId: Long)
+PUT	    /node/:nodeId/to/:targetId                      controllers.Node.moveNode(nodeId: Long, targetId: Long)
 
 # AUTHENTICATION
 POST		/signin							                            controllers.Security.signIn

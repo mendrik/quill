@@ -96,7 +96,7 @@ module quill {
             }
         }
 
-        @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.POST, body: 'newNode', headers: quill.headers})
+        @Rest({url: '/node/{{currentTreeNode.id}}', method: Method.POST, body: 'newNode', headers: quill.headers})
         createChildNode(node?: Node) {
             Progress.stop()
             const newNode = CustomTreeNode.toTreeNode(node)
@@ -114,7 +114,7 @@ module quill {
             newNode.focusAndEdit()
         }
 
-        @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers})
+        @Rest({url: '/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers})
         deleteNode() {
             const node = this.currentTreeNode
             const nodes = isDef(node.parent) ? node.parent.children : this.nodes
@@ -123,7 +123,7 @@ module quill {
             this.triggerDown('defocus-other-nodes')
         }
 
-        @Rest({url: '/projects/{{projectId}}/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers})
+        @Rest({url: '/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers})
         renameNodeCall() {
             Progress.stop()
         }

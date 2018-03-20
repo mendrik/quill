@@ -14,8 +14,14 @@ sealed trait NodeRoot
 case object Structure extends NodeRoot
 case object Schema extends NodeRoot
 
+sealed trait Position
+case object Inside extends Position
+case object Above extends Position
+case object Below extends Position
+
 case class Node(
     id: Long,
+    project: Long,
     name: String,
     nodeRoot: NodeRoot,
     nodeType: NodeType,
@@ -30,6 +36,11 @@ object Node {
 case class NewNode(
     name: String,
     sort: Int
+)
+
+case class MoveNode(
+    open: Boolean,
+    position: Position
 )
 
 case class RenameNode(

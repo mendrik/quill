@@ -7,7 +7,7 @@ import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
 import security.{QuillEnv, SecurityRules}
-import security.rules.{NodeOwner, ProjectOwner}
+import security.rules.{NodeOwner, NotChildNode, ProjectOwner}
 import utils.Actions
 import utils.Implicits._
 import v1.generic.extensions.decodeHash
@@ -29,36 +29,46 @@ class Node @Inject()(
 
     def createStructureNode(hash: String) = Actions.securedJson[NewNode](
         Some("new-node"), ProjectOwner(hash)) { (node, request) =>
-            val newNode = Node(0, node.name, Structure, StringType, node.sort, Nil)
             for {
-                Some(id)   <- decodeHash(hash)
-                Some(node) <- nodeService.createNode(id, newNode, None)
+                Some(projectId) <- decodeHash(hash)
+                newNode         <- Future.successful(Node(0, projectId, node.name, Structure, StringType, node.sort, Nil))
+                Some(node)      <- nodeService.createNode(newNode, None)
             } yield {
                 Ok(Json.toJson(node))
             }
     }
 
-    def createSchemaNode(hash: String) = Actions.secured(ProjectOwner(hash)) { implicit request =>
-        Ok(Json.toJson(""))
+    def moveNode(nodeId: Long, targetId: Long) = Actions.securedJson[MoveNode](
+        Some("new-node"), NodeOwner(nodeId), NotChildNode(nodeId, targetId)) { (move, request) =>
+            nodeService.moveNode(nodeId, targetId, move)
+                .flatMap(_ => Ok(""))
     }
 
-    def createChildNode(hash: String, parentNodeId: Long) = Actions.securedJson[NewNode](
-        Some("new-child-node"), ProjectOwner(hash), NodeOwner(parentNodeId)) { (node, request) =>
-            val newNode = Node(0, node.name, Structure, StringType, node.sort, Nil)
+    def createSchemaNode(hash: String) = Actions.secured(
+        ProjectOwner(hash)) { implicit request =>
+            Ok(Json.toJson(""))
+    }
+
+    def createChildNode(parentNodeId: Long) = Actions.securedJson[NewNode](
+        Some("new-child-node"), NodeOwner(parentNodeId)) { (node, request) =>
             for {
-                Some(id)   <- decodeHash(hash)
-                Some(node) <- nodeService.createNode(id, newNode, Some(parentNodeId))
+                Some(target)    <- nodeService.byId(parentNodeId)
+                newNode         <- Future.successful(Node(0, target.project, node.name, Structure, StringType, node.sort, Nil))
+                Some(node)      <- nodeService.createNode(newNode, Some(parentNodeId))
             } yield {
                 Ok(Json.toJson(node))
             }
     }
 
-    def deleteNode(projectHash: String, nodeId: Long) = Actions.secured(NodeOwner(nodeId)) { implicit request =>
-        nodeService.deleteNode(nodeId).flatMap(_ => Ok(""))
+    def deleteNode(nodeId: Long) = Actions.secured(
+        NodeOwner(nodeId)) { implicit request =>
+            nodeService.deleteNode(nodeId)
+                .flatMap(_ => Ok(""))
     }
 
-    def renameNode(projectHash: String, nodeId: Long) = Actions.securedJson[RenameNode](Some("rename-node")) {
-        (node, request) =>
-            nodeService.renameNode(nodeId, node.name).flatMap(_ => Ok(""))
+    def renameNode(nodeId: Long) = Actions.securedJson[RenameNode](
+        Some("rename-node")) { (node, request) =>
+            nodeService.renameNode(nodeId, node.name)
+                .flatMap(_ => Ok(""))
     }
 }

@@ -28,7 +28,7 @@
     "ts-node": "5.0.1",
     "tslint": "5.9.1",
     "typescript": "2.7.2",
-    "uglify-js": "3.3.15"
+    "uglify-js": "3.3.16"
   },
   "dependencies": {
     "bulma": "0.6.2",

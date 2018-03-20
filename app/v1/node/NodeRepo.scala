@@ -18,6 +18,24 @@ class NodeRepo @Inject()(
     projectRepo: ProjectRepo
 ) {
 
+    def pathToRoot(parent: Node): Future[Seq[Long]] = db.run {
+        sql"""
+             |SELECT T2.id
+             |FROM (
+             |    SELECT
+             |        @r AS _id,
+             |        (SELECT @r := parent FROM nodes WHERE id = _id) AS parent,
+             |        @l := @l + 1 AS lvl
+             |    FROM
+             |        (SELECT @r := 182, @l := 0) vars,
+             |        nodes H
+             |    WHERE @r <> 0) T1
+             |JOIN nodes T2
+             |ON T1._id = T2.id
+             |ORDER BY T1.lvl DESC
+           """.as[Long]
+    }
+
     private val dbConfig = dcp.get[MySQLProfile]
     private val db = dbConfig.db
 
@@ -45,10 +63,10 @@ class NodeRepo @Inject()(
         .headOption
     }
 
-    def createNode(project: Long, node: Node, parent: Option[Long]): Future[Option[Node]] =
+    def createNode(node: Node, parent: Option[Long]): Future[Option[Node]] =
         getHighestSort(parent).flatMap(sort => db.run {
             Nodes returning Nodes.map(_.id) +=
-                NodesRow(node.id, parent, project, node.name, node.nodeRoot,
+                NodesRow(node.id, parent, node.project, node.name, node.nodeRoot,
                     node.nodeType, sort.map(_ + 1).getOrElse(0))
         }).flatMap(findById)
 
@@ -68,7 +86,7 @@ class NodeRepo @Inject()(
     def toNodes(row: Seq[NodesRow]): List[Node] = row.map(toNode).toList
 
     def toNode(row: NodesRow): Node = {
-        Node(row.id, row.name, row.nodeRoot, row.nodeType, row.sort, Nil)
+        Node(row.id, row.project, row.name, row.nodeRoot, row.nodeType, row.sort, Nil)
     }
 
     def toTree(parent: Option[NodesRow], nodes: Seq[NodesRow]): List[Node] = {
