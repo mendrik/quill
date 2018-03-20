@@ -26,6 +26,7 @@ import scala.concurrent.duration._
 class Security @Inject()(
   implicit val builder: DefaultActionBuilder,
   override val messagesApi: MessagesApi,
+  val cc: ControllerComponents,
   val projectService: ProjectService,
   val userService: UserService,
   val silhouette: Silhouette[QuillEnv],
@@ -36,7 +37,7 @@ class Security @Inject()(
   val mailTokenService: MailTokenService[MailTokenUser],
   val mailer: Mailer,
   val clock: Clock
-) extends InjectedController {
+) extends AbstractController(cc) {
 
     implicit val lang: Lang = Lang("en")
     implicit val parser: BodyParser[JsValue] = this.parse.json

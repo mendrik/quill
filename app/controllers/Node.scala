@@ -20,10 +20,11 @@ import scala.concurrent.Future
 class Node @Inject()(
   override val messagesApi: MessagesApi,
   val nodeService: NodeService,
+  val cc: ControllerComponents,
   implicit val silhouette: Silhouette[QuillEnv],
   implicit val securityRules: SecurityRules,
   val configuration: Configuration
-) extends InjectedController {
+) extends AbstractController(cc) {
 
     implicit val lang: Lang = Lang("en")
     implicit val parser: BodyParser[JsValue] = this.parse.json
