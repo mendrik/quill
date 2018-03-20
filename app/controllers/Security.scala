@@ -11,7 +11,7 @@ import error.ErrorIO._
 import error.{Errors, SecurityError}
 import play.api.Configuration
 import play.api.i18n.MessagesApi
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import security.{MailTokenService, MailTokenUser, QuillEnv}
 import utils.{Actions, Mailer}
@@ -24,6 +24,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 class Security @Inject()(
+  implicit val parser: BodyParser[JsValue],
+  implicit val lang: play.api.i18n.Lang,
+  implicit val builder: DefaultActionBuilder,
   override val messagesApi: MessagesApi,
   val projectService: ProjectService,
   val userService: UserService,

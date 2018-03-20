@@ -2,7 +2,7 @@ package utils
 
 import com.mohiva.play.silhouette.api.Silhouette
 import error.ReadError
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc._
 import security.rules.SecurityRule
@@ -12,7 +12,7 @@ import scala.concurrent.Future
 
 case class BodyParseException(prefix: Option[String], jsErrors: scala.Seq[(JsPath, scala.Seq[JsonValidationError])]) extends Exception {
 
-    def errors(ma: MessagesApi): Seq[ReadError] = jsErrors.flatMap { case (path, e) =>
+    def errors(ma: MessagesApi)(implicit lang: Lang): Seq[ReadError] = jsErrors.flatMap { case (path, e) =>
         val fieldName = path.path match {
             case p :: Nil => p match {
                 case p: KeyPathNode => Some(p.key)
@@ -42,8 +42,8 @@ object Actions extends Results {
 
     def json[C](prefix: Option[String] = None)
                (block: (C, RequestHeader) => Future[Result])
-               (implicit reads: Reads[C], parser: BodyParser[JsValue]): Action[JsValue] =
-        Action.async(parser) { request =>
+               (implicit reads: Reads[C], parser: BodyParser[JsValue], builder: DefaultActionBuilder): Action[JsValue] =
+        builder.async(parser) { request =>
             request.body.validate[C] match {
                 case JsSuccess(json, _) =>
                     block(json, request)
@@ -65,9 +65,9 @@ object Actions extends Results {
             }
     }
 
-    def secured[B](rules: SecurityRule*)
+    def secured(rules: SecurityRule*)
                (block: RequestHeader => Future[Result])
-               (implicit silhouette: Silhouette[QuillEnv], securityRules: SecurityRules): Action[B] =
+               (implicit silhouette: Silhouette[QuillEnv], securityRules: SecurityRules) =
         silhouette.UserAwareAction.async { request =>
             securityRules.checkRules(request.identity, rules)
             block(request.request)

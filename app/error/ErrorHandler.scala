@@ -6,7 +6,7 @@ import com.mohiva.play.silhouette.impl.exceptions.{IdentityNotFoundException, In
 import error.ErrorIO._
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.api.http.{HttpErrorHandler, Status}
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.api.routing.Router
@@ -17,6 +17,7 @@ import scala.concurrent.Future
 
 @Singleton
 class ErrorHandler @Inject()(
+    implicit val lang: Lang,
     messagesApi: MessagesApi,
     router: Provider[Router]
 ) extends HttpErrorHandler with Status with Results with SecuredErrorHandler with UnsecuredErrorHandler {

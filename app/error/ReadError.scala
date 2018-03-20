@@ -1,13 +1,13 @@
 package error
 
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 
 trait Error {
     def errorType: String
     def title: String
     def message: String
 
-    def translate(messagesApi: MessagesApi): SecurityError = SecurityError(
+    def translate(messagesApi: MessagesApi)(implicit lang: Lang): SecurityError = SecurityError(
         messagesApi.translate(title, Nil).getOrElse(title),
         messagesApi.translate(message, Nil).getOrElse(message)
     )
