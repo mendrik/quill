@@ -3,7 +3,7 @@ package controllers
 import com.mohiva.play.silhouette.api._
 import javax.inject.Inject
 import play.api.Configuration
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import security.rules.{NodeOwner, NotChildNode, ProjectOwner}
@@ -13,18 +13,20 @@ import utils.Implicits._
 import v1.NodeIO._
 import v1.generic.extensions.decodeHash
 import v1.node._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class Node @Inject()(
   override val messagesApi: MessagesApi,
   val nodeService: NodeService,
-  implicit val lang: play.api.i18n.Lang,
   implicit val silhouette: Silhouette[QuillEnv],
   implicit val securityRules: SecurityRules,
-  implicit val parser: BodyParser[JsValue],
   val configuration: Configuration
 ) extends InjectedController {
+
+    implicit val lang: Lang = Lang("en")
+    implicit val parser: BodyParser[JsValue] = this.parse.json
 
     def newNodeName: String = messagesApi.translate("node.default-name", Nil).get
 

@@ -12,12 +12,10 @@ import play.api.mvc.{RequestHeader, Result, Results}
 import play.api.routing.Router
 import security.rules.SecurityException
 import utils.BodyParseException
-
 import scala.concurrent.Future
 
 @Singleton
 class ErrorHandler @Inject()(
-    implicit val lang: Lang,
     messagesApi: MessagesApi,
     router: Provider[Router]
 ) extends HttpErrorHandler with Status with Results with SecuredErrorHandler with UnsecuredErrorHandler {
@@ -45,6 +43,7 @@ class ErrorHandler @Inject()(
     }
 
     def onServerError(request: RequestHeader, exception: Throwable) = {
+        implicit val lang: Lang = Lang("en")
         Future.successful(exception match {
             case e: BodyParseException =>
                 BadRequest(Json.toJson(

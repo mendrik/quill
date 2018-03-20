@@ -16,6 +16,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
 
 routesImport += "play.api.mvc.PathBindable._"
+routesGenerator := InjectedRoutesGenerator
 
 lazy val root = (project in file("."))
     .enablePlugins(PlayScala)

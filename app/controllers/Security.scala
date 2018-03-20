@@ -10,7 +10,7 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import error.ErrorIO._
 import error.{Errors, SecurityError}
 import play.api.Configuration
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import security.{MailTokenService, MailTokenUser, QuillEnv}
@@ -24,8 +24,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 class Security @Inject()(
-  implicit val parser: BodyParser[JsValue],
-  implicit val lang: play.api.i18n.Lang,
   implicit val builder: DefaultActionBuilder,
   override val messagesApi: MessagesApi,
   val projectService: ProjectService,
@@ -39,6 +37,9 @@ class Security @Inject()(
   val mailer: Mailer,
   val clock: Clock
 ) extends InjectedController {
+
+    implicit val lang: Lang = Lang("en")
+    implicit val parser: BodyParser[JsValue] = this.parse.json
 
     val userExistsError = Errors(List(SecurityError("signup.email", "validation.email.exists").translate(messagesApi)))
     val userNotFoundError = Errors(List(SecurityError("signin.failed", "signin.error.notfound").translate(messagesApi)))
