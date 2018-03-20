@@ -11,7 +11,7 @@ import v1.generic.extensions._
 
 package object UserIO {
 
-    private def err(msgKey: String) = Reads[String](_ => JsError(ValidationError(msgKey)))
+    private def err(msgKey: String) = Reads[String](_ => JsError(JsonValidationError(msgKey)))
 
     implicit val signupReads: Reads[SignUp] = (
         (__ \ "firstname").nonEmpty ~
@@ -42,7 +42,7 @@ package object UserIO {
             if (passwordChange.password == passwordChange.passwordRepeat) {
                 JsSuccess(passwordChange)
             } else {
-                JsError(__ \ "password", ValidationError("Passwords don't match"))
+                JsError(__ \ "password", JsonValidationError("Passwords don't match"))
             }
         }
     }

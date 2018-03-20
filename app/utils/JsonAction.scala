@@ -2,8 +2,7 @@ package utils
 
 import com.mohiva.play.silhouette.api.Silhouette
 import error.ReadError
-import play.api.data.validation.ValidationError
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc._
 import security.rules.SecurityRule
@@ -11,8 +10,9 @@ import security.{QuillEnv, SecurityRules}
 
 import scala.concurrent.Future
 
-case class BodyParseException(prefix: Option[String], jsErrors: scala.Seq[(JsPath, scala.Seq[ValidationError])]) extends Exception {
-    def errors(ma: MessagesApi): Seq[ReadError] = jsErrors.flatMap { case (path, e) =>
+case class BodyParseException(prefix: Option[String], jsErrors: scala.Seq[(JsPath, scala.Seq[JsonValidationError])]) extends Exception {
+
+    def errors(ma: MessagesApi)(implicit lang: Lang): Seq[ReadError] = jsErrors.flatMap { case (path, e) =>
         val fieldName = path.path match {
             case p :: Nil => p match {
                 case p: KeyPathNode => Some(p.key)
@@ -42,19 +42,20 @@ object Actions extends Results {
 
     def json[C](prefix: Option[String] = None)
                (block: (C, RequestHeader) => Future[Result])
-               (implicit reads: Reads[C]) = Action.async(BodyParsers.parse.json) { request =>
-        request.body.validate[C] match {
-            case JsSuccess(json, _) =>
-                block(json, request)
-            case JsError(errors) =>
-                throw BodyParseException(prefix, errors)
+               (implicit reads: Reads[C], parser: BodyParser[JsValue], builder: DefaultActionBuilder): Action[JsValue] =
+        builder.async(parser) { request =>
+            request.body.validate[C] match {
+                case JsSuccess(json, _) =>
+                    block(json, request)
+                case JsError(errors) =>
+                    throw BodyParseException(prefix, errors)
         }
     }
 
     def securedJson[C](prefix: Option[String], rules: SecurityRule*)
                (block: (C, RequestHeader) => Future[Result])
-               (implicit reads: Reads[C], silhouette: Silhouette[QuillEnv], securityRules: SecurityRules) =
-        silhouette.UserAwareAction.async(BodyParsers.parse.json) { request =>
+               (implicit reads: Reads[C], silhouette: Silhouette[QuillEnv], securityRules: SecurityRules, parser: BodyParser[JsValue]):
+    Action[JsValue] = silhouette.UserAwareAction.async(parser) { request =>
             request.body.validate[C] match {
                 case JsSuccess(json, _) =>
                     securityRules.checkRules(request.identity, rules)

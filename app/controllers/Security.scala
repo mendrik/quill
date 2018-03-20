@@ -1,30 +1,32 @@
 package controllers
 
 import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
+import com.mohiva.play.silhouette.api.services.AuthenticatorService
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordHasher}
 import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import error.ErrorIO._
 import error.{Errors, SecurityError}
 import play.api.Configuration
-import play.api.i18n.MessagesApi
-import play.api.libs.json.Json
+import play.api.i18n.{Lang, MessagesApi}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
-import utils.Implicits._
 import security.{MailTokenService, MailTokenUser, QuillEnv}
 import utils.{Actions, Mailer}
 import v1.UserIO._
 import v1.project.ProjectService
 import v1.user._
 import utils.Implicits._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 class Security @Inject()(
-  val messagesApi: MessagesApi,
+  implicit val builder: DefaultActionBuilder,
+  override val messagesApi: MessagesApi,
+  val cc: ControllerComponents,
   val projectService: ProjectService,
   val userService: UserService,
   val silhouette: Silhouette[QuillEnv],
@@ -35,19 +37,22 @@ class Security @Inject()(
   val mailTokenService: MailTokenService[MailTokenUser],
   val mailer: Mailer,
   val clock: Clock
-) extends Controller {
+) extends AbstractController(cc) {
+
+    implicit val lang: Lang = Lang("en")
+    implicit val parser: BodyParser[JsValue] = this.parse.json
 
     val userExistsError = Errors(List(SecurityError("signup.email", "validation.email.exists").translate(messagesApi)))
     val userNotFoundError = Errors(List(SecurityError("signin.failed", "signin.error.notfound").translate(messagesApi)))
     val emailNotFoundError = Errors(List(SecurityError("new-password.failed", "signin.error.notfound").translate(messagesApi)))
-    val authenticatorExpiry = 30 days
-    val authenticatorIdleTimeout = 5 days
-    val authService = silhouette.env.authenticatorService
-    val eventBus = silhouette.env.eventBus
+    val authenticatorExpiry: FiniteDuration = 30 days
+    val authenticatorIdleTimeout: FiniteDuration = 5 days
+    val authService: AuthenticatorService[BearerTokenAuthenticator] = silhouette.env.authenticatorService
+    val eventBus: EventBus = silhouette.env.eventBus
 
     def signIn = Actions.json[PostedCredentials](Some("signin")) { (pc, r) =>
         val credentials = Credentials(pc.identifier, pc.password)
-        implicit val request = r
+        implicit val request: RequestHeader = r
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
             userService.retrieve(loginInfo).flatMap {
                 case Some(user) =>
@@ -70,7 +75,7 @@ class Security @Inject()(
     }
 
     def signUp = Actions.json[SignUp](Some("signup")) { (data, r) =>
-        implicit val request = r
+        implicit val request: RequestHeader = r
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
@@ -133,7 +138,7 @@ class Security @Inject()(
     }
 
     def changePassword = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
-        implicit val request = r
+        implicit val request: RequestHeader = r
         (for {
             Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id) if !token.isExpired
             Some(user) <- userService.retrieve(token.email)
