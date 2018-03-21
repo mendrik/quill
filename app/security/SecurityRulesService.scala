@@ -1,6 +1,6 @@
 package security
 
-import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
+import scala.concurrent.ExecutionContext.Implicits.global
 import javax.inject.Inject
 import play.api.Configuration
 import security.rules._
@@ -28,7 +28,14 @@ case class SecurityRulesService @Inject()(
     }
 
     def checkNotChildNode(nodeId: Long, targetId: Long): Unit = {
-        // todo
+        for {
+            Some(node) <- nodeRepo.findById(targetId)
+            path       <- nodeRepo.pathToRoot(node)
+        } yield {
+            if (path.contains(nodeId)) {
+                throw NotAllowedException()
+            }
+        }
     }
 
     def checkRules(user: Option[User], rules: Seq[SecurityRule]): Unit = {

@@ -13,7 +13,8 @@ module quill {
     export interface NodeDrop {
         from: string
         to: string,
-        position: DropPostion
+        position: DropPostion,
+        open
     }
 
     const NODE_DATA_TYPE = 'quill/node-id'
@@ -59,7 +60,8 @@ module quill {
                 this.triggerUp('node-drop', {
                     from: id,
                     to: this.id(),
-                    position: this.element.getAttribute('data-dragover')
+                    position: this.element.getAttribute('data-dragover'),
+                    open: this.children.length > 0 && this.open
                 } as NodeDrop)
             }
         }

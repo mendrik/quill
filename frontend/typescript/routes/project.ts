@@ -35,9 +35,8 @@ module quill {
             sort: 0
         }
 
-        renameNode: RenameNode = {
-            name: undefined
-        }
+        renameNode: RenameNode
+        moveNode: NodeDrop
 
         id = () => this.projectId
 
@@ -132,13 +131,20 @@ module quill {
         @Subscribe('node-edited')
         editNode(node: CustomTreeNode) {
             Progress.start()
-            this.renameNode.name = node.text
+            this.renameNode = {name: node.text}
             this.renameNodeCall()
+        }
+
+        @Rest({url: '/node/{{moveNode.from}}/to/{{moveNode.to}}', method: Method.PUT, body: 'moveNode', headers: quill.headers})
+        moveNodeCall() {
+            Progress.stop()
         }
 
         @Subscribe('node-drop')
         dragNode(drop: NodeDrop) {
-            console.log(drop)
+            Progress.start()
+            this.moveNode = {...drop}
+            this.moveNodeCall()
         }
 
         @Template()

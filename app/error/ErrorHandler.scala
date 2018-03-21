@@ -10,8 +10,9 @@ import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.api.routing.Router
-import security.rules.SecurityException
+import security.rules.{NotAllowedException, SecurityException}
 import utils.BodyParseException
+
 import scala.concurrent.Future
 
 @Singleton
@@ -52,6 +53,10 @@ class ErrorHandler @Inject()(
             case _: SecurityException =>
                 Forbidden(Json.toJson(
                     Errors(Seq(ReadError("ui.errors.unauthorized.title", "ui.errors.unauthorized.message")))
+                ))
+            case _: NotAllowedException =>
+                Forbidden(Json.toJson(
+                    Errors(Seq(ReadError("ui.errors.notallowed.title", "ui.errors.notallowed.message")))
                 ))
             case _: IdentityNotFoundException =>
                 Unauthorized(Json.toJson(
