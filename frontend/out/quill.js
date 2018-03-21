@@ -44,7 +44,7 @@ var quill;
     quill.headers = (_a = {
             'X-Api-Key': 'AbCdEfGhIjK1',
             'Content-Type': 'application/json',
-            'Accept-Language': 'en-US'
+            'Accept-Language': 'en'
         },
         _a[AUTH_HEADER] = localStorage.getItem(AUTH_HEADER),
         _a);

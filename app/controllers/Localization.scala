@@ -1,18 +1,20 @@
 package controllers
 
 import javax.inject.Inject
-
-import play.api.i18n.MessagesApi
-import play.api.libs.json.Json
+import play.api.i18n.{Lang, MessagesApi}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import utils.MessageIO._
 import utils.{Message, Messages}
 
 class Localization @Inject()(
-    override val messagesApi: MessagesApi
-) extends InjectedController {
+    override val messagesApi: MessagesApi,
+    val cc: ControllerComponents
+) extends AbstractController(cc) {
 
     val LanguageHeader = "Accept-Language"
+    implicit val lang: Lang = Lang("en")
+    implicit val parser: BodyParser[JsValue] = this.parse.json
 
     def translations = Action { request =>
         val lang = request.headers.get(LanguageHeader).map(_.split("_").head).getOrElse("en")
