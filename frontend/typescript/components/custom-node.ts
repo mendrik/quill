@@ -25,6 +25,7 @@ module quill {
 
         init(el: Element) {
             el.setAttribute('draggable', 'true')
+            el.setAttribute('tabindex', '-1')
         }
 
         @On({event: 'dragstart', scope: Scope.Direct})

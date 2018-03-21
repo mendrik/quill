@@ -66,6 +66,7 @@ module quill {
 
         @Subscribe('node-focused')
         nodeSelected(node: CustomTreeNode) {
+            (node.element as HTMLLIElement).focus()
             this.currentTreeNode = node
             this.triggerDown('defocus-other-nodes', node)
         }

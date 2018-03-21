@@ -358,6 +358,7 @@ var quill;
         }
         CustomTreeNode.prototype.init = function (el) {
             el.setAttribute('draggable', 'true');
+            el.setAttribute('tabindex', '-1');
         };
         CustomTreeNode.prototype.dragstart = function (ev) {
             ev.dataTransfer.setData(NODE_DATA_TYPE, this.id());
@@ -574,6 +575,7 @@ var quill;
             this.currentTreeNode = undefined;
         };
         ProjectPage.prototype.nodeSelected = function (node) {
+            node.element.focus();
             this.currentTreeNode = node;
             this.triggerDown('defocus-other-nodes', node);
         };
