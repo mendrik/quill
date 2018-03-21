@@ -85,8 +85,8 @@ slickGenerate := {
     val targetPackageName = "database"
     val outputDir = (sourceManaged in Compile).value.getPath // place generated files in sbt's managed sources folder
     val fname = outputDir + s"/$targetPackageName/Tables.scala"
-    println(s"\nauto-generating slick source for database schema at $url...")
-    println(s"output source file file: file://$fname\n")
+    // println(s"\nauto-generating slick source for database schema at $url...")
+    // println(s"output source file file: file://$fname\n")
     (runner in Compile).value.run("slick.codegen.SourceCodeGenerator",
         (dependencyClasspath in Compile).value.files,
         Array(
