@@ -36,5 +36,4 @@ class Project @Inject()(
         })
         .fallbackTo(successful(Unauthorized))
     }
-
 }

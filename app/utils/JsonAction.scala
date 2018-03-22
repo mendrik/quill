@@ -43,7 +43,7 @@ object Actions extends Results {
 
     def json[C](block: (C, RequestHeader) => Future[Result])
                (implicit reads: Reads[C], parser: BodyParser[JsValue],
-                builder: DefaultActionBuilder): Action[JsValue] =
+                builder: ActionBuilder[Request, AnyContent]): Action[JsValue] =
         builder.async(parser) { request =>
             request.body.validate[C] match {
                 case JsSuccess(json, _) =>

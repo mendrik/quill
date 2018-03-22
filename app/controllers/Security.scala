@@ -10,7 +10,7 @@ import error.ErrorIO._
 import error.{Errors, SecurityError}
 import javax.inject.Inject
 import play.api.Configuration
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.Lang
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import security.{MailTokenService, MailTokenUser, QuillEnv}
@@ -24,8 +24,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 class Security @Inject()(
-  implicit val builder: DefaultActionBuilder,
-  override val messagesApi: MessagesApi,
+  val conf: Configuration,
   val cc: ControllerComponents,
   val projectService: ProjectService,
   val userService: UserService,
@@ -41,6 +40,7 @@ class Security @Inject()(
 
     implicit val lang: Lang = Lang("en")
     implicit val parser: BodyParser[JsValue] = this.parse.json
+    implicit val builder: ActionBuilder[Request, AnyContent] = cc.actionBuilder
 
     val userExistsError = Errors(List(SecurityError("signup", "validation.email.exists").translate(messagesApi)))
     val userNotFoundError = Errors(List(SecurityError("signin", "signin.error.notfound").translate(messagesApi)))
@@ -110,7 +110,7 @@ class Security @Inject()(
 
     def requestPasswordChange: Action[JsValue] = Actions.json[RequestPasswordChange] { (rpc, r) =>
         val token = MailTokenUser(rpc.identifier)
-        implicit val request = r
+        implicit val request: RequestHeader = r
         (for {
             Some(user) <- userService.retrieve(rpc.identifier)
             Some(token) <- mailTokenService.create(token)
@@ -131,7 +131,7 @@ class Security @Inject()(
                 mailTokenService.consume(id)
                 Redirect("/404")
             } else {
-                Ok(views.html.index())
+                Ok(views.html.index(conf))
             }
         })
         .fallbackTo(Redirect("/404"))

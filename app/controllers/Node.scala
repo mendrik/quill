@@ -14,7 +14,7 @@ import v1.generic.extensions.decodeHash
 import v1.node._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.Future.successful
 
 class Node @Inject()(
   override val messagesApi: MessagesApi,
@@ -34,7 +34,7 @@ class Node @Inject()(
         for {
             _               <- securityRules.checkRules(request.identity, ProjectOwner(hash))
             Some(projectId) <- decodeHash(hash)
-            newNode         <- Future.successful(Node(0, projectId, node.name, Structure, StringType, node.sort, Nil))
+            newNode         <- successful(Node(0, projectId, node.name, Structure, StringType, node.sort, Nil))
             Some(node)      <- nodeService.createNode(newNode, None)
         } yield {
             Ok(Json.toJson(node))
@@ -62,7 +62,7 @@ class Node @Inject()(
         for {
             _            <- securityRules.checkRules(request.identity, NodeOwner(parentNodeId))
             Some(target) <- nodeService.byId(parentNodeId)
-            newNode      <- Future.successful(Node(0, target.project, node.name, Structure, StringType, node.sort, Nil))
+            newNode      <- successful(Node(0, target.project, node.name, Structure, StringType, node.sort, Nil))
             Some(node)   <- nodeService.createNode(newNode, Some(parentNodeId))
         } yield {
             Ok(Json.toJson(node))
