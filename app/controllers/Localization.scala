@@ -16,7 +16,7 @@ class Localization @Inject()(
     implicit val parser: BodyParser[JsValue] = this.parse.json
 
     def translations = Action { request =>
-        implicit val lang = request.headers.get(LanguageHeader).map(_.split("_").head).getOrElse("en")
+        implicit val lang: String = request.headers.get(LanguageHeader).map(_.split("_").head).getOrElse("en")
         val messages = messagesApi.messages.getOrElse(lang, Map.empty)
             .filter(_._1.startsWith("ui."))
             .map { case (key, value) =>

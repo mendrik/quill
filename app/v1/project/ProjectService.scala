@@ -17,8 +17,6 @@ class ProjectService @Inject()(
     repo: ProjectRepo,
     puRepo: ProjectUserRepo
 ) {
-    val unauthorized = Future.failed(new AccessDeniedException("Access denied to project"))
-
     def createProject(user: User): Future[Project] = {
         for {
             Some(project) <- repo.createProject(Project(0, None, Nil, Nil))
@@ -44,8 +42,8 @@ class ProjectService @Inject()(
 
     def findByHashAndUser(hash: String, user: Long): Future[Project] = {
         for {
-            Some(id) <- decodeHash(hash)
-            ok <- userInProject(user, id)
+            Some(id)      <- decodeHash(hash)
+            ok            <- userInProject(user, id)
             Some(project) <- repo.findById(id) if ok
         } yield {
             project

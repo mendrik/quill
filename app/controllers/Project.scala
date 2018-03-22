@@ -1,46 +1,40 @@
 package controllers
 
-import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api._
-import play.api.Configuration
-import play.api.i18n.MessagesApi
+import javax.inject.Inject
 import play.api.libs.json.Json
 import play.api.mvc._
-import security.QuillEnv
-import utils.Implicits._
+import security.{QuillEnv, SecurityRules}
+import security.rules.ProjectOwner
+import utils.Actions.secured
 import v1.ProjectIO._
 import v1.node.NodeService
 import v1.project.ProjectService
-import v1.user._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future.successful
 
 class Project @Inject()(
-  override val messagesApi: MessagesApi,
   val projectService: ProjectService,
-  val userService: UserService,
   val nodeService: NodeService,
-  val silhouette: Silhouette[QuillEnv],
-  val configuration: Configuration,
+  implicit val silhouette: Silhouette[QuillEnv],
+  implicit val securityRules: SecurityRules,
   val cc: ControllerComponents
 ) extends AbstractController(cc) {
 
-    def project(hash: String) = silhouette.SecuredAction.async { implicit request =>
-        val user: User = request.identity
-        projectService.findByHashAndUser(hash, user.id).flatMap { project =>
-            for {
-                structure <- nodeService.structureNodes(project.id)
-                schema <- nodeService.schemaNodes(project.id)
-            } yield {
-                val enhancedProject = project.copy(
-                    structure = structure,
-                    schema = schema
-                )
-                Ok(Json.toJson(enhancedProject))
-            }
-        }
-        .fallbackTo(Unauthorized)
+    def project(hash: String): Action[AnyContent] = secured { implicit request =>
+        (for {
+            _         <- securityRules.checkRules(request.identity, ProjectOwner(hash))
+            Some(u)   <- successful(request.identity)
+            project   <- projectService.findByHashAndUser(hash, u.id)
+            structure <- nodeService.structureNodes(project.id)
+            schema    <- nodeService.schemaNodes(project.id)
+        } yield {
+            Ok(Json.toJson(
+                project.copy(structure = structure, schema = schema)
+            ))
+        })
+        .fallbackTo(successful(Unauthorized))
     }
 
 }

@@ -659,17 +659,19 @@ var quill;
         ProjectPage.prototype.moveNodeCall = function () {
             quill.Progress.stop();
             var mn = this.moveNode;
-            var from = this.findNode(mn.from);
-            var to = this.findNode(mn.to);
+            var allNodes = this.allNodes(this.nodes);
+            var from = allNodes.find(function (n) { return n.id() === mn.from; });
+            var to = allNodes.find(function (n) { return n.id() === mn.to; });
             var nodes = isDef(from.parent) ? from.parent.children : this.nodes;
+            var toNodes = isDef(to.parent) ? to.parent.children : this.nodes;
             removeFromArray(nodes, [from]);
             if (mn.position === quill.DropPostion.inside) {
                 var position = nodes.indexOf(to);
                 to.add(from, position + 1);
             }
-            else if (mn.position === quill.DropPostion.above) {
-            }
-            else if (mn.position === quill.DropPostion.below) {
+            else {
+                var index = toNodes.indexOf(to) + (mn.position === quill.DropPostion.below ? 1 : 0);
+                toNodes.splice(index, 0, from);
             }
         };
         ProjectPage.prototype.dragNode = function (drop) {
@@ -680,9 +682,8 @@ var quill;
         ProjectPage.prototype.projectPage = function () {
             return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                <horizontal-split class=\"grow\" id=\"app-split\">\n                  <sidebar class=\"v-flex\">\n                    <tree-actions></tree-actions>\n                    <scroll-pane class=\"grow\">\n                      <aside class=\"menu\">\n                        <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                        <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                      </aside>\n                    </scroll-pane>\n                  </sidebar>\n                  <section class=\"v-flex\">\n                    <scroll-pane class=\"grow\">\n                    </scroll-pane>\n                  </section>\n                </horizontal-split>\n                <footer class=\"no-grow\"/>\n            </panel>";
         };
-        ProjectPage.prototype.findNode = function (nodeId) {
-            var treeNodes = [].concat.apply([], this.nodes.map(quill.flattenTree));
-            return treeNodes.find(function (n) { return n.id() === nodeId; });
+        ProjectPage.prototype.allNodes = function (nodes) {
+            return [].concat.apply([], nodes.map(quill.flattenTree));
         };
         __decorate([
             Bind()

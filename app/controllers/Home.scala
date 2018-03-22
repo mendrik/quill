@@ -16,7 +16,7 @@ class Home @Inject()(
         Ok(views.html.index())
     }
 
-    def project(id: String) = Action.async { request =>
+    def project(id: String): Action[AnyContent] = Action.async { request =>
         Ok(views.html.index())
     }
 

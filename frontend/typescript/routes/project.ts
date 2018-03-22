@@ -143,17 +143,18 @@ module quill {
         moveNodeCall() {
             Progress.stop()
             const mn       = this.moveNode
-            const from     = this.findNode(mn.from)
-            const to       = this.findNode(mn.to)
+            const allNodes = this.allNodes(this.nodes)
+            const from     = allNodes.find(n => n.id() === mn.from)
+            const to       = allNodes.find(n => n.id() === mn.to)
             const nodes    = isDef(from.parent) ? from.parent.children : this.nodes
+            const toNodes  = isDef(to.parent) ? to.parent.children : this.nodes
             removeFromArray(nodes, [from])
             if (mn.position === DropPostion.inside) {
                 const position = nodes.indexOf(to)
                 to.add(from, position + 1)
-            } else if (mn.position === DropPostion.above) {
-                // todo
-            } else if (mn.position === DropPostion.below) {
-                // todo
+            } else {
+                const index = toNodes.indexOf(to) + (mn.position === DropPostion.below ? 1 : 0)
+                toNodes.splice(index, 0, from)
             }
         }
 
@@ -190,9 +191,8 @@ module quill {
             </panel>`
         }
 
-        private findNode(nodeId: string) {
-            const treeNodes = [].concat(...this.nodes.map(flattenTree))
-            return treeNodes.find(n => n.id() === nodeId)
+        private allNodes(nodes: CustomTreeNode[]) {
+            return [].concat(...nodes.map(flattenTree))
         }
     }
 }

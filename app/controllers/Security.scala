@@ -1,6 +1,5 @@
 package controllers
 
-import javax.inject.Inject
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
@@ -9,16 +8,17 @@ import com.mohiva.play.silhouette.impl.authenticators.BearerTokenAuthenticator
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import error.ErrorIO._
 import error.{Errors, SecurityError}
+import javax.inject.Inject
 import play.api.Configuration
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import security.{MailTokenService, MailTokenUser, QuillEnv}
+import utils.Implicits._
 import utils.{Actions, Mailer}
 import v1.UserIO._
 import v1.project.ProjectService
 import v1.user._
-import utils.Implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -50,7 +50,7 @@ class Security @Inject()(
     val authService: AuthenticatorService[BearerTokenAuthenticator] = silhouette.env.authenticatorService
     val eventBus: EventBus = silhouette.env.eventBus
 
-    def signIn = Actions.json[PostedCredentials](Some("signin")) { (pc, r) =>
+    def signIn: Action[JsValue] = Actions.json[PostedCredentials] { (pc, r) =>
         val credentials = Credentials(pc.identifier, pc.password)
         implicit val request: RequestHeader = r
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
@@ -69,12 +69,12 @@ class Security @Inject()(
         }
     }
 
-    def signOut = silhouette.SecuredAction.async { implicit request =>
+    def signOut: Action[AnyContent] = silhouette.SecuredAction.async { implicit request =>
         eventBus.publish(LogoutEvent(request.identity, request))
         authService.discard(request.authenticator, Ok)
     }
 
-    def signUp = Actions.json[SignUp](Some("signup")) { (data, r) =>
+    def signUp: Action[JsValue] = Actions.json[SignUp] { (data, r) =>
         implicit val request: RequestHeader = r
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userService.retrieve(loginInfo).flatMap {
@@ -95,7 +95,7 @@ class Security @Inject()(
         }
     }
 
-    def accountInfo = silhouette.SecuredAction.async { implicit request =>
+    def accountInfo: Action[AnyContent] = silhouette.SecuredAction.async { implicit request =>
         val user: User = request.identity
         if (user.lastProject.isEmpty) {
             for {
@@ -108,7 +108,7 @@ class Security @Inject()(
         }
     }
 
-    def requestPasswordChange = Actions.json[RequestPasswordChange](Some("forgot-password")) { (rpc, r) =>
+    def requestPasswordChange: Action[JsValue] = Actions.json[RequestPasswordChange] { (rpc, r) =>
         val token = MailTokenUser(rpc.identifier)
         implicit val request = r
         (for {
@@ -123,7 +123,7 @@ class Security @Inject()(
         }
     }
 
-    def changePasswordPage(id: String) = Action.async { implicit request =>
+    def changePasswordPage(id: String): Action[AnyContent] = Action.async { implicit request =>
         (for {
             Some(token) <- mailTokenService.retrieve(id)
         } yield {
@@ -137,7 +137,7 @@ class Security @Inject()(
         .fallbackTo(Redirect("/404"))
     }
 
-    def changePassword = Actions.json[PasswordChange](Some("new-password")) { (pc, r) =>
+    def changePassword: Action[JsValue] = Actions.json[PasswordChange] { (pc, r) =>
         implicit val request: RequestHeader = r
         (for {
             Some(token: MailTokenUser) <- mailTokenService.retrieve(pc.id) if !token.isExpired

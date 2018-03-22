@@ -12,16 +12,16 @@ trait Entity {
 
 package object extensions {
 
-    val hashids = Hashids.reference("p4013c7-1Ds", 7)
+    val hashids: Hashids = Hashids.reference("p4013c7-1Ds", 7)
 
     def decodeHash(hash: String): Future[Option[Long]] = Future.successful(hashids.decode(hash).headOption)
 
     implicit class ProjectExtensions(project: Project) {
-        def hash = hashids.encode(project.id)
+        def hash: String = hashids.encode(project.id)
     }
 
     implicit class UserExtensions(user: User) {
-        def lastProjectHash = hashids.encode(user.lastProject.get)
+        def lastProjectHash: String = hashids.encode(user.lastProject.get)
     }
 }
 

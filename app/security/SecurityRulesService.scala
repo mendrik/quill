@@ -12,7 +12,7 @@ import scala.concurrent.Future
 import scala.concurrent.Future.sequence
 
 trait SecurityRules {
-    def checkRules(user: Option[User], rules: Seq[SecurityRule]): Future[Boolean]
+    def checkRules(user: Option[User], rules: SecurityRule*): Future[Boolean]
 }
 
 case class SecurityRulesService @Inject()(
@@ -42,7 +42,7 @@ case class SecurityRulesService @Inject()(
         }
     }
 
-    def checkRules(user: Option[User], rules: Seq[SecurityRule]): Future[Boolean] = {
+    def checkRules(user: Option[User], rules: SecurityRule*): Future[Boolean] = {
         val res = user match {
             case Some(user: User) => sequence(rules.map {
                 case ProjectOwner(hash: String) => checkProjectOwner(user, hash)
