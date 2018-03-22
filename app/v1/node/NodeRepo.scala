@@ -18,20 +18,21 @@ class NodeRepo @Inject()(
 ) {
 
     def pathToRoot(parent: Node): Future[Seq[Long]] = db.run {
+        val id = parent.id.toString
         sql"""
-             |SELECT T2.id
-             |FROM (
-             |    SELECT
-             |        @r AS _id,
-             |        (SELECT @r := parent FROM nodes WHERE id = _id) AS parent,
-             |        @l := @l + 1 AS lvl
-             |    FROM
-             |        (SELECT @r := 182, @l := 0) vars,
-             |        nodes H
-             |    WHERE @r <> 0) T1
-             |JOIN nodes T2
-             |ON T1._id = T2.id
-             |ORDER BY T1.lvl DESC
+             select t2.id
+              from (
+                 select
+                     @r as _id,
+                     (select @r := parent from nodes where id = _id) as parent,
+                     @l := @l + 1 as lvl
+                 from
+                     (select @r := ${id}, @l := 0) vars,
+                     nodes h
+                 where @r <> 0) t1
+              join nodes t2
+              on t1._id = t2.id
+              order by t1.lvl desc
            """.as[Long]
     }
 

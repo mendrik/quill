@@ -201,9 +201,16 @@ var quill;
                 ToastManager.showToast(new Toast('ui.error.server', err.errors[0].message, Theme.Error));
             };
             AjaxWidget.prototype.requestForbidden = function () {
-                console.log('failure');
+                quill.Progress.stop();
+                ToastManager.showToast(new Toast('ui.errors.forbidden.title', 'ui.errors.forbidden.message', Theme.Error));
+            };
+            AjaxWidget.prototype.requestUnauthorized = function () {
                 quill.Progress.stop();
                 ToastManager.showToast(new Toast('ui.errors.unauthorized.title', 'ui.errors.unauthorized.message', Theme.Error));
+            };
+            AjaxWidget.prototype.requestMethodNotAllowed = function () {
+                quill.Progress.stop();
+                ToastManager.showToast(new Toast('ui.errors.notallowed.title', 'ui.errors.notallowed.message', Theme.Error));
             };
             AjaxWidget.prototype.timeout = function () {
                 quill.Progress.stop();
@@ -219,6 +226,12 @@ var quill;
             __decorate([
                 Subscribe('xhr-failure-403')
             ], AjaxWidget.prototype, "requestForbidden", null);
+            __decorate([
+                Subscribe('xhr-failure-401')
+            ], AjaxWidget.prototype, "requestUnauthorized", null);
+            __decorate([
+                Subscribe('xhr-failure-405')
+            ], AjaxWidget.prototype, "requestMethodNotAllowed", null);
             __decorate([
                 Subscribe('xhr-failure-timeout')
             ], AjaxWidget.prototype, "timeout", null);
@@ -1036,17 +1049,20 @@ var quill;
                 this.checkLogin();
             }
             else {
-                this.pages.splice(0, 1, new quill.ProjectPage(params.id));
+                this.goToPage(new quill.ProjectPage(params.id));
             }
         };
         QuillApplication.prototype.loginPage = function () {
-            this.pages.splice(0, 1, new quill.LoginPage());
+            this.goToPage(new quill.LoginPage());
         };
         QuillApplication.prototype.notFoundPage = function () {
-            this.pages.splice(0, 1, new quill.NotFoundPage());
+            this.goToPage(new quill.NotFoundPage());
         };
         QuillApplication.prototype.changePasswordPage = function () {
-            this.pages.splice(0, 1, new quill.PassordChangePage());
+            this.goToPage(new quill.PassordChangePage());
+        };
+        QuillApplication.prototype.goToPage = function (page) {
+            this.pages.splice(0, 1, page);
         };
         QuillApplication.prototype.homePage = function () {
             this.checkLogin();

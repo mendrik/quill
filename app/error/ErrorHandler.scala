@@ -14,6 +14,7 @@ import security.rules.{NotAllowedException, SecurityException}
 import utils.BodyParseException
 
 import scala.concurrent.Future
+import scala.concurrent.Future.successful
 
 @Singleton
 class ErrorHandler @Inject()(
@@ -21,21 +22,21 @@ class ErrorHandler @Inject()(
     router: Provider[Router]
 ) extends HttpErrorHandler with Status with Results with SecuredErrorHandler with UnsecuredErrorHandler {
 
-    override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = Future.successful {
+    override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = successful {
         Unauthorized(Json.toJson(
             Errors(Seq(SecurityError("Not authorized", "You must login")))
         ))
     }
 
     // 403 - Forbidden
-    override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = Future.successful {
+    override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = successful {
         Forbidden(Json.toJson(
             Errors(Seq(ReadError("ui.errors.unauthorized.title", "ui.errors.unauthorized.message")))
         ))
     }
 
     def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
-        Future.successful(
+        successful(
             statusCode match {
                 case NOT_FOUND => Redirect("/404", statusCode)
                 case _ => Status(statusCode)("A client error occurred: " + message)
@@ -45,30 +46,28 @@ class ErrorHandler @Inject()(
 
     def onServerError(request: RequestHeader, exception: Throwable) = {
         implicit val lang: Lang = Lang("en")
-        Future.successful(exception match {
-            case e: BodyParseException =>
-                BadRequest(Json.toJson(
-                    Errors(e.errors(messagesApi))
-                ))
-            case _: SecurityException =>
-                Forbidden(Json.toJson(
-                    Errors(Seq(ReadError("ui.errors.unauthorized.title", "ui.errors.unauthorized.message")))
-                ))
-            case _: NotAllowedException =>
-                Forbidden(Json.toJson(
-                    Errors(Seq(ReadError("ui.errors.notallowed.title", "ui.errors.notallowed.message")))
-                ))
-            case _: IdentityNotFoundException =>
-                Unauthorized(Json.toJson(
-                    Errors(Seq(ServerError("signin.failed", "signin.error.notfound").translate(messagesApi)))
-                ))
-            case _: InvalidPasswordException =>
-                Unauthorized(Json.toJson(
-                    Errors(Seq(ServerError("signin.failed", "signin.error.password").translate(messagesApi)))
-                ))
-            case e: Throwable =>
-                println(ExceptionUtils.getStackTrace(e))
-                InternalServerError(Json.toJson(Errors(List(ServerError("Server Error", e.getMessage.capitalize)))))
-        })
+        println(ExceptionUtils.getStackTrace(exception))
+        successful {
+            exception match {
+                case e: BodyParseException =>
+                    BadRequest(Json.toJson(
+                        Errors(e.errors(messagesApi))
+                    ))
+                case _: SecurityException =>
+                    Forbidden("")
+                case _: NotAllowedException =>
+                    MethodNotAllowed("")
+                case _: IdentityNotFoundException =>
+                    Unauthorized(Json.toJson(
+                        Errors(Seq(ServerError("signin.failed", "signin.error.notfound").translate(messagesApi)))
+                    ))
+                case _: InvalidPasswordException =>
+                    Unauthorized(Json.toJson(
+                        Errors(Seq(ServerError("signin.failed", "signin.error.password").translate(messagesApi)))
+                    ))
+                case e: Throwable =>
+                    InternalServerError(Json.toJson(Errors(List(ServerError("Server Error", e.getMessage.capitalize)))))
+            }
+        }
     }
 }

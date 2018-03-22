@@ -16,9 +16,20 @@ module quill.components {
 
         @Subscribe('xhr-failure-403')
         requestForbidden() {
-            console.log('failure');
+            Progress.stop()
+            ToastManager.showToast(new Toast('ui.errors.forbidden.title', 'ui.errors.forbidden.message', Theme.Error))
+        }
+
+        @Subscribe('xhr-failure-401')
+        requestUnauthorized() {
             Progress.stop()
             ToastManager.showToast(new Toast('ui.errors.unauthorized.title', 'ui.errors.unauthorized.message', Theme.Error))
+        }
+
+        @Subscribe('xhr-failure-405')
+        requestMethodNotAllowed() {
+            Progress.stop()
+            ToastManager.showToast(new Toast('ui.errors.notallowed.title', 'ui.errors.notallowed.message', Theme.Error))
         }
 
         @Subscribe('xhr-failure-timeout')

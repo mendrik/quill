@@ -7,7 +7,7 @@ import play.api.libs.json._
 import play.api.mvc._
 import security.rules.SecurityRule
 import security.{QuillEnv, SecurityRules}
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 case class BodyParseException(prefix: Option[String], jsErrors: scala.Seq[(JsPath, scala.Seq[JsonValidationError])]) extends Exception {
@@ -42,7 +42,8 @@ object Actions extends Results {
 
     def json[C](prefix: Option[String] = None)
                (block: (C, RequestHeader) => Future[Result])
-               (implicit reads: Reads[C], parser: BodyParser[JsValue], builder: DefaultActionBuilder): Action[JsValue] =
+               (implicit reads: Reads[C], parser: BodyParser[JsValue],
+                builder: DefaultActionBuilder): Action[JsValue] =
         builder.async(parser) { request =>
             request.body.validate[C] match {
                 case JsSuccess(json, _) =>
@@ -53,24 +54,27 @@ object Actions extends Results {
     }
 
     def securedJson[C](prefix: Option[String], rules: SecurityRule*)
-               (block: (C, RequestHeader) => Future[Result])
-               (implicit reads: Reads[C], silhouette: Silhouette[QuillEnv], securityRules: SecurityRules, parser: BodyParser[JsValue]):
-    Action[JsValue] = silhouette.UserAwareAction.async(parser) { request =>
-            request.body.validate[C] match {
-                case JsSuccess(json, _) =>
-                    securityRules.checkRules(request.identity, rules)
-                    block(json, request.request)
-                case JsError(errors) =>
-                    throw BodyParseException(prefix, errors)
+                      (block: (C, RequestHeader) => Future[Result])
+                      (implicit reads: Reads[C], silhouette: Silhouette[QuillEnv],
+                       securityRules: SecurityRules, parser: BodyParser[JsValue]): Action[JsValue] =
+        silhouette.UserAwareAction.async(parser) { request =>
+            securityRules.checkRules(request.identity, rules).flatMap { _ =>
+                request.body.validate[C] match {
+                    case JsSuccess(json, _) =>
+                        block(json, request.request)
+                    case JsError(errors) =>
+                        throw BodyParseException(prefix, errors)
+                }
             }
-    }
+        }
 
     def secured(rules: SecurityRule*)
                (block: RequestHeader => Future[Result])
                (implicit silhouette: Silhouette[QuillEnv], securityRules: SecurityRules) =
         silhouette.UserAwareAction.async { request =>
-            securityRules.checkRules(request.identity, rules)
-            block(request.request)
-    }
+            securityRules.checkRules(request.identity, rules).flatMap { _ =>
+                block(request.request)
+            }
+        }
 
 }

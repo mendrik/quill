@@ -43,7 +43,7 @@ class Node @Inject()(
     }
 
     def moveNode(nodeId: Long, targetId: Long): Action[JsValue] = securedJson[MoveNode](
-        Some("new-node"), NodeOwner(nodeId), NotChildNode(nodeId, targetId)) { (move, request) =>
+        Some("move-node"), NodeOwner(nodeId), NotChildNode(nodeId, targetId)) { (move, request) =>
             nodeService.moveNode(nodeId, targetId, move)
                 .flatMap(_ => Ok(""))
     }

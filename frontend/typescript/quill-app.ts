@@ -62,23 +62,27 @@ module quill {
             if (!this.user) {
                 this.checkLogin()
             } else {
-                this.pages.splice(0, 1, new ProjectPage(params.id))
+                this.goToPage(new ProjectPage(params.id))
             }
         }
 
         @Route('/login')
         loginPage() {
-            this.pages.splice(0, 1, new LoginPage())
+            this.goToPage(new LoginPage())
         }
 
         @Route('/404')
         notFoundPage() {
-            this.pages.splice(0, 1, new NotFoundPage())
+            this.goToPage(new NotFoundPage())
         }
 
         @Route('/changepassword')
         changePasswordPage() {
-            this.pages.splice(0, 1, new PassordChangePage())
+            this.goToPage(new PassordChangePage())
+        }
+
+        goToPage(page: Widget) {
+            this.pages.splice(0, 1, page)
         }
 
         @Route('/')

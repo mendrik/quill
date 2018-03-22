@@ -8,8 +8,9 @@ import utils.Implicits._
 import scala.concurrent.Future
 
 class Home @Inject()(
-    override val messagesApi: MessagesApi
-) extends InjectedController {
+    override val messagesApi: MessagesApi,
+    val cc: ControllerComponents
+) extends AbstractController(cc) {
 
     def index = Action { request =>
         Ok(views.html.index())
