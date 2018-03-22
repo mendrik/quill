@@ -13,8 +13,8 @@
     <link rel="icon" href="@routes.Assets.versioned("favicon.ico")">
 
     @if(conf.get[String]("mode") == "feather") {
-      <link rel="stylesheet" type="text/css" href="/out/styles.css">
       <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("/dev/feather-components/feather-components.css")">
+      <link rel="stylesheet" type="text/css" href="/out/styles.css">
     } else {
       <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("feather-components.css")">
       <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("styles.css")">
