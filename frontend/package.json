@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "npm-run-all --parallel watch:css watch",
     "watch:css": "postcss postcss/all.pcss -w -o out/styles.css",
+    "build:css": "postcss postcss/all.pcss -o out/styles.css",
     "watch": "tsc -w -p tsconfig.json",
-    "publish": "ts-node build/build.ts"
+    "build:ts": "ts-node build/build.ts",
+    "publish": "npm-run-all --parallel build:css build:ts"
   },
   "author": "Andreas Prudzilko",
   "license": "ISC",
@@ -32,7 +34,7 @@
   },
   "dependencies": {
     "bulma": "0.6.2",
-    "feather-ts": "c1.2.57",
-    "feather-components": "1.0.11"
+    "feather-ts": "1.2.57",
+    "feather-components": "1.0.12"
   }
 }

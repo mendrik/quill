@@ -22,7 +22,7 @@ module quill {
             this.render()
         }
 
-        @On({event: 'tap', selector: '.nav-toggle'})
+        @On({event: 'tap', selector: '.navbar-toggle'})
         toggle(ev, el) {
             this.toggleActiveState()
             if (el.classList.contains('is-active')) {
@@ -41,9 +41,10 @@ module quill {
         }
 
         toggleActiveState() {
-            const el = this.element.querySelector('.nav-toggle');
+            const el = this.element.querySelector('.navbar-toggle')
             el.classList.toggle('is-active')
-            el.nextElementSibling.classList.toggle('is-active')
+            const menu = this.element.querySelector('.navbar-menu')
+            menu.classList.toggle('is-active')
         }
 
         @On({event: 'tap', selector: 'a.logout'})
@@ -66,26 +67,28 @@ module quill {
         @Template()
         markup() {
             return `
-            <nav class="nav">
-              <div class="nav-left">
-                <a class="nav-item" href="/" id="logo">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+              <div class="navbar-brand">
+                <a class="navbar-item" href="/" id="logo">
                     <img src="/assets/images/quill.svg" alt="Quill Logo">
                     <span>Quill</span><span>{{project.name}}</span>
                 </a>
+                <div class="navbar-burger navbar-toggle">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
-              <span class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-              <div class="nav-right nav-menu">
-                <a class="nav-item logout">Logout <span class="username">{{user.firstname}}</span></a>
-                <a class="nav-item">Documentation</a>
-                <div  class="nav-item">
-                    <p class="control has-icons-right" id="search">
-                      <input class="input" type="text" placeholder="Search...">
-                      <Icon name="search" align-right="right"></Icon>
-                    </p>
+              <div class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item logout">Logout <span class="username">{{user.firstname}}</span></a>
+                    <a class="navbar-item">Documentation</a>
+                    <div  class="navbar-item">
+                        <p class="control has-icons-right" id="search">
+                          <input class="input" type="text" placeholder="Search...">
+                          <Icon name="search" align-right="right"></Icon>
+                        </p>
+                    </div>
                 </div>
               </div>
             </nav>

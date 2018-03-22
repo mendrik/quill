@@ -9,17 +9,18 @@
     <title>Quill</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="@routes.Assets.versioned("bulma.css")">
     <link rel="icon" href="@routes.Assets.versioned("favicon.ico")">
-    <link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
 
     @if(conf.get[String]("mode") == "feather") {
       <link rel="stylesheet" type="text/css" href="/out/styles.css">
       <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("/dev/feather-components/feather-components.css")">
     } else {
+      <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("feather-components.css")">
       <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("styles.css")">
     }
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
   </head>
   <body class="toast-manager quill-app">
     @if(conf.get[String]("mode") == "feather") {

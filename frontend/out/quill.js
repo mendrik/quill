@@ -510,9 +510,10 @@ var quill;
             }
         };
         Navigation.prototype.toggleActiveState = function () {
-            var el = this.element.querySelector('.nav-toggle');
+            var el = this.element.querySelector('.navbar-toggle');
             el.classList.toggle('is-active');
-            el.nextElementSibling.classList.toggle('is-active');
+            var menu = this.element.querySelector('.navbar-menu');
+            menu.classList.toggle('is-active');
         };
         Navigation.prototype.logoutClicked = function () {
             this.doLogout();
@@ -526,10 +527,10 @@ var quill;
             this.route('/login');
         };
         Navigation.prototype.markup = function () {
-            return "\n            <nav class=\"nav\">\n              <div class=\"nav-left\">\n                <a class=\"nav-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    <span>Quill</span><span>{{project.name}}</span>\n                </a>\n              </div>\n              <span class=\"nav-toggle\">\n                <span></span>\n                <span></span>\n                <span></span>\n              </span>\n              <div class=\"nav-right nav-menu\">\n                <a class=\"nav-item logout\">Logout <span class=\"username\">{{user.firstname}}</span></a>\n                <a class=\"nav-item\">Documentation</a>\n                <div  class=\"nav-item\">\n                    <p class=\"control has-icons-right\" id=\"search\">\n                      <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                      <Icon name=\"search\" align-right=\"right\"></Icon>\n                    </p>\n                </div>\n              </div>\n            </nav>\n            ";
+            return "\n            <nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n              <div class=\"navbar-brand\">\n                <a class=\"navbar-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    <span>Quill</span><span>{{project.name}}</span>\n                </a>\n                <div class=\"navbar-burger navbar-toggle\">\n                  <span></span>\n                  <span></span>\n                  <span></span>\n                </div>\n              </div>\n              <div class=\"navbar-menu\">\n                <div class=\"navbar-end\">\n                    <a class=\"navbar-item logout\">Logout <span class=\"username\">{{user.firstname}}</span></a>\n                    <a class=\"navbar-item\">Documentation</a>\n                    <div  class=\"navbar-item\">\n                        <p class=\"control has-icons-right\" id=\"search\">\n                          <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                          <Icon name=\"search\" align-right=\"right\"></Icon>\n                        </p>\n                    </div>\n                </div>\n              </div>\n            </nav>\n            ";
         };
         __decorate([
-            On({ event: 'tap', selector: '.nav-toggle' })
+            On({ event: 'tap', selector: '.navbar-toggle' })
         ], Navigation.prototype, "toggle", null);
         __decorate([
             On({ event: 'tap', selector: 'a.logout' })

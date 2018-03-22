@@ -13,7 +13,7 @@ module quill {
 
         @Template()
         markup() {
-            return ``;
+            return ``
         }
     }
 }
