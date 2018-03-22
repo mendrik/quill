@@ -16,8 +16,6 @@
     <logger name="org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator" level="ERROR" />
     <logger name="slick" level="ERROR" />
     <logger name="java.sql" level="ERROR" />
-    <logger name="security" level="ERROR" />
-    <logger name="akka" level="INFO" />
 
     <root level="WARN">
         <appender-ref ref="STDOUT" />

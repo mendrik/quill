@@ -43,8 +43,7 @@ class Node @Inject()(
 
     def moveNode(nodeId: Long, targetId: Long): Action[JsValue] = securedJson[MoveNode] { (move, request) =>
         for {
-            _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId), NodeOwner(targetId))
-            _ <- securityRules.checkRules(request.identity, NotChildNode(nodeId, targetId)) if move.position == v1.node.Inside
+            _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId), NodeOwner(targetId), NotChildNode(nodeId, targetId))
             _ <- nodeService.moveNode(nodeId, targetId, move)
         } yield {
             Ok("")
