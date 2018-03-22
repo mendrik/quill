@@ -37,6 +37,10 @@ var quill;
                 return TreeNodeIcon.boolean;
         }
     };
+    quill.flattenTree = function (node) {
+        return (_a = [node]).concat.apply(_a, node.children.map(quill.flattenTree));
+        var _a;
+    };
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
@@ -355,6 +359,7 @@ var quill;
     var TreeNode = feather.ui.tree.TreeNode;
     var On = feather.event.On;
     var Scope = feather.event.Scope;
+    var isDef = feather.functions.isDef;
     var DropPostion;
     (function (DropPostion) {
         DropPostion["inside"] = "inside";
@@ -406,8 +411,13 @@ var quill;
                 });
             }
         };
-        CustomTreeNode.prototype.add = function (node) {
-            this.children.push(node);
+        CustomTreeNode.prototype.add = function (node, index) {
+            if (isDef(index)) {
+                this.children.splice(index, 0, node);
+            }
+            else {
+                this.children.push(node);
+            }
             node.parent = this;
         };
         CustomTreeNode.toTreeNode = function (n) {
@@ -607,6 +617,10 @@ var quill;
                     }
                     break;
                 }
+                case 'node-edit': {
+                    this.currentTreeNode.focusAndEdit();
+                    break;
+                }
                 case 'node-delete': {
                     this.deleteNode();
                     break;
@@ -644,6 +658,19 @@ var quill;
         };
         ProjectPage.prototype.moveNodeCall = function () {
             quill.Progress.stop();
+            var mn = this.moveNode;
+            var from = this.findNode(mn.from);
+            var to = this.findNode(mn.to);
+            var nodes = isDef(from.parent) ? from.parent.children : this.nodes;
+            removeFromArray(nodes, [from]);
+            if (mn.position === quill.DropPostion.inside) {
+                var position = nodes.indexOf(to);
+                to.add(from, position + 1);
+            }
+            else if (mn.position === quill.DropPostion.above) {
+            }
+            else if (mn.position === quill.DropPostion.below) {
+            }
         };
         ProjectPage.prototype.dragNode = function (drop) {
             quill.Progress.start();
@@ -652,6 +679,10 @@ var quill;
         };
         ProjectPage.prototype.projectPage = function () {
             return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                <horizontal-split class=\"grow\" id=\"app-split\">\n                  <sidebar class=\"v-flex\">\n                    <tree-actions></tree-actions>\n                    <scroll-pane class=\"grow\">\n                      <aside class=\"menu\">\n                        <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                        <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                        <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                      </aside>\n                    </scroll-pane>\n                  </sidebar>\n                  <section class=\"v-flex\">\n                    <scroll-pane class=\"grow\">\n                    </scroll-pane>\n                  </section>\n                </horizontal-split>\n                <footer class=\"no-grow\"/>\n            </panel>";
+        };
+        ProjectPage.prototype.findNode = function (nodeId) {
+            var treeNodes = [].concat.apply([], this.nodes.map(quill.flattenTree));
+            return treeNodes.find(function (n) { return n.id() === nodeId; });
         };
         __decorate([
             Bind()

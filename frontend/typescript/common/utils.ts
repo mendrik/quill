@@ -38,4 +38,12 @@ module quill {
                 return TreeNodeIcon.boolean
         }
     }
+
+    export interface HasChildren<T> {
+        children: HasChildren<T>[]
+    }
+
+    export const flattenTree = <T>(node: HasChildren<T>) =>
+        [node].concat(...node.children.map(flattenTree))
+
 }

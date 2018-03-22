@@ -3,6 +3,7 @@ module quill {
     import TreeNode = feather.ui.tree.TreeNode
     import On       = feather.event.On
     import Scope    = feather.event.Scope
+    import isDef = feather.functions.isDef;
 
     export enum DropPostion {
         inside = 'inside',
@@ -19,7 +20,7 @@ module quill {
 
     const NODE_DATA_TYPE = 'quill/node-id'
 
-    export class CustomTreeNode extends TreeNode<Node> {
+    export class CustomTreeNode extends TreeNode<Node> implements HasChildren<TreeNode<Node>> {
         parent: CustomTreeNode
 
         id = () => `${this.value.id}`
@@ -76,8 +77,12 @@ module quill {
             return tn
         }
 
-        add(node: CustomTreeNode) {
-            this.children.push(node)
+        add(node: CustomTreeNode, index?: number) {
+            if (isDef(index)) {
+                this.children.splice(index, 0, node)
+            } else {
+                this.children.push(node)
+            }
             node.parent = this
         }
     }

@@ -89,6 +89,10 @@ module quill {
                     }
                     break
                 }
+                case 'node-edit': {
+                    this.currentTreeNode.focusAndEdit()
+                    break
+                }
                 case 'node-delete': {
                     this.deleteNode()
                     break
@@ -138,6 +142,19 @@ module quill {
         @Rest({url: '/node/{{moveNode.from}}/to/{{moveNode.to}}', method: Method.PUT, body: 'moveNode', headers: quill.headers})
         moveNodeCall() {
             Progress.stop()
+            const mn       = this.moveNode
+            const from     = this.findNode(mn.from)
+            const to       = this.findNode(mn.to)
+            const nodes    = isDef(from.parent) ? from.parent.children : this.nodes
+            removeFromArray(nodes, [from])
+            if (mn.position === DropPostion.inside) {
+                const position = nodes.indexOf(to)
+                to.add(from, position + 1)
+            } else if (mn.position === DropPostion.above) {
+                // todo
+            } else if (mn.position === DropPostion.below) {
+                // todo
+            }
         }
 
         @Subscribe('node-drop')
@@ -171,6 +188,11 @@ module quill {
                 </horizontal-split>
                 <footer class="no-grow"/>
             </panel>`
+        }
+
+        private findNode(nodeId: string) {
+            const treeNodes = [].concat(...this.nodes.map(flattenTree))
+            return treeNodes.find(n => n.id() === nodeId)
         }
     }
 }
