@@ -57,7 +57,7 @@ module quill {
             this.route('/login')
         }
 
-        @Subscribe('xhr-failure')
+        @Subscribe('xhr-failure-401')
         logoutFailed() {
             removeToken()
             this.route('/login')

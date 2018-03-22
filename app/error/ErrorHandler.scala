@@ -24,11 +24,10 @@ class ErrorHandler @Inject()(
 
     override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = successful {
         Unauthorized(Json.toJson(
-            Errors(Seq(SecurityError("Not authorized", "You must login")))
+            Errors(Seq(ReadError("ui.errors.unauthorized.title", "ui.errors.unauthorized.message")))
         ))
     }
 
-    // 403 - Forbidden
     override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = successful {
         Forbidden(Json.toJson(
             Errors(Seq(ReadError("ui.errors.unauthorized.title", "ui.errors.unauthorized.message")))

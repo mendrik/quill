@@ -42,9 +42,9 @@ class Security @Inject()(
     implicit val lang: Lang = Lang("en")
     implicit val parser: BodyParser[JsValue] = this.parse.json
 
-    val userExistsError = Errors(List(SecurityError("signup.email", "validation.email.exists").translate(messagesApi)))
-    val userNotFoundError = Errors(List(SecurityError("signin.failed", "signin.error.notfound").translate(messagesApi)))
-    val emailNotFoundError = Errors(List(SecurityError("new-password.failed", "signin.error.notfound").translate(messagesApi)))
+    val userExistsError = Errors(List(SecurityError("signup", "validation.email.exists").translate(messagesApi)))
+    val userNotFoundError = Errors(List(SecurityError("signin", "signin.error.notfound").translate(messagesApi)))
+    val emailNotFoundError = Errors(List(SecurityError("new-password", "signin.error.notfound").translate(messagesApi)))
     val authenticatorExpiry: FiniteDuration = 30 days
     val authenticatorIdleTimeout: FiniteDuration = 5 days
     val authService: AuthenticatorService[BearerTokenAuthenticator] = silhouette.env.authenticatorService

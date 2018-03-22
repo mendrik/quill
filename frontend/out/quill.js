@@ -528,7 +528,7 @@ var quill;
             Rest({ url: '/signout', headers: quill.headers })
         ], Navigation.prototype, "doLogout", null);
         __decorate([
-            Subscribe('xhr-failure')
+            Subscribe('xhr-failure-401')
         ], Navigation.prototype, "logoutFailed", null);
         __decorate([
             Template()
