@@ -11,7 +11,7 @@ import v1.user.User
 
 import scala.concurrent.Future
 
-case class BodyParseException(jsErrors: scala.Seq[(JsPath, scala.Seq[JsonValidationError])]) extends Exception {
+case class BodyParseException(req: RequestHeader, jsErrors: scala.Seq[(JsPath, scala.Seq[JsonValidationError])]) extends Exception {
 
     def errors(ma: MessagesApi)(implicit lang: Lang): Seq[ReadError] = jsErrors.flatMap { case (path, e) =>
         val fieldName = path.path match {
@@ -21,10 +21,10 @@ case class BodyParseException(jsErrors: scala.Seq[(JsPath, scala.Seq[JsonValidat
             }
             case _ => None
         }
+        val prefix = req.path.split("/").toList.takeRight(1).headOption
         fieldName.map { field =>
-            val fieldWithPrefix = field
+            val fieldWithPrefix = prefix.map(_ + ".").getOrElse("") + field
             val translatedFieldName = ma.translate(fieldWithPrefix, Nil).getOrElse(fieldWithPrefix)
-            val and = ma.translate("joins.and", Nil)
             val errorMessage = e.map(v =>
                 v.messages.map(m => {
                     val oldArgs = e.headOption.map(_.args).getOrElse(Nil).toList
@@ -49,7 +49,7 @@ object Actions extends Results {
                 case JsSuccess(json, _) =>
                     block(json, request)
                 case JsError(errors) =>
-                    throw BodyParseException(errors)
+                    throw BodyParseException(request, errors)
             }
         }
 
@@ -60,7 +60,7 @@ object Actions extends Results {
                 case JsSuccess(json, _) =>
                     block(json, request)
                 case JsError(errors) =>
-                    throw BodyParseException(errors)
+                    throw BodyParseException(request.request, errors)
             }
         }
 

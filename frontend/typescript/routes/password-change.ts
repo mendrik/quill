@@ -36,7 +36,7 @@ module quill {
             this.doPasswordChange()
         }
 
-        @Rest({url: '/account/password', method: Method.PUT, body: 'newPassword', headers: quill.headers})
+        @Rest({url: '/account/new-password', method: Method.PUT, body: 'newPassword', headers: quill.headers})
         doPasswordChange() {
             Progress.stop()
             this.route('/login')

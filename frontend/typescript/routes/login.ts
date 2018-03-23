@@ -134,7 +134,7 @@ module quill {
             label: 'ui.signup.email',
             name: 'signup.email',
             icon: 'envelope-o',
-            placeholder: 'john@mail,com',
+            placeholder: 'john@mail.com',
             onChange: (p: string) => this.signup.email = p
         }
 

@@ -11,8 +11,8 @@ POST		/projects/:id/structure                         controllers.Node.createStr
 POST		/projects/:id/schema                            controllers.Node.createSchemaNode(id)
 POST		/node/:nodeId                                   controllers.Node.createChildNode(nodeId: Long)
 DELETE	/node/:nodeId                                   controllers.Node.deleteNode(nodeId: Long)
-PUT	    /node/:nodeId                                   controllers.Node.renameNode(nodeId: Long)
-PUT	    /node/:nodeId/to/:targetId                      controllers.Node.moveNode(nodeId: Long, targetId: Long)
+PUT	    /node/:nodeId/rename                            controllers.Node.renameNode(nodeId: Long)
+PUT	    /node/:nodeId/move                              controllers.Node.moveNode(nodeId: Long)
 
 # AUTHENTICATION
 POST		/signin							                            controllers.Security.signIn
@@ -23,7 +23,7 @@ POST		/signup							                            controllers.Security.signUp
 GET			/account						                            controllers.Security.accountInfo
 PUT			/account						                            controllers.Security.requestPasswordChange
 GET			/changepassword                                 controllers.Security.changePasswordPage(id: String ?= "")
-PUT			/account/password		                            controllers.Security.changePassword
+PUT			/account/new-password		                        controllers.Security.changePassword
 
 
 # Map static resources from the /public folder to the /assets URL path

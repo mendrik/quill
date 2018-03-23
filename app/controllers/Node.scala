@@ -3,7 +3,7 @@ package controllers
 import com.mohiva.play.silhouette.api._
 import javax.inject.Inject
 import play.api.Configuration
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.Lang
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import security.rules.{NodeOwner, NotChildNode, ProjectOwner}
@@ -17,7 +17,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.successful
 
 class Node @Inject()(
-  override val messagesApi: MessagesApi,
   val nodeService: NodeService,
   val cc: ControllerComponents,
   implicit val silhouette: Silhouette[QuillEnv],
@@ -31,9 +30,9 @@ class Node @Inject()(
     def newNodeName: String = messagesApi.translate("node.default-name", Nil).get
 
     def createStructureNode(hash: String): Action[JsValue] = securedJson[NewNode] { (node, request) =>
+        val Some(projectId) = decodeHash(hash)
         for {
             _               <- securityRules.checkRules(request.identity, ProjectOwner(hash))
-            Some(projectId) <- decodeHash(hash)
             newNode         <- successful(Node(0, projectId, node.name, Structure, StringType, node.sort, Nil))
             Some(node)      <- nodeService.createNode(newNode, None)
         } yield {
@@ -41,10 +40,10 @@ class Node @Inject()(
         }
     }
 
-    def moveNode(nodeId: Long, targetId: Long): Action[JsValue] = securedJson[MoveNode] { (move, request) =>
+    def moveNode(nodeId: Long): Action[JsValue] = securedJson[MoveNode] { (move, request) =>
         for {
-            _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId), NodeOwner(targetId), NotChildNode(nodeId, targetId))
-            _ <- nodeService.moveNode(nodeId, targetId, move)
+            _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId), NodeOwner(move.to), NotChildNode(nodeId, move.to))
+            _ <- nodeService.moveNode(nodeId, move)
         } yield {
             Ok("")
         }

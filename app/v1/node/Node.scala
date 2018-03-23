@@ -39,6 +39,7 @@ case class NewNode(
 )
 
 case class MoveNode(
+    to: Long,
     open: Boolean,
     position: Position
 )

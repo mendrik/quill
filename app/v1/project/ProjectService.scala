@@ -41,8 +41,8 @@ class ProjectService @Inject()(
     }
 
     def findByHashAndUser(hash: String, user: Long): Future[Project] = {
+        val Some(id) = decodeHash(hash)
         for {
-            Some(id)      <- decodeHash(hash)
             ok            <- userInProject(user, id)
             Some(project) <- repo.findById(id) if ok
         } yield {

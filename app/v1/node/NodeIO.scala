@@ -12,6 +12,7 @@ package object NodeIO {
     implicit val renameNodeReads: Reads[RenameNode] = Json.reads[RenameNode]
 
     implicit val moveNodeReads: Reads[MoveNode] = (
+        (__ \ "to").read[Long] ~
         (__ \ "open").read[Boolean] ~
         (__ \ "position").read[String].map(toPosition)
     )(MoveNode.apply _)

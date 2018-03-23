@@ -76,16 +76,6 @@ scalacOptions ++= Seq(
     "-Ywarn-numeric-widen" // Warn when numerics are widened.
 )
 
-/*
-lazy val npmBuildTask = taskKey[Unit]("Execute the npm publish command to build the UI")
-
-npmBuildTask := {
-    "cd frontend && npm publish" !
-}
-
-compile := ((compile in Compile) dependsOn npmBuildTask).value
-*/
-
 lazy val slickGenerate = taskKey[Seq[File]]("slick code generation")
 
 slickGenerate := {

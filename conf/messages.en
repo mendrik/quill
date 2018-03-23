@@ -17,7 +17,7 @@ new-password.failed=Request failed
 new-password.password=Password
 new-password.passwordRepeat=Repeated password
 
-forgot-password.identifier=Email
+account.identifier=Email
 email.forgot-password.title=Reset your json.services password
 email.forgot-password.message=Click <a href="{0}">here</a> to reset your password.
 
@@ -51,7 +51,8 @@ ui.signup.lastname=Last name
 ui.signup.password=Password
 ui.signup.button=Sign up
 
-ui.new-password.failed=Changing password failed
+ui.account.failed=Changing password failed
+ui.new-password.failed=Request failed
 ui.forgot-password.failed=Request failed
 ui.forgot-password.email=Send instructions to
 ui.forgot-password.email.placeholder=Fill in your email

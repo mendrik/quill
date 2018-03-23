@@ -14,7 +14,7 @@ package object extensions {
 
     val hashids: Hashids = Hashids.reference("p4013c7-1Ds", 7)
 
-    def decodeHash(hash: String): Future[Option[Long]] = Future.successful(hashids.decode(hash).headOption)
+    def decodeHash(hash: String): Option[Long] = hashids.decode(hash).headOption
 
     implicit class ProjectExtensions(project: Project) {
         def hash: String = hashids.encode(project.id)

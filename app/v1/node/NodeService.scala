@@ -6,7 +6,7 @@ import scala.concurrent.Future
 
 class NodeService @Inject()(repo: NodeRepo) {
 
-    def moveNode(nodeId: Long, targetId: Long, move: MoveNode) = Future.successful(())
+    def moveNode(nodeId: Long, move: MoveNode) = Future.successful(())
 
     def createNode(node: Node, parent: Option[Long]) =
         repo.createNode(node, parent)
@@ -29,7 +29,7 @@ class NodeService @Inject()(repo: NodeRepo) {
         for {
             Some(node: Node)   <- repo.findById(nodeId)
             Some(parent: Node) <- repo.findById(parentId)
-            nodes        <- repo.pathToRoot(parent) if node.nodeRoot == parent.nodeRoot
+            nodes              <- repo.pathToRoot(parent) if node.nodeRoot == parent.nodeRoot
         } yield nodes.contains(nodeId)
     }
 }

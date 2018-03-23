@@ -726,7 +726,7 @@ var quill;
             Subscribe('node-edited')
         ], ProjectPage.prototype, "editNode", null);
         __decorate([
-            Rest({ url: '/node/{{moveNode.from}}/to/{{moveNode.to}}', method: Method.PUT, body: 'moveNode', headers: quill.headers })
+            Rest({ url: '/node/{{moveNode.from}}', method: Method.PUT, body: 'moveNode', headers: quill.headers })
         ], ProjectPage.prototype, "moveNodeCall", null);
         __decorate([
             Subscribe('node-drop')
@@ -792,7 +792,7 @@ var quill;
                 label: 'ui.signup.email',
                 name: 'signup.email',
                 icon: 'envelope-o',
-                placeholder: 'john@mail,com',
+                placeholder: 'john@mail.com',
                 onChange: function (p) { return _this.signup.email = p; }
             };
             _this.signupPasswordConfig = {
@@ -947,7 +947,7 @@ var quill;
             On({ event: 'tap', selector: '.change-action' })
         ], PassordChangePage.prototype, "submitClicked", null);
         __decorate([
-            Rest({ url: '/account/password', method: Method.PUT, body: 'newPassword', headers: quill.headers })
+            Rest({ url: '/account/new-password', method: Method.PUT, body: 'newPassword', headers: quill.headers })
         ], PassordChangePage.prototype, "doPasswordChange", null);
         __decorate([
             Subscribe('xhr-failure-401')

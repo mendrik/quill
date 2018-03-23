@@ -139,7 +139,7 @@ module quill {
             this.renameNodeCall()
         }
 
-        @Rest({url: '/node/{{moveNode.from}}/to/{{moveNode.to}}', method: Method.PUT, body: 'moveNode', headers: quill.headers})
+        @Rest({url: '/node/{{moveNode.from}}', method: Method.PUT, body: 'moveNode', headers: quill.headers})
         moveNodeCall() {
             Progress.stop()
             const mn       = this.moveNode
