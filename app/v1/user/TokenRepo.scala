@@ -7,8 +7,8 @@ import database._
 import utils.Implicits._
 import play.api.db.slick.DatabaseConfigProvider
 import security.Token
-import slick.jdbc.MySQLProfile
-import slick.jdbc.MySQLProfile.api._
+import slick.jdbc.PostgresProfile
+import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -16,7 +16,7 @@ import scala.concurrent.Future
 @Singleton
 class TokenRepo @Inject()(dcp: DatabaseConfigProvider) {
 
-    private val dbConfig = dcp.get[MySQLProfile]
+    private val dbConfig = dcp.get[PostgresProfile]
     private val db = dbConfig.db
 
     def findById(id: String): Future[Option[Token]] =

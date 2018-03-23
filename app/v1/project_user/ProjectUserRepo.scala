@@ -4,8 +4,8 @@ import javax.inject.{Inject, Singleton}
 
 import database.Tables._
 import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.MySQLProfile
-import slick.jdbc.MySQLProfile.api._
+import slick.jdbc.PostgresProfile
+import slick.jdbc.PostgresProfile.api._
 import v1.project.Project
 import v1.user.User
 
@@ -15,7 +15,7 @@ import scala.concurrent.Future
 @Singleton
 class ProjectUserRepo @Inject()(dcp: DatabaseConfigProvider) {
 
-    private val dbConfig = dcp.get[MySQLProfile]
+    private val dbConfig = dcp.get[PostgresProfile]
     private val db = dbConfig.db
 
     def find(user: Long, project: Long): Future[Option[ProjectUser]] =

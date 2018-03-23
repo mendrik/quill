@@ -3,8 +3,8 @@ package v1.node
 import database.Tables._
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.MySQLProfile
 import slick.jdbc.MySQLProfile.api._
+import slick.jdbc.PostgresProfile
 import v1.NodeIO._
 import v1.project.{Project, ProjectRepo}
 
@@ -36,7 +36,7 @@ class NodeRepo @Inject()(
            """.as[Long]
     }
 
-    private val dbConfig = dcp.get[MySQLProfile]
+    private val dbConfig = dcp.get[PostgresProfile]
     private val db = dbConfig.db
 
     def findById(id: Long): Future[Option[Node]] = db.run {

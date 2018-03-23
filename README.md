@@ -23,4 +23,8 @@ cd frontend
 npm install
 npm publish
 cd ..
-sbt run
+sbt run // to generate database
+
+after database was created
+sbt codegen/slick
+
