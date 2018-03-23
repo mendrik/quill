@@ -4,7 +4,7 @@ import v1.generic.Entity
 import v1.node.Node
 
 case class Project(
-    id: Long,
+    id: Int,
     name: Option[String],
     structure: Seq[Node],
     schema: Seq[Node]

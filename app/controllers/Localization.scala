@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject.Inject
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.{MessagesApi}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import utils.MessageIO._

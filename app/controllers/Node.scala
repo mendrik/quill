@@ -40,7 +40,7 @@ class Node @Inject()(
         }
     }
 
-    def moveNode(nodeId: Long): Action[JsValue] = securedJson[MoveNode] { (move, request) =>
+    def moveNode(nodeId: Int): Action[JsValue] = securedJson[MoveNode] { (move, request) =>
         for {
             _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId), NodeOwner(move.to), NotChildNode(nodeId, move.to))
             _ <- nodeService.moveNode(nodeId, move)
@@ -57,7 +57,7 @@ class Node @Inject()(
         }
     }
 
-    def createChildNode(parentNodeId: Long): Action[JsValue] = securedJson[NewNode] { (node, request) =>
+    def createChildNode(parentNodeId: Int): Action[JsValue] = securedJson[NewNode] { (node, request) =>
         for {
             _            <- securityRules.checkRules(request.identity, NodeOwner(parentNodeId))
             Some(target) <- nodeService.byId(parentNodeId)
@@ -68,7 +68,7 @@ class Node @Inject()(
         }
     }
 
-    def deleteNode(nodeId: Long): Action[AnyContent] = secured { request =>
+    def deleteNode(nodeId: Int): Action[AnyContent] = secured { request =>
         for {
             _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
             _ <- nodeService.deleteNode(nodeId)
@@ -77,7 +77,7 @@ class Node @Inject()(
         }
     }
 
-    def renameNode(nodeId: Long): Action[JsValue] = securedJson[RenameNode] { (node, request) =>
+    def renameNode(nodeId: Int): Action[JsValue] = securedJson[RenameNode] { (node, request) =>
         for {
             _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
             _ <- nodeService.renameNode(nodeId, node.name)

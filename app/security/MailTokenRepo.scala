@@ -23,7 +23,7 @@ class MailTokenRepo @Inject()(dcp: DatabaseConfigProvider) {
     def createMailToken(token: MailTokenUser): Future[Option[MailTokenUser]] =
         db.run(MailTokens += token).flatMap(_ => findById(token.id))
 
-    def remove(id: String) =
+    def remove(id: String): Future[Unit] =
         db.run(MailTokens.filter(_.id === id).delete).map(_ => ())
 
     def toMailTokenUser(tokenRow: MailTokensRow): MailTokenUser =

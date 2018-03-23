@@ -36,11 +36,11 @@ class ProjectService @Inject()(
         .fallbackTo(createProject(user))
     }
 
-    def userInProject(user: Long, project: Long): Future[Boolean] = {
+    def userInProject(user: Int, project: Int): Future[Boolean] = {
         puRepo.find(user, project).map(_.isDefined)
     }
 
-    def findByHashAndUser(hash: String, user: Long): Future[Project] = {
+    def findByHashAndUser(hash: String, user: Int): Future[Project] = {
         val Some(id) = decodeHash(hash)
         for {
             ok            <- userInProject(user, id)

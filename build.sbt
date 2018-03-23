@@ -4,7 +4,7 @@ import sbt.Keys.{resolvers, version}
 val silhouetteVersion = "5.0.0"
 val slickVersion = "3.2.2"
 val playSlickVersion = "3.0.1"
-val scVersion = "2.12.5"
+val scVersion = "2.12.3"
 
 val exRes = List(
     "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
@@ -32,7 +32,7 @@ lazy val root = (project in file("."))
 lazy val sharedSettings = Seq(
     scalaVersion := scVersion,
     libraryDependencies ++= List(
-        "org.postgresql" % "postgresql" % "9.4-1206-jdbc41",
+        "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
         "org.scala-lang" % "scala-reflect" % scVersion,
         "com.typesafe.slick" %% "slick" % slickVersion,
         "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
@@ -75,7 +75,7 @@ lazy val scalacOpts = Seq(
 
 lazy val codegenSettings = Seq(
     sourceGenerators in Compile += slickCodegen.taskValue,
-    slickCodegenDatabaseUrl := "jdbc:postgresql://localhosts/quill",
+    slickCodegenDatabaseUrl := "jdbc:postgresql://localhost/quill",
     slickCodegenDatabaseUser := "quill",
     slickCodegenDatabasePassword := "quill42",
     slickCodegenDriver := slick.jdbc.PostgresProfile,

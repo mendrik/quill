@@ -5,7 +5,7 @@ import play.api.libs.json.{JsString, JsValue, Writes}
 
 case class Token(
     id: String,
-    user: Long,
+    user: Int,
     lastUsed: DateTime,
     expiration: DateTime
 )

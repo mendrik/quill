@@ -11,7 +11,7 @@ import v1.project.Project
 package object ProjectIO {
 
     implicit val projectReads: Reads[Project] = (
-        (__ \ "id").read[Long] ~
+        (__ \ "id").read[Int] ~
         (__ \ "name").readNullable[String] ~
         (__ \ "structure").readList[Node] ~
         (__ \ "schema").readList[Node]
