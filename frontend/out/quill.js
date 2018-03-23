@@ -404,8 +404,8 @@ var quill;
             this.dragleave();
             if (id) {
                 this.triggerUp('node-drop', {
-                    from: id,
-                    to: this.id(),
+                    from: parseInt(id, 10),
+                    to: parseInt(this.id(), 10),
                     position: this.element.getAttribute('data-dragover'),
                     open: this.children.length > 0 && this.open
                 });
@@ -720,13 +720,13 @@ var quill;
             Rest({ url: '/node/{{currentTreeNode.id}}', method: Method.DELETE, headers: quill.headers })
         ], ProjectPage.prototype, "deleteNode", null);
         __decorate([
-            Rest({ url: '/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers })
+            Rest({ url: '/node/{{currentTreeNode.id}}/rename', method: Method.PUT, body: 'renameNode', headers: quill.headers })
         ], ProjectPage.prototype, "renameNodeCall", null);
         __decorate([
             Subscribe('node-edited')
         ], ProjectPage.prototype, "editNode", null);
         __decorate([
-            Rest({ url: '/node/{{moveNode.from}}', method: Method.PUT, body: 'moveNode', headers: quill.headers })
+            Rest({ url: '/node/{{moveNode.from}}/move', method: Method.PUT, body: 'moveNode', headers: quill.headers })
         ], ProjectPage.prototype, "moveNodeCall", null);
         __decorate([
             Subscribe('node-drop')

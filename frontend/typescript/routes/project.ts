@@ -127,7 +127,7 @@ module quill {
             this.triggerDown('defocus-other-nodes')
         }
 
-        @Rest({url: '/node/{{currentTreeNode.id}}', method: Method.PUT, body: 'renameNode', headers: quill.headers})
+        @Rest({url: '/node/{{currentTreeNode.id}}/rename', method: Method.PUT, body: 'renameNode', headers: quill.headers})
         renameNodeCall() {
             Progress.stop()
         }
@@ -139,7 +139,7 @@ module quill {
             this.renameNodeCall()
         }
 
-        @Rest({url: '/node/{{moveNode.from}}', method: Method.PUT, body: 'moveNode', headers: quill.headers})
+        @Rest({url: '/node/{{moveNode.from}}/move', method: Method.PUT, body: 'moveNode', headers: quill.headers})
         moveNodeCall() {
             Progress.stop()
             const mn       = this.moveNode

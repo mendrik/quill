@@ -12,8 +12,8 @@ module quill {
     }
 
     export interface NodeDrop {
-        from: string
-        to: string,
+        from: number
+        to: number,
         position: DropPostion,
         open
     }
@@ -59,8 +59,8 @@ module quill {
             this.dragleave()
             if (id) {
                 this.triggerUp('node-drop', {
-                    from: id,
-                    to: this.id(),
+                    from: parseInt(id, 10),
+                    to: parseInt(this.id(), 10),
                     position: this.element.getAttribute('data-dragover'),
                     open: this.children.length > 0 && this.open
                 } as NodeDrop)
