@@ -31,14 +31,24 @@ lazy val codegen = project
     .settings(sharedSettings)
     .settings(libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % slickVersion)
 
+
+/*
+lazy val root = (project in file("."))
+    .enablePlugins(PlayScala, CodegenPlugin)
+    .settings(
+        sharedSettings,
+        codegenSettings
+    )
+*/
+
 lazy val sharedSettings = Seq(
     scalaVersion := scVersion,
     libraryDependencies ++= List(
-        "com.typesafe.play" %% "play-slick" % playSlickVersion,
-        "mysql" % "mysql-connector-java" % "latest.release",
+        "org.postgresql" % "postgresql" % "42.2.2",
         "org.scala-lang" % "scala-reflect" % scVersion,
         "com.typesafe.slick" %% "slick" % slickVersion,
         "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
+        "com.typesafe.slick" %% "slick-codegen" % slickVersion,
         "joda-time" % "joda-time" % "2.9.9",
         "org.joda" % "joda-convert" % "1.8.1"
     )
@@ -47,8 +57,9 @@ lazy val sharedSettings = Seq(
 libraryDependencies ++= Seq(
     guice,
     filters,
-    javaJdbc,
     specs2 % Test,
+    "com.typesafe.play" %% "play-slick" % playSlickVersion,
+    "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3",
     "com.typesafe.play" %% "play-json" % "2.6.7",
     "io.john-ky" %% "hashids-scala" % "1.1.2-2974446",
     "com.typesafe.play" %% "play-mailer" % "5.0.0",
@@ -76,9 +87,23 @@ scalacOptions ++= Seq(
     "-Ywarn-numeric-widen" // Warn when numerics are widened.
 )
 
-lazy val slickGenerate = taskKey[Seq[File]]("slick code generation")
+/*
+lazy val codegenSettings = Seq(
+    sourceGenerators in Compile += slickCodegen.taskValue,
+    slickCodegenDatabaseUrl := "jdbc:postgresql://localhosts/quill",
+    slickCodegenDatabaseUser := "quill",
+    slickCodegenDatabasePassword := "quill42",
+    slickCodegenDriver := slick.driver.PostgresDriver,
+    slickCodegenJdbcDriver := "org.postgresql.Driver",
+    slickCodegenOutputPackage := "database",
+    slickCodegenOutputDir := (sourceManaged in Compile).value
+)
+*/
 
-slickGenerate := {
+
+lazy val slick = taskKey[Seq[File]]("slick code generation")
+
+lazy val slickCodeGenTask = Def.task {
     val dbName = "quill"
     val userName = "quill"
     val password = "quill42"
@@ -88,9 +113,10 @@ slickGenerate := {
     val targetPackageName = "database"
     val outputDir = (sourceManaged in Compile).value.getPath // place generated files in sbt's managed sources folder
     val fname = outputDir + s"/$targetPackageName/Tables.scala"
-    // println(s"\nauto-generating slick source for database schema at $url...")
-    // println(s"output source file file: file://$fname\n")
-    (runner in Compile).value.run("slick.codegen.SourceCodeGenerator",
+    val r = (runner in Compile).value
+    println(s"\nauto-generating slick source for database schema at $url...")
+    println(s"output source file file: file://$fname\n")
+    toError(r.run("slick.codegen.SourceCodeGenerator",
         (dependencyClasspath in Compile).value.files,
         Array(
             slickDriver,
@@ -100,9 +126,8 @@ slickGenerate := {
             targetPackageName,
             userName,
             password,
-            "true",
-            "utils.CodeGenerator"
+            "true"
         ),
-        streams.value.log)
+        streams.value.log))
     Seq(file(fname))
 }
