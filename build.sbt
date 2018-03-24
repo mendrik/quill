@@ -32,7 +32,7 @@ lazy val root = (project in file("."))
 lazy val sharedSettings = Seq(
     scalaVersion := scVersion,
     libraryDependencies ++= List(
-        "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
+        "org.postgresql" % "postgresql" % "42.2.2",
         "org.scala-lang" % "scala-reflect" % scVersion,
         "com.typesafe.slick" %% "slick" % slickVersion,
         "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
@@ -73,7 +73,7 @@ lazy val scalacOpts = Seq(
     "-Ywarn-dead-code", // Warn when dead code is identified.
     "-Ywarn-inaccessible", // Warn about inaccessible types in method signatures.
     "-Ywarn-nullary-override", // Warn when non-nullary overrides nullary, e.g. def foo() over def foo.
-    "-Ywarn-unused:-params,-explicits,-implicits,-imports"
+    "-Ywarn-unused:-explicits,-implicits,-imports"
 )
 
 lazy val codegenSettings = Seq(

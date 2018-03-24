@@ -16,6 +16,9 @@
     <logger name="org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator" level="ERROR" />
     <logger name="slick" level="ERROR" />
     <logger name="java.sql" level="ERROR" />
+<!--
+    <logger name="slick.jdbc.JdbcBackend.statement"  level="DEBUG" />
+-->
 
     <root level="WARN">
         <appender-ref ref="STDOUT" />

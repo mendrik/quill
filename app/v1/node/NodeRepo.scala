@@ -19,14 +19,15 @@ class NodeRepo @Inject()(
 
     def pathToRoot(parent: Node): Future[Seq[Long]] = db.run {
         val id = parent.id.toString
-        sql"""
-             | WITH RECURSIVE res AS (
-             |    (SELECT id, parent FROM nodes WHERE id = '$id')
-             |  UNION ALL
-             |    (SELECT ct.id, ct.parent FROM res r JOIN nodes ct ON r.parent = ct.id)
-             | )
-             | SELECT id FROM res
-           """.as[Long]
+        val sql = sql"""
+        WITH RECURSIVE res AS (
+            (SELECT id, parent FROM nodes WHERE id = #$id)
+        UNION ALL
+            (SELECT ct.id, ct.parent FROM res r JOIN nodes ct ON r.parent = ct.id)
+        )
+        SELECT id FROM res
+        """
+        sql.as[Long]
     }
 
     private val dbConfig = dcp.get[PostgresProfile]
