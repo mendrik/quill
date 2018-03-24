@@ -20,19 +20,12 @@ class NodeRepo @Inject()(
     def pathToRoot(parent: Node): Future[Seq[Long]] = db.run {
         val id = parent.id.toString
         sql"""
-             select t2.id
-              from (
-                 select
-                     @r as _id,
-                     (select @r := parent from nodes where id = _id) as parent,
-                     @l := @l + 1 as lvl
-                 from
-                     (select @r := ${id}, @l := 0) vars,
-                     nodes h
-                 where @r <> 0) t1
-              join nodes t2
-              on t1._id = t2.id
-              order by t1.lvl desc
+             | WITH RECURSIVE res AS (
+             |    (SELECT id, parent FROM nodes WHERE id = '$id')
+             |  UNION ALL
+             |    (SELECT ct.id, ct.parent FROM res r JOIN nodes ct ON r.parent = ct.id)
+             | )
+             | SELECT id FROM res
            """.as[Long]
     }
 
@@ -77,15 +70,15 @@ class NodeRepo @Inject()(
                 )
         }).flatMap(findById)
 
-    def update(project: Project, node: Node, parent: Option[Node]) =
+    def update(project: Project, node: Node, parent: Option[Node]): Future[Int] =
         db.run(Nodes.filter(_.id === node.id)
             .map(n => (n.name, n.parent, n.project, n.nodeRoot, n.nodeType, n.sort))
             .update((node.name, parent.map(_.id), project.id, node.nodeRoot, node.nodeType, node.sort)))
 
-    def remove(id: Long) =
+    def remove(id: Long): Future[Int] =
         db.run(Nodes.filter(_.id === id).delete)
 
-    def rename(id: Long, name: String) =
+    def rename(id: Long, name: String): Future[Int] =
         db.run(Nodes.filter(_.id === id)
             .map(n => n.name)
             .update(name))

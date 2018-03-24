@@ -43,7 +43,7 @@ lazy val sharedSettings = Seq(
 )
 
 lazy val dependencies = Seq(
-    javaJdbc,
+    jdbc,
     guice,
     filters,
     "com.typesafe.play" %% "play-slick" % playSlickVersion,
