@@ -208,7 +208,7 @@ var quill;
                 quill.Progress.stop();
                 ToastManager.showToast(new Toast('ui.errors.forbidden.title', 'ui.errors.forbidden.message', Theme.Error));
             };
-            AjaxWidget.prototype.requestUnauthorized = function () {
+            AjaxWidget.prototype.requestUnauthorized = function (err) {
                 quill.Progress.stop();
                 ToastManager.showToast(new Toast('ui.errors.unauthorized.title', 'ui.errors.unauthorized.message', Theme.Error));
             };
@@ -824,7 +824,7 @@ var quill;
             this.route('/ ');
             quill.Progress.stop();
         };
-        LoginPage.prototype.unauthorized = function (err) {
+        LoginPage.prototype.requestUnauthorized = function (err) {
             quill.Progress.stop();
             ToastManager.showToast(new Toast(err.errors[0].title, err.errors[0].message, Theme.Error));
         };
@@ -864,7 +864,7 @@ var quill;
         ], LoginPage.prototype, "doLogin", null);
         __decorate([
             Subscribe('xhr-failure-401')
-        ], LoginPage.prototype, "unauthorized", null);
+        ], LoginPage.prototype, "requestUnauthorized", null);
         __decorate([
             On({ event: 'tap', selector: '.signup-action' })
         ], LoginPage.prototype, "signupClicked", null);

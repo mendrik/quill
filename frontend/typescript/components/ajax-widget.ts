@@ -21,7 +21,7 @@ module quill.components {
         }
 
         @Subscribe('xhr-failure-401')
-        requestUnauthorized() {
+        requestUnauthorized(err: Errors) {
             Progress.stop()
             ToastManager.showToast(new Toast('ui.errors.unauthorized.title', 'ui.errors.unauthorized.message', Theme.Error))
         }

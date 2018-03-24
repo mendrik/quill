@@ -63,7 +63,7 @@ module quill {
         }
 
         @Subscribe('xhr-failure-401')
-        unauthorized(err: Errors) {
+        requestUnauthorized(err: Errors) {
             Progress.stop()
             ToastManager.showToast(new Toast(err.errors[0].title, err.errors[0].message, Theme.Error))
         }
