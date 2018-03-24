@@ -6,26 +6,26 @@ import scala.concurrent.Future
 
 class NodeService @Inject()(repo: NodeRepo) {
 
-    def moveNode(nodeId: Int, move: MoveNode) = Future.successful(())
+    def moveNode(nodeId: Long, move: MoveNode) = Future.successful(())
 
-    def createNode(node: Node, parent: Option[Int]) =
+    def createNode(node: Node, parent: Option[Long]) =
         repo.createNode(node, parent)
 
-    def deleteNode(nodeId: Int) =
+    def deleteNode(nodeId: Long) =
         repo.remove(nodeId)
 
-    def renameNode(nodeId: Int, name: String) =
+    def renameNode(nodeId: Long, name: String) =
         repo.rename(nodeId, name)
 
-    def structureNodes(project: Int): Future[Seq[Node]] =
+    def structureNodes(project: Long): Future[Seq[Node]] =
         repo.findByProjectAndType(project, Structure)
 
-    def byId(nodeId: Int): Future[Option[Node]] = repo.findById(nodeId)
+    def byId(nodeId: Long): Future[Option[Node]] = repo.findById(nodeId)
 
-    def schemaNodes(project: Int): Future[Seq[Node]] =
+    def schemaNodes(project: Long): Future[Seq[Node]] =
         repo.findByProjectAndType(project, Schema)
 
-    def isChildNode(nodeId: Int, parentId: Int): Future[Boolean] = {
+    def isChildNode(nodeId: Long, parentId: Long): Future[Boolean] = {
         for {
             Some(node: Node)   <- repo.findById(nodeId)
             Some(parent: Node) <- repo.findById(parentId)

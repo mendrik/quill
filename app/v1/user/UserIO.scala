@@ -2,7 +2,6 @@ package v1
 
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import json.JsPathExtra
-import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._

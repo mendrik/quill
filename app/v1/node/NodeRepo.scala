@@ -17,7 +17,7 @@ class NodeRepo @Inject()(
     projectRepo: ProjectRepo
 ) {
 
-    def pathToRoot(parent: Node): Future[Seq[Int]] = db.run {
+    def pathToRoot(parent: Node): Future[Seq[Long]] = db.run {
         val id = parent.id.toString
         sql"""
              select t2.id
@@ -33,24 +33,24 @@ class NodeRepo @Inject()(
               join nodes t2
               on t1._id = t2.id
               order by t1.lvl desc
-           """.as[Int]
+           """.as[Long]
     }
 
     private val dbConfig = dcp.get[PostgresProfile]
     private val db = dbConfig.db
 
-    def findById(id: Int): Future[Option[Node]] = db.run {
+    def findById(id: Long): Future[Option[Node]] = db.run {
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
-    def findByProjectAndType(project: Int, nodeRoot: NodeRoot): Future[Seq[Node]] = db.run {
+    def findByProjectAndType(project: Long, nodeRoot: NodeRoot): Future[Seq[Node]] = db.run {
         Nodes
             .filter(p => p.project === project && p.nodeRoot === (nodeRoot: String))
             .sortBy(_.sort.asc)
             .result
     }.map(toTree(None, _))
 
-    def getHighestSort(parent: Option[Int]): Future[Option[Int]] = db.run {
+    def getHighestSort(parent: Option[Long]): Future[Option[Int]] = db.run {
         val select = parent match {
             case Some(id) => Nodes.filter(n => n.parent === id)
             case None => Nodes.filter(n => n.parent.isEmpty)
@@ -63,7 +63,7 @@ class NodeRepo @Inject()(
         .headOption
     }
 
-    def createNode(node: Node, parent: Option[Int]): Future[Option[Node]] =
+    def createNode(node: Node, parent: Option[Long]): Future[Option[Node]] =
         getHighestSort(parent).flatMap(sort => db.run {
             Nodes returning Nodes.map(_.id) +=
                 NodesRow(
@@ -82,10 +82,10 @@ class NodeRepo @Inject()(
             .map(n => (n.name, n.parent, n.project, n.nodeRoot, n.nodeType, n.sort))
             .update((node.name, parent.map(_.id), project.id, node.nodeRoot, node.nodeType, node.sort)))
 
-    def remove(id: Int) =
+    def remove(id: Long) =
         db.run(Nodes.filter(_.id === id).delete)
 
-    def rename(id: Int, name: String) =
+    def rename(id: Long, name: String) =
         db.run(Nodes.filter(_.id === id)
             .map(n => n.name)
             .update(name))

@@ -20,8 +20,8 @@ case object Above extends Position
 case object Below extends Position
 
 case class Node(
-    id: Int,
-    project: Int,
+    id: Long,
+    project: Long,
     name: String,
     nodeRoot: NodeRoot,
     nodeType: NodeType,
@@ -39,7 +39,7 @@ case class NewNode(
 )
 
 case class MoveNode(
-    to: Int,
+    to: Long,
     open: Boolean,
     position: Position
 )

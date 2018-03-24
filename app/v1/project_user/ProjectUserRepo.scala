@@ -18,7 +18,7 @@ class ProjectUserRepo @Inject()(dcp: DatabaseConfigProvider) {
     private val dbConfig = dcp.get[PostgresProfile]
     private val db = dbConfig.db
 
-    def find(user: Int, project: Int): Future[Option[ProjectUser]] =
+    def find(user: Long, project: Long): Future[Option[ProjectUser]] =
         db.run(ProjectUsers.filter(pu => pu.user === user && pu.project === project).result
             .headOption.map(_.map(toProjectUser)))
 

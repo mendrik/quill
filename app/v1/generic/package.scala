@@ -4,20 +4,18 @@ import org.hashids.Hashids
 import v1.project.Project
 import v1.user.User
 
-import scala.concurrent.Future
-
 trait Entity {
-    val id: Int
+    val id: Long
 }
 
 package object extensions {
 
-    val hashids: Hashids = Hashids.reference("p4013c7-1Ds", 7)
+    val hashids: Hashids = Hashids("p4013c7-1Ds", 7)
 
-    def decodeHash(hash: String): Option[Int] = hashids.decode(hash).headOption
+    def decodeHash(hash: String): Option[Long] = hashids.decode(hash).headOption.map(_.toLong)
 
     implicit class ProjectExtensions(project: Project) {
-        def hash: String = hashids.encode(project.id)
+        def hash: String = hashids.encode(project.id.toLong)
     }
 
     implicit class UserExtensions(user: User) {

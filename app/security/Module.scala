@@ -15,9 +15,7 @@ import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepo
 import error.ErrorHandler
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
-import v1.node.NodeRepo
-import v1.project.ProjectRepo
-import v1.user.{UserRepo, UserService}
+import v1.user.UserService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

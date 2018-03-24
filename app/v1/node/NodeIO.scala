@@ -12,14 +12,14 @@ package object NodeIO {
     implicit val renameNodeReads: Reads[RenameNode] = Json.reads[RenameNode]
 
     implicit val moveNodeReads: Reads[MoveNode] = (
-        (__ \ "to").read[Int] ~
+        (__ \ "to").read[Long] ~
         (__ \ "open").read[Boolean] ~
         (__ \ "position").read[String].map(toPosition)
     )(MoveNode.apply _)
 
     implicit val nodeReads: Reads[Node] = (
-        (__ \ "id").read[Int] ~
-        (__ \ "project").read[Int] ~
+        (__ \ "id").read[Long] ~
+        (__ \ "project").read[Long] ~
         (__ \ "name").read[String] ~
         (__ \ "nodeRoot").read[String].map(toNodeRoot) ~
         (__ \ "nodeType").read[String].map(toNodeType) ~
@@ -28,8 +28,8 @@ package object NodeIO {
     )(Node.apply _)
 
     implicit val nodeWrites: Writes[Node] = (
-        (__ \ "id").write[Int] ~
-        (__ \ "project").write[Int] ~
+        (__ \ "id").write[Long] ~
+        (__ \ "project").write[Long] ~
         (__ \ "name").write[String] ~
         (__ \ "rootType").write[NodeRoot] ~
         (__ \ "type").write[NodeType] ~

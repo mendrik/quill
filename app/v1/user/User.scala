@@ -4,13 +4,13 @@ import com.mohiva.play.silhouette.api.Identity
 import v1.generic.Entity
 
 case class User(
-  id: Int,
+  id: Long,
   email: String,
   confirmed: Boolean,
   password: String,
   firstName: String,
   lastName: String,
-  lastProject: Option[Int]
+  lastProject: Option[Long]
 ) extends Identity with Entity {
     def key = email
     def fullName: String = firstName + " " + lastName

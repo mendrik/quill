@@ -26,11 +26,11 @@ case class SecurityRulesService @Inject()(
         Future.successful(true)
     }
 
-    def checkNodeOwner(user: User, nodeId: Int): Future[Boolean] = {
+    def checkNodeOwner(user: User, nodeId: Long): Future[Boolean] = {
         Future.successful(true)
     }
 
-    def checkNotChildNode(nodeId: Int, targetId: Int): Future[Boolean] = {
+    def checkNotChildNode(nodeId: Long, targetId: Long): Future[Boolean] = {
         for {
             Some(node) <- nodeRepo.findById(targetId)
             path       <- nodeRepo.pathToRoot(node)
@@ -46,8 +46,8 @@ case class SecurityRulesService @Inject()(
         val res = user match {
             case Some(user: User) => sequence(rules.map {
                 case ProjectOwner(hash: String) => checkProjectOwner(user, hash)
-                case NodeOwner(nodeId: Int) => checkNodeOwner(user, nodeId)
-                case NotChildNode(nodeId: Int, targetId: Int) => checkNotChildNode(nodeId, targetId)
+                case NodeOwner(nodeId: Long) => checkNodeOwner(user, nodeId)
+                case NotChildNode(nodeId: Long, targetId: Long) => checkNotChildNode(nodeId, targetId)
             })
             case _ => throw SecurityException()
         }

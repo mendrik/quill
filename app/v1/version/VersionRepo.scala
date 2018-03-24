@@ -5,8 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 import v1.project.Project
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import database.Tables._
 import scala.concurrent.Future
 
 @Singleton
@@ -15,7 +14,7 @@ class VersionRepo @Inject()(dcp: DatabaseConfigProvider) {
     private val dbConfig = dcp.get[PostgresProfile]
     private val db = dbConfig.db
 
-    def findById(id: Int): Future[Option[Version]] =
+    def findById(id: Long): Future[Option[Version]] =
         db.run(Versions.filter(_.id === id).result.headOption.map(_.map(toVersion)))
 
     def createVersion(version: Version, project: Project): Future[Option[Version]] =

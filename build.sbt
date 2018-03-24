@@ -4,7 +4,7 @@ import sbt.Keys.{resolvers, version}
 val silhouetteVersion = "5.0.0"
 val slickVersion = "3.2.2"
 val playSlickVersion = "3.0.1"
-val scVersion = "2.12.3"
+val scVersion = "2.12.5"
 
 val exRes = List(
     "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
@@ -70,7 +70,8 @@ lazy val scalacOpts = Seq(
     "-Ywarn-dead-code", // Warn when dead code is identified.
     "-Ywarn-inaccessible", // Warn about inaccessible types in method signatures.
     "-Ywarn-nullary-override", // Warn when non-nullary overrides nullary, e.g. def foo() over def foo.
-    "-Ywarn-numeric-widen" // Warn when numerics are widened.
+    "-Ywarn-numeric-widen", // Warn when numerics are widened.
+    "-Ywarn-unused:-implicits,_"
 )
 
 lazy val codegenSettings = Seq(

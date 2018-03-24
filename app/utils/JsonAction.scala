@@ -7,7 +7,6 @@ import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc._
 import security.QuillEnv
-import v1.user.User
 
 import scala.concurrent.Future
 
