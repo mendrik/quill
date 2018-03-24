@@ -43,13 +43,15 @@ lazy val sharedSettings = Seq(
 )
 
 lazy val dependencies = Seq(
+    javaJdbc,
     guice,
     filters,
     "com.typesafe.play" %% "play-slick" % playSlickVersion,
-    "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3",
+   // "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3",
     "com.typesafe.play" %% "play-json" % "2.6.7",
     "com.github.ancane" %% "hashids-scala" % "1.3",
     "com.typesafe.play" %% "play-mailer" % "6.0.1",
+    "com.typesafe.play" %% "play-mailer-guice" % "6.0.1",
     "com.mohiva" %% "play-silhouette" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion,
@@ -60,18 +62,18 @@ lazy val dependencies = Seq(
 
 lazy val scalacOpts = Seq(
     "-language:implicitConversions",
+    "-language:existentials",
     "-language:postfixOps",
     "-deprecation", // Emit warning and location for usages of deprecated APIs.
     "-feature", // Emit warning and location for usages of features that should be imported explicitly.
     "-unchecked", // Enable additional warnings where generated code depends on assumptions.
     "-Xfatal-warnings", // Fail the compilation if there are any warnings.
-    "-Xlint", // Enable recommended additional warnings.
+    "-Xlint:unused", // Enable recommended additional warnings.
     "-Ywarn-adapted-args", // Warn if an argument list is modified to match the receiver.
     "-Ywarn-dead-code", // Warn when dead code is identified.
     "-Ywarn-inaccessible", // Warn about inaccessible types in method signatures.
     "-Ywarn-nullary-override", // Warn when non-nullary overrides nullary, e.g. def foo() over def foo.
-    "-Ywarn-numeric-widen", // Warn when numerics are widened.
-    "-Ywarn-unused:-implicits,_"
+    "-Ywarn-unused:-params,-explicits,-implicits,-imports"
 )
 
 lazy val codegenSettings = Seq(

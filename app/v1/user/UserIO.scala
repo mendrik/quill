@@ -10,8 +10,6 @@ import v1.generic.extensions._
 
 package object UserIO {
 
-    private def err(msgKey: String) = Reads[String](_ => JsError(JsonValidationError(msgKey)))
-
     implicit val signupReads: Reads[SignUp] = (
         (__ \ "firstname").nonEmpty ~
         (__ \ "lastname").nonEmpty ~

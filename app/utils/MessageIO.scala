@@ -8,8 +8,8 @@ case class Messages(messages: List[Message])
 
 package object MessageIO {
 
-    implicit val messageWrites = Json.writes[Message]
+    implicit val messageWrites: OWrites[Message] = Json.writes[Message]
     
-    implicit val messagesWrites = Json.writes[Messages]
+    implicit val messagesWrites: OWrites[Messages] = Json.writes[Messages]
 
 }

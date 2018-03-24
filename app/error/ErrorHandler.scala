@@ -45,7 +45,6 @@ class ErrorHandler @Inject()(
 
     def onServerError(request: RequestHeader, exception: Throwable) = {
         implicit val lang: Lang = Lang("en")
-        println(ExceptionUtils.getStackTrace(exception))
         successful {
             exception match {
                 case e: BodyParseException =>
@@ -65,6 +64,7 @@ class ErrorHandler @Inject()(
                         Errors(Seq(ServerError("signin.failed", "signin.error.password").translate(messagesApi)))
                     ))
                 case e: Throwable =>
+                    println(ExceptionUtils.getStackTrace(exception))
                     InternalServerError(Json.toJson(Errors(List(ServerError("Server Error", e.getMessage.capitalize)))))
             }
         }

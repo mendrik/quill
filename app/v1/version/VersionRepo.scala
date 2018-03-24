@@ -7,6 +7,7 @@ import slick.jdbc.PostgresProfile.api._
 import v1.project.Project
 import database.Tables._
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class VersionRepo @Inject()(dcp: DatabaseConfigProvider) {
