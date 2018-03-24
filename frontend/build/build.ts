@@ -13,7 +13,14 @@ fs.writeFileSync('out/quill.min.js', minified.code)
 
 console.log(' *** copy to public ***')
 
-fs.createReadStream('out/quill.min.js').pipe(fs.createWriteStream('../public/quill.min.js'));
-fs.createReadStream('out/styles.css').pipe(fs.createWriteStream('../public/styles.css'));
-fs.createReadStream('node_modules/feather-components/feather-components.css').pipe(fs.createWriteStream('../public/feather-components.css'));
-fs.createReadStream('node_modules/bulma/css/bulma.css').pipe(fs.createWriteStream('../public/bulma.css'));
+fs.createReadStream('out/quill.min.js')
+    .pipe(fs.createWriteStream('../public/quill.min.js'))
+
+fs.createReadStream('out/styles.css')
+    .pipe(fs.createWriteStream('../public/styles.css'))
+
+fs.createReadStream('node_modules/feather-components/feather-components.css')
+    .pipe(fs.createWriteStream('../public/feather-components.css'))
+
+fs.createReadStream('node_modules/bulma/css/bulma.css')
+    .pipe(fs.createWriteStream('../public/bulma.css'))

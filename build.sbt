@@ -6,12 +6,19 @@ val slickVersion = "3.2.2"
 val playSlickVersion = "3.0.1"
 val scVersion = "2.12.5"
 
+val databaseUrl = System.getenv("DB_QUILL_URL")
+val databaseUser = System.getenv("DB_QUILL_USER")
+val databasePassword = System.getenv("DB_QUILL_PASSWORD")
+
 val exRes = List(
     "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
     Resolver.sonatypeRepo("releases"),
     Resolver.sonatypeRepo("snapshots"),
     "Atlassian Releases" at "https://maven.atlassian.com/public/"
 )
+
+lazy val flyway = (project in file("modules/flyway"))
+    .enablePlugins(FlywayPlugin)
 
 lazy val root = (project in file("."))
     .enablePlugins(PlayScala, CodegenPlugin)
@@ -34,6 +41,7 @@ lazy val sharedSettings = Seq(
     libraryDependencies ++= List(
         "org.postgresql" % "postgresql" % "42.2.2",
         "org.scala-lang" % "scala-reflect" % scVersion,
+        "org.flywaydb" % "flyway-core" % "5.0.7",
         "com.typesafe.slick" %% "slick" % slickVersion,
         "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
         "com.typesafe.slick" %% "slick-codegen" % slickVersion,
@@ -76,13 +84,14 @@ lazy val scalacOpts = Seq(
     "-Ywarn-unused:-explicits,-implicits,-imports"
 )
 
-lazy val codegenSettings = Seq(
+val codegenSettings = Seq(
     sourceGenerators in Compile += slickCodegen.taskValue,
-    slickCodegenDatabaseUrl := "jdbc:postgresql://localhost/quill",
-    slickCodegenDatabaseUser := "quill",
-    slickCodegenDatabasePassword := "quill42",
+    slickCodegenDatabaseUrl := databaseUrl,
+    slickCodegenDatabaseUser := databaseUser,
+    slickCodegenDatabasePassword := databasePassword,
     slickCodegenDriver := slick.jdbc.PostgresProfile,
     slickCodegenJdbcDriver := "org.postgresql.Driver",
     slickCodegenOutputPackage := "database",
+    slickCodegenExcludedTables := Seq("flyway_schema_history"),
     slickCodegenOutputDir := (sourceManaged in Compile).value
 )

@@ -16,15 +16,28 @@
 
 ## Start
 
-install db?
-configure
+#### requirements
+
+- postgres database
+- java 8
+- nodejs
+
+#### configure environment set
+
+* DB_QUILL_URL=jdbc:postgresql://localhost:quill
+* DB_QUILL_USER=user
+* DB_QUILL_PASSWORD=****
+
+#### initialize database
+
+sbt flyway/flywayMigrate
+
+#### build frontend
 
 cd frontend
 npm install
 npm publish
 cd ..
-sbt run // to generate database
 
-after database was created
-sbt codegen/slick
+#### run play 
 
