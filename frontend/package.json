@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "bulma": "0.6.2",
-    "feather-ts": "1.2.60",
+    "feather-ts": "1.2.61",
     "feather-components": "1.0.12"
   }
 }

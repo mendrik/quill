@@ -170,23 +170,21 @@ module quill {
             return `
             <panel class="fullscreen v-flex">
                 <navigation class="no-grow"></navigation>
-                <horizontal-split class="grow" id="app-split">
-                  <sidebar class="v-flex">
-                    <tree-actions></tree-actions>
-                    <scroll-pane class="grow">
-                      <aside class="menu">
-                        <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
-                        <ul class="tree-view is-marginless" {{nodes}}></ul>
-                        <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
-                        <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
-                      </aside>
-                    </scroll-pane>
-                  </sidebar>
-                  <section class="v-flex">
-                    <scroll-pane class="grow">
-                    </scroll-pane>
-                  </section>
-                </horizontal-split>
+                <scroll-pane class="grow">
+                    <horizontal-split class="grow" id="app-split">
+                      <sidebar class="v-flex">
+                        <tree-actions></tree-actions>
+                        <aside class="menu">
+                          <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
+                          <ul class="tree-view is-marginless" {{nodes}}></ul>
+                          <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
+                          <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
+                        </aside>
+                      </sidebar>
+                      <section class="v-flex">
+                      </section>
+                    </horizontal-split>
+                </scroll-pane>
                 <footer class="no-grow"/>
             </panel>`
         }
