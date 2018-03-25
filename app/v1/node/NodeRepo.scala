@@ -7,7 +7,7 @@ import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.PostgresProfile
 import v1.NodeIO._
 import v1.project.{Project, ProjectRepo}
-
+import scala.language.implicitConversions
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -65,8 +65,8 @@ class NodeRepo @Inject()(
                     parent,
                     node.project,
                     node.name,
-                    asString(node.nodeRoot),
-                    asString(node.nodeType),
+                    node.nodeRoot,
+                    node.nodeType,
                     sort.map(_ + 1).getOrElse(0)
                 )
         }).flatMap(findById)

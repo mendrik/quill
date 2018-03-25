@@ -1,18 +1,25 @@
+# PAGES
 
 GET			/                                               controllers.Home.index
 GET			/login                                          controllers.Home.index
 GET			/404                                            controllers.Home.index
 GET			/project/:hash                                  controllers.Home.project(hash: String)
 
-# API
-GET			/projects/:hash                                 controllers.Project.project(hash: String)
+# REST API
 
+# PROJECT
+GET			/projects/:hash                                 controllers.Project.project(hash: String)
 POST		/projects/:hash/structure                       controllers.Node.createStructureNode(hash: String)
 POST		/projects/:hash/schema                          controllers.Node.createSchemaNode(hash: String)
+
+# NODE
 POST		/node/:nodeId                                   controllers.Node.createChildNode(nodeId: Long)
 DELETE	/node/:nodeId                                   controllers.Node.deleteNode(nodeId: Long)
 PUT	    /node/:nodeId/rename                            controllers.Node.renameNode(nodeId: Long)
 PUT	    /node/:nodeId/move                              controllers.Node.moveNode(nodeId: Long)
+
+# VERSION
+
 
 # AUTHENTICATION
 POST		/signin							                            controllers.Security.signIn
@@ -24,7 +31,6 @@ GET			/account						                            controllers.Security.accountInfo
 PUT			/account						                            controllers.Security.requestPasswordChange
 GET			/changepassword                                 controllers.Security.changePasswordPage(id: String ?= "")
 PUT			/account/new-password		                        controllers.Security.changePassword
-
 
 # Map static resources from the /public folder to the /assets URL path
 GET			/assets/*file				                            controllers.Assets.versioned(path="/public", file: Asset)

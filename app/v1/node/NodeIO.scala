@@ -2,6 +2,7 @@ package v1
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import play.api.libs.json.Reads._
 import v1.node._
 
 package object NodeIO {

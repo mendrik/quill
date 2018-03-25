@@ -18,19 +18,23 @@ class VersionRepo @Inject()(dcp: DatabaseConfigProvider) {
     def findById(id: Long): Future[Option[Version]] =
         db.run(Versions.filter(_.id === id).result.headOption.map(_.map(toVersion)))
 
-    def createVersion(version: Version, project: Project): Future[Option[Version]] =
-        db.run(Versions returning Versions.map(_.id) += toVersionsRow(version, project)).flatMap(findById)
+    def findByProjectId(projectId: Long): Future[Seq[Version]] =
+        db.run(Versions.filter(_.project === projectId).result.map(_.map(toVersion)))
 
-    def update(version: Version) =
+    def createVersion(version: Version, project: Project): Future[Option[Version]] =
+        db.run(Versions returning Versions.map(_.id)
+            += toVersionsRow(version, project)).flatMap(findById)
+
+    def update(version: Version): Future[Int] =
         db.run(Versions.filter(_.id === version.id)
             .map(v => v.name)
             .update(version.name))
 
-    def remove(version: Version) =
+    def remove(version: Version): Future[Int] =
         db.run(Versions.filter(_.id === version.id).delete)
 
     def toVersion(row: VersionsRow): Version =
-        Version(row.id, row.name)
+        Version(row.id, row.project, row.name)
 
     def toVersionsRow(version: Version, project: Project): VersionsRow =
         VersionsRow(version.id, version.name, project.id)

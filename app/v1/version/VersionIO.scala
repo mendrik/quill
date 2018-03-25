@@ -1,0 +1,22 @@
+package v1
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import play.api.libs.json.Reads._
+import v1.version.Version
+
+package object VersionIO {
+
+    implicit val versionReads: Reads[Version] = (
+        (__ \ "id").read[Long] ~
+        (__ \ "project").read[Long] ~
+        (__ \ "name").read[String]
+    )(Version.apply _)
+
+    implicit val nodeWrites: Writes[Version] = (
+        (__ \ "id").write[Long] ~
+        (__ \ "project").write[Long] ~
+        (__ \ "name").write[String]
+    )(unlift(Version.unapply))
+}
+
