@@ -2,8 +2,8 @@ package v1
 
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import json.JsPathExtra
-import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
+import play.api.libs.json.Reads._
 import play.api.libs.json._
 import v1.user._
 import v1.generic.extensions._
@@ -12,7 +12,7 @@ package object UserIO {
 
     implicit val signupReads: Reads[SignUp] = (
         (__ \ "firstname").nonEmpty ~
-        (__ \ "lastname").nonEmpty() ~
+        (__ \ "lastname").nonEmpty ~
         (__ \ "email").nonEmptyWith(email) ~
         (__ \ "password").nonEmptyWith(minLength(6))
     )(SignUp.apply _)
@@ -25,7 +25,7 @@ package object UserIO {
 
     implicit val credentialsReads: Reads[PostedCredentials] = (
         (__ \ "identifier").nonEmptyWith(email) ~
-        (__ \ "password").nonEmpty()
+        (__ \ "password").nonEmpty
     )(PostedCredentials.apply _)
 
     implicit val requestPasswordChangeReads: Reads[RequestPasswordChange] = (__ \ "identifier").nonEmptyWith(email).map(email => RequestPasswordChange(email))
@@ -44,11 +44,14 @@ package object UserIO {
         }
     }
 
-    implicit val userWrites: Writes[User] = (
-        (__ \ "id").write[Long] ~
-        (__ \ "email").write[String] ~
-        (__ \ "firstname").write[String] ~
-        (__ \ "lastname").write[String] ~
-        (__ \ "lastProject").write[String]
-    )(unlift(User.unapply))
+    implicit val userWrites: Writes[User] = new Writes[User] {
+        def writes(u: User) = Json.obj(
+            "id" -> u.id,
+            "email" -> u.email,
+            "firstname" -> u.firstName,
+            "lastname" -> u.lastName,
+            "lastProject" -> u.lastProjectHash
+        )
+    }
+
 }

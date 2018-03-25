@@ -8,7 +8,7 @@ module quill {
     @Construct({selector: 'value-editor', attributes: ['config']})
     export class ValueEditor extends Widget {
 
-        versionValues: VersionValues[]
+        versionValues: VersionValues[] = []
 
         @Template()
         markup() {

@@ -13,7 +13,7 @@ package object VersionIO {
         (__ \ "name").read[String]
     )(Version.apply _)
 
-    implicit val nodeWrites: Writes[Version] = (
+    implicit val versionWrites: Writes[Version] = (
         (__ \ "id").write[Long] ~
         (__ \ "project").write[Long] ~
         (__ \ "name").write[String]

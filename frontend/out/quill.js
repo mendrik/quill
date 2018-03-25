@@ -340,7 +340,9 @@ var quill;
     var ValueEditor = (function (_super) {
         __extends(ValueEditor, _super);
         function ValueEditor() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.versionValues = [];
+            return _this;
         }
         ValueEditor.prototype.markup = function () {
             return "\n            <div class=\"tabs is-boxed\">\n                <ul {{versionValues}}></ul>\n            </div>\n            ";
@@ -671,7 +673,7 @@ var quill;
         ProjectPage.prototype.fetchProject = function (project) {
             this.project = project;
             (_a = this.nodes).splice.apply(_a, [0, this.nodes.length].concat(project.structure.map(quill.CustomTreeNode.toTreeNode)));
-            this.triggerDown('project-loaded', this.projectId);
+            this.triggerDown('project-loaded', project);
             quill.Progress.stop();
             var _a;
         };

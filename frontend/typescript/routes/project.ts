@@ -56,7 +56,7 @@ module quill {
             this.project = project
             this.nodes.splice(0, this.nodes.length,
                 ...project.structure.map(CustomTreeNode.toTreeNode))
-            this.triggerDown('project-loaded', this.projectId)
+            this.triggerDown('project-loaded', project)
             Progress.stop()
         }
 
