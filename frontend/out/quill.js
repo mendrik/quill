@@ -284,6 +284,86 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
+    var TreeNode = feather.ui.tree.TreeNode;
+    var Template = feather.annotations.Template;
+    var ValueNode = (function (_super) {
+        __extends(ValueNode, _super);
+        function ValueNode() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ValueNode.prototype.markup = function () {
+            return '<li></li>';
+        };
+        __decorate([
+            Template()
+        ], ValueNode.prototype, "markup", null);
+        return ValueNode;
+    }(TreeNode));
+    quill.ValueNode = ValueNode;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var Widget = feather.core.Widget;
+    var Template = feather.annotations.Template;
+    var Rest = feather.xhr.Rest;
+    var VersionValues = (function (_super) {
+        __extends(VersionValues, _super);
+        function VersionValues(version) {
+            var _this = _super.call(this) || this;
+            _this.version = version;
+            return _this;
+        }
+        VersionValues.prototype.init = function (el) {
+            this.loadVersionValues();
+        };
+        VersionValues.prototype.loadVersionValues = function () {
+        };
+        VersionValues.prototype.markup = function () {
+            return "\n             <li>\n                <a>\n                    <span class=\"icon is-small\"><i class=\"fas fa-file-alt\"></i></span>\n                    <span>Documents</span>\n                </a>\n            </li>";
+        };
+        __decorate([
+            Rest({ url: '/version/{{version}}/values', headers: quill.headers })
+        ], VersionValues.prototype, "loadVersionValues", null);
+        __decorate([
+            Template()
+        ], VersionValues.prototype, "markup", null);
+        return VersionValues;
+    }(Widget));
+    quill.VersionValues = VersionValues;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var Widget = feather.core.Widget;
+    var Construct = feather.annotations.Construct;
+    var Template = feather.annotations.Template;
+    var Subscribe = feather.hub.Subscribe;
+    var ValueEditor = (function (_super) {
+        __extends(ValueEditor, _super);
+        function ValueEditor() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ValueEditor.prototype.markup = function () {
+            return "\n            <div class=\"tabs is-boxed\">\n                <ul {{versionValues}}></ul>\n            </div>\n            ";
+        };
+        ValueEditor.prototype.projectLoaded = function (project) {
+            (_a = this.versionValues).splice.apply(_a, [0, this.versionValues.length].concat(project.versions.map(function (version) { return new quill.VersionValues(version); })));
+            var _a;
+        };
+        __decorate([
+            Template()
+        ], ValueEditor.prototype, "markup", null);
+        __decorate([
+            Subscribe('project-loaded')
+        ], ValueEditor.prototype, "projectLoaded", null);
+        ValueEditor = __decorate([
+            Construct({ selector: 'value-editor', attributes: ['config'] })
+        ], ValueEditor);
+        return ValueEditor;
+    }(Widget));
+    quill.ValueEditor = ValueEditor;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
     var components;
     (function (components) {
         var GestureWidget = feather.ui.events.GestureWidget;
@@ -565,7 +645,8 @@ var quill;
         id: 0,
         name: '',
         structure: [],
-        schema: []
+        schema: [],
+        versions: []
     };
     var ProjectPage = (function (_super) {
         __extends(ProjectPage, _super);
@@ -590,6 +671,7 @@ var quill;
         ProjectPage.prototype.fetchProject = function (project) {
             this.project = project;
             (_a = this.nodes).splice.apply(_a, [0, this.nodes.length].concat(project.structure.map(quill.CustomTreeNode.toTreeNode)));
+            this.triggerDown('project-loaded', this.projectId);
             quill.Progress.stop();
             var _a;
         };
@@ -681,7 +763,7 @@ var quill;
             this.moveNodeCall();
         };
         ProjectPage.prototype.projectPage = function () {
-            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                <scroll-pane class=\"grow\">\n                    <horizontal-split class=\"grow\" id=\"app-split\">\n                      <sidebar class=\"v-flex\">\n                        <tree-actions></tree-actions>\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                        </aside>\n                      </sidebar>\n                      <section class=\"v-flex\">\n                      </section>\n                    </horizontal-split>\n                </scroll-pane>\n                <footer class=\"no-grow\"/>\n            </panel>";
+            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                <scroll-pane class=\"grow\">\n                    <horizontal-split class=\"grow\" id=\"app-split\">\n                      <sidebar class=\"v-flex\">\n                        <tree-actions></tree-actions>\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                        </aside>\n                      </sidebar>\n                      <section class=\"v-flex\">\n                         <value-editor/>\n                      </section>\n                    </horizontal-split>\n                </scroll-pane>\n                <footer class=\"no-grow\"/>\n            </panel>";
         };
         ProjectPage.prototype.allNodes = function (nodes) {
             return [].concat.apply([], nodes.map(quill.flattenTree));

@@ -29,7 +29,8 @@ module quill {
         id: number,
         name: string,
         structure: Node[],
-        schema: Node[]
+        schema: Node[],
+        versions: string[]
     }
 
     export interface Node {

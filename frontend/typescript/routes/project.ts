@@ -17,7 +17,8 @@ module quill {
         id: 0,
         name: '',
         structure: [],
-        schema: []
+        schema: [],
+        versions: []
     }
 
     export class ProjectPage extends AjaxWidget {
@@ -55,6 +56,7 @@ module quill {
             this.project = project
             this.nodes.splice(0, this.nodes.length,
                 ...project.structure.map(CustomTreeNode.toTreeNode))
+            this.triggerDown('project-loaded', this.projectId)
             Progress.stop()
         }
 
@@ -182,6 +184,7 @@ module quill {
                         </aside>
                       </sidebar>
                       <section class="v-flex">
+                         <value-editor/>
                       </section>
                     </horizontal-split>
                 </scroll-pane>
