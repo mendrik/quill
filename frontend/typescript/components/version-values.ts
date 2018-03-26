@@ -29,7 +29,7 @@ module quill {
             return `
              <li>
                 <a>
-                    <span class="icon is-small"><i class="fas fa-file-alt"></i></span>
+                    <span class="icon is-small"><Icon name="book"/></span>
                     <span>{{version.name}}</span>
                 </a>
             </li>`

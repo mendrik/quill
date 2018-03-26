@@ -46,8 +46,8 @@ module quill {
                 </a>
               </div>
               <div class="navbar-end">
-                <a class="navbar-item settings"><Icon name="cog"/> Settings</span></a>
-                <a class="navbar-item logout"><Icon name="sign-out"/> Logout <span class="username">{{user.firstname}}</span></a>
+                <a class="navbar-item settings"><Icon name="cog"/>Settings</span></a>
+                <a class="navbar-item logout"><Icon name="sign-out"/>Logout <span class="username">{{user.firstname}}</span></a>
                 <div  class="navbar-item">
                 <p class="control has-icons-right" id="search">
                   <input class="input" type="text" placeholder="Search...">
