@@ -1,15 +1,16 @@
 module quill {
 
-    import Widget    = feather.core.Widget;
-    import Template  = feather.annotations.Template;
-    import Rest = feather.xhr.Rest;
+    import Widget    = feather.core.Widget
+    import Template  = feather.annotations.Template
+    import Rest      = feather.xhr.Rest
+    import Bind      = feather.observe.Bind
 
     export class VersionValues extends Widget {
 
-        version: string
+        @Bind() version: Version
         nodes: ValueNode[]
 
-        constructor(version: string) {
+        constructor(version: Version) {
             super()
             this.version = version
         }
@@ -18,7 +19,7 @@ module quill {
             this.loadVersionValues()
         }
 
-        @Rest({url: '/version/{{version}}/values', headers: quill.headers})
+        @Rest({url: '/values/version/{{version.id}}', headers: quill.headers})
         loadVersionValues() {
             // ignore
         }
@@ -29,7 +30,7 @@ module quill {
              <li>
                 <a>
                     <span class="icon is-small"><i class="fas fa-file-alt"></i></span>
-                    <span>Documents</span>
+                    <span>{{version.name}}</span>
                 </a>
             </li>`
         }

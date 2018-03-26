@@ -56,6 +56,11 @@ module quill {
         id: string
     }
 
+    export interface Version {
+        id: string,
+        name: string,
+    }
+
     export type NodeRoot = 'structure' | 'schema'
 
     export type NodeType = 'string' | 'number' | 'enum' | 'boolean' | 'node' | 'list'
