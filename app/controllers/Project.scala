@@ -27,12 +27,8 @@ class Project @Inject()(
             _         <- securityRules.checkRules(request.identity, ProjectOwner(hash))
             Some(u)   <- successful(request.identity)
             project   <- projectService.findByHashAndUser(hash, u.id)
-            structure <- nodeService.structureNodes(project.id)
-            schema    <- nodeService.schemaNodes(project.id)
         } yield {
-            Ok(Json.toJson(
-                project.copy(structure = structure, schema = schema)
-            ))
+            Ok(Json.toJson(project))
         })
         .fallbackTo(successful(Unauthorized))
     }

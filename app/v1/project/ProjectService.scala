@@ -2,6 +2,7 @@ package v1.project
 
 import javax.inject._
 import v1.generic.extensions.decodeHash
+import v1.node.NodeService
 import v1.project_user.ProjectUserRepo
 import v1.user.{User, UserRepo}
 import v1.version.{Version, VersionRepo}
@@ -12,6 +13,7 @@ import scala.concurrent.Future
 class ProjectService @Inject()(
     uRepo: UserRepo,
     repo: ProjectRepo,
+    nodeService: NodeService,
     versionRepo: VersionRepo,
     puRepo: ProjectUserRepo
 ) {
@@ -28,10 +30,10 @@ class ProjectService @Inject()(
 
     def getProject(user: User): Future[Project] = {
         (for {
-            Some(project) <- repo.find(user).map(_.headOption)
-            versions <- versionRepo.findByProjectId(project.id)
+            Some(stub) <- repo.find(user).map(_.headOption)
+            project    <- enhance(stub)
         } yield {
-            project.copy(versions = versions)
+            project
         })
         .fallbackTo(createProject(user))
     }
@@ -44,9 +46,20 @@ class ProjectService @Inject()(
         val Some(id) = decodeHash(hash)
         for {
             ok            <- userInProject(user, id)
-            Some(project) <- repo.findById(id) if ok
+            Some(stub) <- repo.findById(id) if ok
+            project       <- enhance(stub)
         } yield {
             project
+        }
+    }
+
+    def enhance(project: Project): Future[Project] = {
+        for {
+            versions <- versionRepo.findByProjectId(project.id)
+            structure <- nodeService.structureNodes(project.id)
+            schema    <- nodeService.schemaNodes(project.id)
+        } yield {
+            project.copy(versions = versions, structure = structure, schema = schema)
         }
     }
 }
