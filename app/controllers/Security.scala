@@ -34,6 +34,7 @@ class Security @Inject()(
   val credentialsProvider: CredentialsProvider,
   val configuration: Configuration,
   val mailTokenService: MailTokenService[MailTokenUser],
+  val assetFinder: AssetsFinder,
   val mailer: Mailer,
   val clock: Clock
 ) extends AbstractController(cc) {
@@ -131,7 +132,7 @@ class Security @Inject()(
                 mailTokenService.consume(id)
                 Redirect("/404")
             } else {
-                Ok(views.html.index(conf))
+                Ok(views.html.index(conf, assetFinder))
             }
         })
         .fallbackTo(Redirect("/404"))

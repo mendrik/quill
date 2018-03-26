@@ -36,6 +36,8 @@ lazy val root = (project in file("."))
         codegenSettings
     )
 
+unmanagedResourceDirectories in Assets += baseDirectory.value / "frontend" / "out"
+
 lazy val sharedSettings = Seq(
     scalaVersion := scVersion,
     libraryDependencies ++= List(
