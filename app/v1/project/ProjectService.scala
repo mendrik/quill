@@ -21,8 +21,8 @@ class ProjectService @Inject()(
         for {
             Some(project) <- repo.createProject(Project(0, None, Nil, Nil, Nil))
             Some(version) <- versionRepo.createVersion(Version(0, project.id, "Default"), project)
-            _ <- puRepo.createProjectUser(user, project)
-            _ <- uRepo.update(user.copy(lastProject = Some(project.id)))
+            _             <- puRepo.createProjectUser(user, project)
+            _             <- uRepo.update(user.copy(lastProject = Some(project.id)))
         } yield {
             project.copy(versions = Seq(version))
         }
@@ -45,9 +45,9 @@ class ProjectService @Inject()(
     def findByHashAndUser(hash: String, user: Long): Future[Project] = {
         val Some(id) = decodeHash(hash)
         for {
-            ok            <- userInProject(user, id)
+            ok         <- userInProject(user, id)
             Some(stub) <- repo.findById(id) if ok
-            project       <- enhance(stub)
+            project    <- enhance(stub)
         } yield {
             project
         }

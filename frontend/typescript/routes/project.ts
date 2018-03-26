@@ -61,8 +61,9 @@ module quill {
         }
 
         @Subscribe('node-defocused')
-        nodeDeselected(node: CustomTreeNode) {
+        nodeDeselected() {
             this.currentTreeNode = undefined
+            this.triggerDown('defocus-other-nodes')
         }
 
         @Subscribe('node-focused')

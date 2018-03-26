@@ -4,11 +4,16 @@ module quill {
     import Construct = feather.annotations.Construct
     import Template  = feather.annotations.Template
     import Subscribe = feather.hub.Subscribe
+    import Bind      = feather.observe.Bind
 
     @Construct({selector: 'value-editor', attributes: ['config']})
     export class ValueEditor extends Widget {
 
-        versionValues: VersionValues[] = []
+        @Bind({}) versionValues: VersionValues[] = []
+
+        init(el: Element) {
+            this.render()
+        }
 
         @Template()
         markup() {

@@ -18,8 +18,9 @@ DELETE	/node/:nodeId                                   controllers.Node.deleteNo
 PUT	    /node/:nodeId/rename                            controllers.Node.renameNode(nodeId: Long)
 PUT	    /node/:nodeId/move                              controllers.Node.moveNode(nodeId: Long)
 
-# VERSION
+# VALUES
 
+GET     /values/version/:versionId                      controllers.Value.valuesForVersion(versionId: Long)
 
 # AUTHENTICATION
 POST		/signin							                            controllers.Security.signIn
