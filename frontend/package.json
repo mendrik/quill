@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm-run-all --parallel watch:css watch",
-    "watch:css": "postcss postcss/all.pcss -w -o out/styles.css",
-    "build:css": "postcss postcss/all.pcss -o out/styles.css",
+    "watch:css": "postcss postcss/all.pcss -w -o ../target/web/public/main/styles.css",
+    "build:css": "postcss postcss/all.pcss -o /styles.css",
     "watch": "tsc -w -p tsconfig.json",
     "build:ts": "ts-node build/build.ts",
     "publish": "npm-run-all --parallel build:css build:ts"
