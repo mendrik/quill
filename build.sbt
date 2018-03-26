@@ -57,7 +57,6 @@ lazy val dependencies = Seq(
     guice,
     filters,
     "com.typesafe.play" %% "play-slick" % playSlickVersion,
-   // "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3",
     "com.typesafe.play" %% "play-json" % "2.6.7",
     "com.github.ancane" %% "hashids-scala" % "1.3",
     "com.typesafe.play" %% "play-mailer" % "6.0.1",
