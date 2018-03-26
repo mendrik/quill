@@ -33,8 +33,9 @@ module feather.ui {
             return `
             <div class="level is-mobile is-marginless">
               <div class="level-left">
-                 <a class="button is-small" action="node-add"><Icon name="plus"></Icon></a>
-                 <a class="button is-small" action="node-edit" {{disabled}}><Icon name="pencil"></Icon></a>
+                 <a class="button is-small" action="node-add"><Icon name="plus"/></a>
+                 <a class="button is-small" action="node-edit" {{disabled}}><Icon name="pencil"/></a>
+                 <a class="button is-small" action="node-configure" {{disabled}}><Icon name="cog"/></a>
               </div>
               <div class="level-right">
                  <a class="button is-small" action="node-delete" {{disabled}}><Icon name="trash-o"/></a>

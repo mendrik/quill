@@ -7,11 +7,41 @@
     }
 }
 
-.navbar-menu.is-active {
-    position: absolute;
-    width: 100%;
+.navbar-brand > .navbar-item {
+    > span {
+        &:nth-child(2) {
+            font-family: 'PT Serif', serif;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        &:nth-child(3) {
+            margin-left: 15px;
+            font-weight: normal;
+        }
+    }
+}
+
+.navbar-item {
+    font-family: 'Yantramanav', sans-serif;
 }
 
 .menu-label {
     white-space: nowrap;
+}
+
+.navbar {
+    align-items: stretch;
+    display: flex;
+}
+
+.navbar-menu {
+    display: block;
+}
+
+.navbar-end {
+    justify-content: flex-end;
+    margin-left: auto;
+    align-items: center;
+    display: flex;
 }
