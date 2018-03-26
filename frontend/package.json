@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "npm-run-all --parallel watch:css watch",
     "watch:css": "postcss postcss/all.pcss -w -o ../target/web/public/main/styles.css",
-    "build:css": "postcss postcss/all.pcss -o /styles.css",
-    "watch": "tsc -w -p tsconfig.json",
-    "build:ts": "ts-node build/build.ts",
-    "publish": "npm-run-all --parallel build:css build:ts"
+    "watch": "tsc -w -p tsconfig.json --outFile ../target/web/public/main/quill.js",
+    "build:css": "postcss postcss/all.pcss -o out/styles.css",
+    "build:ts": "tsc -w -p tsconfig.json --outFile out/quill.js",
+    "assemble": "ts-node build/build.ts",
+    "publish": "npm-run-all build:css build:ts assemble"
   },
   "author": "Andreas Prudzilko",
   "license": "ISC",

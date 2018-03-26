@@ -14,7 +14,6 @@
         "target": "es5",
         "sourceRoot": "./typescript",
         "rootDir": "./",
-        "out": "../target/web/public/main/quill.js",
         "lib": ["es2015", "dom"],
         "types": [
             "node",
