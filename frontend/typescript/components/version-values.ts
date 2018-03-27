@@ -30,7 +30,7 @@ module quill {
              <li>
                 <a>
                     <span class="icon is-small"><Icon name="book"/></span>
-                    <span>{{version.name}}</span>
+                    <span class="editable">{{version.name}}</span>
                 </a>
             </li>`
         }

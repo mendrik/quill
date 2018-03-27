@@ -27,17 +27,17 @@ class VersionRepo @Inject()(dcp: DatabaseConfigProvider) {
 
     def update(version: Version): Future[Int] =
         db.run(Versions.filter(_.id === version.id)
-            .map(v => v.name)
-            .update(version.name))
+            .map(v => (v.name, v.icon))
+            .update((version.name, version.icon)))
 
     def remove(version: Version): Future[Int] =
         db.run(Versions.filter(_.id === version.id).delete)
 
     def toVersion(row: VersionsRow): Version =
-        Version(row.id, row.project, row.name)
+        Version(row.id, row.project, row.name, row.icon)
 
     def toVersionsRow(version: Version, project: Project): VersionsRow =
-        VersionsRow(version.id, version.name, project.id)
+        VersionsRow(version.id, version.name, project.id, version.icon)
 
 }
 

@@ -10,13 +10,15 @@ package object VersionIO {
     implicit val versionReads: Reads[Version] = (
         (__ \ "id").read[Long] ~
         (__ \ "project").read[Long] ~
-        (__ \ "name").read[String]
+        (__ \ "name").read[String] ~
+        (__ \ "icon").read[String]
     )(Version.apply _)
 
     implicit val versionWrites: Writes[Version] = (
         (__ \ "id").write[Long] ~
         (__ \ "project").write[Long] ~
-        (__ \ "name").write[String]
+        (__ \ "name").write[String] ~
+        (__ \ "icon").write[String]
     )(unlift(Version.unapply))
 }
 
