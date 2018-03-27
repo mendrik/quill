@@ -26,6 +26,7 @@ module quill {
         @Bind() nodes: Array<CustomTreeNode> = []
         @Bind() schemaNodes: Array<CustomTreeNode> = []
         @Bind({bequeath: true}) project: Project = dummyProject
+        @Bind() loading = true
 
         projectId: string
         currentTreeNode: CustomTreeNode
@@ -47,7 +48,6 @@ module quill {
         }
 
         init() {
-            Progress.start()
             this.fetchProject()
         }
 
@@ -57,7 +57,7 @@ module quill {
             this.nodes.splice(0, this.nodes.length,
                 ...project.structure.map(CustomTreeNode.toTreeNode))
             this.triggerDown('project-loaded', project)
-            Progress.stop()
+            this.loading = false
         }
 
         @Subscribe('node-defocused')
@@ -176,7 +176,7 @@ module quill {
                     <horizontal-split class="grow" id="app-split">
                       <sidebar class="v-flex">
                         <tree-actions></tree-actions>
-                        <scroll-spy class="grow">
+                        <scroll-spy class="grow" {{loading}}>
                           <aside class="menu">
                             <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
                             <ul class="tree-view is-marginless" {{nodes}}></ul>
@@ -185,7 +185,7 @@ module quill {
                           </aside>
                         </scroll-spy>
                       </sidebar>
-                      <section class="v-flex">
+                      <section class="v-flex value-section">
                          <value-editor class="grow v-flex"/>
                       </section>
                     </horizontal-split>
