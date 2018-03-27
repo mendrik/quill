@@ -32,6 +32,7 @@
         "typescript/common/polyfill.ts",
         "typescript/components/translate.ts",
         "typescript/components/progress.ts",
+        "typescript/components/scroll-spy.ts",
         "typescript/components/html-fragment.ts",
         "typescript/components/ajax-widget.ts",
         "typescript/components/ajax-form.ts",

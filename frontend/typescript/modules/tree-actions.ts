@@ -33,12 +33,12 @@ module feather.ui {
             return `
             <div class="level is-mobile is-marginless">
               <div class="level-left">
-                 <a class="button is-small" action="node-add"><Icon name="plus"/></a>
-                 <a class="button is-small" action="node-edit" {{disabled}}><Icon name="pencil"/></a>
-                 <a class="button is-small" action="node-configure" {{disabled}}><Icon name="cog"/></a>
+                 <a class="button is-small" action="node-add"><Icon name="plus" icon-class="is-small"/></a>
+                 <a class="button is-small" action="node-edit" {{disabled}}><Icon name="pencil" icon-class="is-small"/></a>
+                 <a class="button is-small" action="node-configure" {{disabled}}><Icon name="cog" icon-class="is-small"/></a>
               </div>
               <div class="level-right">
-                 <a class="button is-small" action="node-delete" {{disabled}}><Icon name="trash-o"/></a>
+                 <a class="button is-small" action="node-delete" {{disabled}}><Icon name="trash-o" icon-class="is-small"/></a>
               </div>
             </div>`
         }

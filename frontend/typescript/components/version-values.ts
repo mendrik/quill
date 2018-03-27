@@ -28,10 +28,19 @@ module quill {
         markup() {
             return `
              <li>
-                <a>
-                    <span class="icon is-small"><Icon name="book"/></span>
-                    <span class="editable">{{version.name}}</span>
-                </a>
+                <div class="level">
+                    <div class="level-left">
+                        <span class="level-item">
+                            <span class="icon is-small"><Icon name="book"/></span>
+                            <span class="version-name">{{version.name}}</span>
+                        </span>
+                    </div>
+                    <div class="level-right">
+                        <a class="button is-small" action="node-configure"><Icon name="cog" icon-class="is-small"/></a>
+                    </div>
+                </div>
+                <div class="synched-value-scroll">
+                </div>
             </li>`
         }
     }

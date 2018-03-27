@@ -6,17 +6,8 @@
 @import 'bulma-overrides.pcss';
 @import 'progress.pcss';
 @import 'node.pcss';
-
-.inline {
-    display: inline-block;
-}
-
-.has-text-right {
-
-    .button:last-child {
-        margin-right: 0;
-    }
-}
+@import 'value-editor.pcss';
+@import 'scroll-spy.pcss';
 
 translate {
     margin-bottom: var(--pad);
@@ -37,4 +28,10 @@ h3 {
 
 .block {
     margin: 2rem 0 0 0;
+}
+
+html,
+body {
+    min-width: 768px;
+    overflow-x: auto;
 }

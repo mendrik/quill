@@ -6,7 +6,7 @@ module quill {
     import Subscribe = feather.hub.Subscribe
     import Bind      = feather.observe.Bind
 
-    @Construct({selector: 'value-editor', attributes: ['config']})
+    @Construct({selector: 'value-editor'})
     export class ValueEditor extends Widget {
 
         @Bind({}) versionValues: VersionValues[] = []
@@ -17,11 +17,7 @@ module quill {
 
         @Template()
         markup() {
-            return `
-            <div class="tabs is-boxed">
-                <ul {{versionValues}}></ul>
-            </div>
-            `
+            return `<ul class="grow" {{versionValues}}></ul>`
         }
 
         @Subscribe('project-loaded')

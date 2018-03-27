@@ -1,0 +1,29 @@
+value-editor {
+    font-family: 'Yantramanav', sans-serif;
+
+    > ul {
+        display: flex;
+        align-items: stretch;
+
+        > li {
+            flex: 1;
+            max-width: 280px;
+            border-right: var(--light-devider);
+            padding: 5px 10px;
+
+            .level {
+                flex-wrap: nowrap;
+                overflow: hidden;
+                height: 2.25em;
+            }
+
+            .version-name {
+                margin-left: 5px;
+            }
+
+            .synched-value-scroll {
+                overflow: hidden;
+            }
+        }
+    }
+}

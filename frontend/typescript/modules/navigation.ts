@@ -1,14 +1,11 @@
 module quill {
 
-    import Construct                    = feather.annotations.Construct
-    import Template                     = feather.annotations.Template
-    import On                           = feather.event.On
-    import GestureWidget                = feather.ui.events.GestureWidget
-    import Subscribe                    = feather.hub.Subscribe
-    import addMultipleEventListeners    = feather.ui.events.addMultipleEventListeners
-    import removeMultipleEventListeners = feather.ui.events.removeMultipleEventListeners
-    import tapEvents                    = feather.ui.events.tapEvents
-    import Rest                         = feather.xhr.Rest
+    import Construct     = feather.annotations.Construct
+    import Template      = feather.annotations.Template
+    import On            = feather.event.On
+    import GestureWidget = feather.ui.events.GestureWidget
+    import Subscribe     = feather.hub.Subscribe
+    import Rest          = feather.xhr.Rest
 
     @Construct({selector: 'navigation', singleton: true})
     export class Navigation extends GestureWidget {
@@ -51,7 +48,7 @@ module quill {
                 <div  class="navbar-item">
                 <p class="control has-icons-right" id="search">
                   <input class="input" type="text" placeholder="Search...">
-                  <Icon name="search" align-right="right"></Icon>
+                  <Icon name="search" align-right="right"/>
                 </p>
                 </div>
               </div>

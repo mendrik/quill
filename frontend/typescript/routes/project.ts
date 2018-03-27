@@ -173,19 +173,20 @@ module quill {
             return `
             <panel class="fullscreen v-flex">
                 <navigation class="no-grow"></navigation>
-                <scroll-pane class="grow">
                     <horizontal-split class="grow" id="app-split">
                       <sidebar class="v-flex">
                         <tree-actions></tree-actions>
-                        <aside class="menu">
-                          <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
-                          <ul class="tree-view is-marginless" {{nodes}}></ul>
-                          <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
-                          <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
-                        </aside>
+                        <scroll-spy class="grow">
+                          <aside class="menu">
+                            <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
+                            <ul class="tree-view is-marginless" {{nodes}}></ul>
+                            <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
+                            <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
+                          </aside>
+                        </scroll-spy>
                       </sidebar>
                       <section class="v-flex">
-                         <value-editor/>
+                         <value-editor class="grow v-flex"/>
                       </section>
                     </horizontal-split>
                 </scroll-pane>
