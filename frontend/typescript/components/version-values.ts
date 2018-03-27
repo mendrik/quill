@@ -39,8 +39,53 @@ module quill {
                         <a class="button is-small" action="node-configure"><Icon name="cog" icon-class="is-small"/></a>
                     </div>
                 </div>
-                <div class="synched-value-scroll">
-                </div>
+                <scroll-receiver>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                    aaa<br>
+                </scroll-receiver>
             </li>`
         }
     }
