@@ -31,7 +31,7 @@ module feather.ui {
         @Template()
         markup() {
             return `
-            <div class="level is-mobile is-marginless">
+            <div class="level is-mobile is-marginless tree-actions">
               <div class="level-left">
                  <a class="button is-small" action="node-add"><Icon name="plus" icon-class="is-small"/></a>
                  <a class="button is-small" action="node-edit" {{disabled}}><Icon name="pencil" icon-class="is-small"/></a>

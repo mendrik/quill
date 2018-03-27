@@ -28,7 +28,7 @@ module quill {
         markup() {
             return `
              <li>
-                <div class="level">
+                <div class="level version-header">
                     <div class="level-left">
                         <span class="level-item">
                             <span class="icon is-small"><Icon name="book"/></span>

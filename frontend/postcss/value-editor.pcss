@@ -1,20 +1,27 @@
 value-editor {
     font-family: 'Yantramanav', sans-serif;
+    border-top: var(--default-border);
+    border-bottom: var(--default-border);
 
     > ul {
         display: flex;
         align-items: stretch;
+        list-style: none;
 
         > li {
             flex: 1;
             max-width: 280px;
             border-right: var(--light-devider);
-            padding: 5px 10px;
+            background-color: white;
+
+            .version-header {
+                padding: 5px;
+                border-bottom: var(--light-devider);
+            }
 
             .level {
                 flex-wrap: nowrap;
                 overflow: hidden;
-                height: 2.25em;
             }
 
             .version-name {

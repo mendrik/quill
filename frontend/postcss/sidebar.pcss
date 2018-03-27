@@ -1,16 +1,10 @@
 sidebar {
     overflow: hidden;
+    border-top: var(--default-border);
+    border-bottom: var(--default-border);
 
     .level {
         padding: 5px;
-
-        .level-left,
-        .level-right {
-            > .button,
-            > .toggler {
-                margin-right: 5px;
-            }
-        }
     }
 
     aside {
@@ -27,6 +21,25 @@ sidebar {
     }
 
     .scroll-pane {
+
+    }
+
+    .tree-actions {
+        border-bottom: var(--light-devider);
+
+        .button {
+            margin-right: 5px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+horizontal-split {
+    .dragger {
+        background-color: whitesmoke;
     }
 }
 
