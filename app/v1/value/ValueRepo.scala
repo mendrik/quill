@@ -7,7 +7,7 @@ import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 import v1.node.Node
 import v1.version.Version
-
+import utils.Implicits._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -36,7 +36,17 @@ class ValueRepo @Inject()(dcp: DatabaseConfigProvider) {
         db.run(NodeValues.filter(_.id === value.id).delete)
 
     def toValue(row: NodeValuesRow): Value =
-        Value(row.id, row.node)
+        Value(
+            row.id,
+            row.version,
+            row.node,
+            row.arrValue,
+            row.strValue,
+            row.numValue,
+            row.decimalValue,
+            row.dateValue,
+            row.boolValue
+        )
 
     def toNodeValuesRow(value: Value, node: Node, version: Version): NodeValuesRow =
         NodeValuesRow(value.id, node.id, version.id, None, None, None, None)

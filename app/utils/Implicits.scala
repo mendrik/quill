@@ -7,6 +7,7 @@ import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
 import org.joda.time.DateTime
+import play.api.libs.json._
 import play.api.mvc.Result
 
 import scala.concurrent.Future
@@ -18,8 +19,12 @@ object Implicits {
     implicit def passwordInfo2pwd(passwordInfo: PasswordInfo): String = passwordInfo.password
 
     implicit def toDatetime(timestamp: Timestamp): DateTime = new DateTime(timestamp.getTime)
+    implicit def toOptionalLocalDatetime(timestamp: Option[Timestamp]): Option[DateTime] = timestamp.map(toDatetime)
     implicit def toTimestamp(datetime: DateTime): Timestamp = new Timestamp(datetime.getMillis)
 
     implicit def toFuture(status: Result): Future[Result] = Future.successful(status)
+
+    val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    implicit val dateFormat = Format[DateTime](JodaReads.jodaDateReads(pattern), JodaWrites.jodaDateWrites(pattern))
 }
 

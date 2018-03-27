@@ -1,7 +1,6 @@
 package security
 
 import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.repositories.AuthenticatorRepository
 import com.mohiva.play.silhouette.api.util.PasswordInfo
@@ -35,7 +34,14 @@ class SecurityService @Inject()(
     override def add(a: BearerTokenAuthenticator): Future[BearerTokenAuthenticator] = {
         for {
             Some(user: User) <- userRepo.findByEmail(a.loginInfo.providerKey)
-            Some(token: Token) <- tokenRepo.createToken(Token(a.id, user.id, a.lastUsedDateTime, a.expirationDateTime))
+            Some(token: Token) <- tokenRepo.createToken(
+                Token(
+                    a.id,
+                    user.id,
+                    a.lastUsedDateTime,
+                    a.expirationDateTime
+                )
+            )
         } yield {
             bearerToken(token, user)
         }
@@ -45,7 +51,12 @@ class SecurityService @Inject()(
         for {
             Some(user) <- userRepo.findByEmail(a.loginInfo.providerKey)
         } yield {
-            val token = Token(a.id, user.id, a.lastUsedDateTime, a.expirationDateTime)
+            val token = Token(
+                a.id,
+                user.id,
+                a.lastUsedDateTime,
+                a.expirationDateTime
+            )
             tokenRepo.update(token)
             bearerToken(token, user)
         }
