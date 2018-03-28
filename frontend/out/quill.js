@@ -152,6 +152,63 @@ var quill;
 })(quill || (quill = {}));
 var quill;
 (function (quill) {
+    var Construct = feather.annotations.Construct;
+    var ScrollPane = feather.ui.ScrollPane;
+    var On = feather.event.On;
+    var Scope = feather.event.Scope;
+    var Subscribe = feather.hub.Subscribe;
+    var ScrollSpy = (function (_super) {
+        __extends(ScrollSpy, _super);
+        function ScrollSpy() {
+            var _this = _super.call(this) || this;
+            _this.receivers = [];
+            return _this;
+        }
+        ScrollSpy.prototype.registerReceiver = function (sr) {
+            this.receivers.push(sr);
+            this.onScroll();
+        };
+        ScrollSpy.prototype.onScroll = function () {
+            var y = this.element.scrollTop;
+            this.receivers.forEach(function (sr) { return sr.scrollTo(y); });
+        };
+        __decorate([
+            Subscribe('register-scroll-receiver')
+        ], ScrollSpy.prototype, "registerReceiver", null);
+        __decorate([
+            On({ event: 'scroll', scope: Scope.Direct })
+        ], ScrollSpy.prototype, "onScroll", null);
+        ScrollSpy = __decorate([
+            Construct({ selector: 'scroll-spy', attributes: ['sync'], singleton: true })
+        ], ScrollSpy);
+        return ScrollSpy;
+    }(ScrollPane));
+    quill.ScrollSpy = ScrollSpy;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var Construct = feather.annotations.Construct;
+    var ScrollPane = feather.ui.ScrollPane;
+    var ScrollReceiver = (function (_super) {
+        __extends(ScrollReceiver, _super);
+        function ScrollReceiver() {
+            return _super.call(this) || this;
+        }
+        ScrollReceiver.prototype.init = function (el) {
+            this.triggerSingleton('register-scroll-receiver', this);
+        };
+        ScrollReceiver.prototype.scrollTo = function (y) {
+            this.element.scrollTop = y;
+        };
+        ScrollReceiver = __decorate([
+            Construct({ selector: 'scroll-receiver' })
+        ], ScrollReceiver);
+        return ScrollReceiver;
+    }(ScrollPane));
+    quill.ScrollReceiver = ScrollReceiver;
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
     var components;
     (function (components) {
         var Widget = feather.core.Widget;
@@ -306,6 +363,7 @@ var quill;
     var Widget = feather.core.Widget;
     var Template = feather.annotations.Template;
     var Rest = feather.xhr.Rest;
+    var Bind = feather.observe.Bind;
     var VersionValues = (function (_super) {
         __extends(VersionValues, _super);
         function VersionValues(version) {
@@ -319,10 +377,13 @@ var quill;
         VersionValues.prototype.loadVersionValues = function () {
         };
         VersionValues.prototype.markup = function () {
-            return "\n             <li>\n                <a>\n                    <span class=\"icon is-small\"><i class=\"fas fa-file-alt\"></i></span>\n                    <span>Documents</span>\n                </a>\n            </li>";
+            return "\n             <li>\n                <div class=\"level version-header\">\n                    <div class=\"level-left\">\n                        <span class=\"level-item\">\n                            <span class=\"icon is-small\"><Icon name=\"book\"/></span>\n                            <span class=\"version-name\">{{version.name}}</span>\n                        </span>\n                    </div>\n                    <div class=\"level-right\">\n                        <a class=\"button is-small tooltip\" action=\"version-github\" data-tooltip=\"Upload to github\">\n                            <Icon name=\"github\" icon-class=\"is-small\"/>\n                        </a>\n                        <a class=\"button is-small tooltip\" action=\"version-download\" data-tooltip=\"Download full JSON\">\n                            <Icon name=\"download\" icon-class=\"is-small\"/>\n                        </a>\n                        <a class=\"button is-small tooltip\" action=\"version-configure\" data-tooltip=\"Configure version\">\n                            <Icon name=\"cog\" icon-class=\"is-small\"/>\n                        </a>\n                    </div>\n                </div>\n                <scroll-receiver>\n                    Nu Bass \u00A0<br>Nichol Cumbie \u00A0<br>Lenna Piercy \u00A0<br>See Aispuro \u00A0<br>\n                    Sophie Troyer \u00A0<br>Bryan Cool \u00A0<br>Sylvia Mabe \u00A0<br>Hue Keele \u00A0<br>\n                    Kaylee Speaks \u00A0<br>Milda Costin \u00A0<br>Jennie Dietrich \u00A0<br>Reanna Leanos \u00A0<br>\n                    Ruby Dehn \u00A0<br>Asa Estes \u00A0<br>Tennie Steverson \u00A0<br>Despina Schnur \u00A0<br>\n                    Lakeisha Getman \u00A0<br>Mara Heng \u00A0<br>Carroll Down \u00A0<br>Florencio Fazzino \u00A0<br>\n                    Hailey Causey \u00A0<br>Babara Friscia \u00A0<br>Chanell Stgermain \u00A0<br>Annette Deangelis \u00A0<br>\n                    Sulema Pulley \u00A0<br>Kylee Penman \u00A0<br>Ariel Pridgen \u00A0<br>Mitch Granado \u00A0<br>\n                    Vernia Dates \u00A0<br>Darnell Pablo \u00A0<br>Anneliese Alderman \u00A0<br>Brad Dahl \u00A0<br>\n                    Valentin Amburgey \u00A0<br>Kemberly Pelzer \u00A0<br>Ronald Boney \u00A0<br>Adah Boateng \u00A0<br>\n                    Marcelina Alls \u00A0<br>Felicia Guss \u00A0<br>Linn Mershon \u00A0<br>Chere Scioneaux \u00A0<br>\n                    Madalyn Glisson \u00A0<br>Kimberely Hagwood \u00A0<br>Roxanne Ouimet \u00A0<br>Annalisa Armagost \u00A0<br>\n                    Doris Troy \u00A0<br>Angeline Shelor \u00A0<br>Zada Manjarrez \u00A0<br>Marvella Ritch \u00A0<br>\n                    Larisa Burruel \u00A0<br>Margrett Canino \u00A0<br><br>\n                </scroll-receiver>\n            </li>";
         };
         __decorate([
-            Rest({ url: '/version/{{version}}/values', headers: quill.headers })
+            Bind()
+        ], VersionValues.prototype, "version", void 0);
+        __decorate([
+            Rest({ url: '/values/version/{{version.id}}', headers: quill.headers })
         ], VersionValues.prototype, "loadVersionValues", null);
         __decorate([
             Template()
@@ -337,6 +398,7 @@ var quill;
     var Construct = feather.annotations.Construct;
     var Template = feather.annotations.Template;
     var Subscribe = feather.hub.Subscribe;
+    var Bind = feather.observe.Bind;
     var ValueEditor = (function (_super) {
         __extends(ValueEditor, _super);
         function ValueEditor() {
@@ -344,13 +406,19 @@ var quill;
             _this.versionValues = [];
             return _this;
         }
+        ValueEditor.prototype.init = function (el) {
+            this.render();
+        };
         ValueEditor.prototype.markup = function () {
-            return "\n            <div class=\"tabs is-boxed\">\n                <ul {{versionValues}}></ul>\n            </div>\n            ";
+            return "<ul class=\"grow\" {{versionValues}}></ul>";
         };
         ValueEditor.prototype.projectLoaded = function (project) {
             (_a = this.versionValues).splice.apply(_a, [0, this.versionValues.length].concat(project.versions.map(function (version) { return new quill.VersionValues(version); })));
             var _a;
         };
+        __decorate([
+            Bind({})
+        ], ValueEditor.prototype, "versionValues", void 0);
         __decorate([
             Template()
         ], ValueEditor.prototype, "markup", null);
@@ -358,7 +426,7 @@ var quill;
             Subscribe('project-loaded')
         ], ValueEditor.prototype, "projectLoaded", null);
         ValueEditor = __decorate([
-            Construct({ selector: 'value-editor', attributes: ['config'] })
+            Construct({ selector: 'value-editor' })
         ], ValueEditor);
         return ValueEditor;
     }(Widget));
@@ -561,41 +629,14 @@ var quill;
     var On = feather.event.On;
     var GestureWidget = feather.ui.events.GestureWidget;
     var Subscribe = feather.hub.Subscribe;
-    var addMultipleEventListeners = feather.ui.events.addMultipleEventListeners;
-    var removeMultipleEventListeners = feather.ui.events.removeMultipleEventListeners;
-    var tapEvents = feather.ui.events.tapEvents;
     var Rest = feather.xhr.Rest;
     var Navigation = (function (_super) {
         __extends(Navigation, _super);
         function Navigation() {
-            var _this = _super.call(this) || this;
-            _this.closeHandler = _this.closeHandler.bind(_this);
-            return _this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         Navigation.prototype.init = function () {
             this.render();
-        };
-        Navigation.prototype.toggle = function (ev, el) {
-            this.toggleActiveState();
-            if (el.classList.contains('is-active')) {
-                addMultipleEventListeners(tapEvents, document, this.closeHandler);
-            }
-            else {
-                removeMultipleEventListeners(tapEvents, document, this.closeHandler);
-            }
-        };
-        Navigation.prototype.closeHandler = function (ev) {
-            var el = this.element;
-            if (!el.contains(ev.target)) {
-                this.toggleActiveState();
-                removeMultipleEventListeners(tapEvents, document, this.closeHandler);
-            }
-        };
-        Navigation.prototype.toggleActiveState = function () {
-            var el = this.element.querySelector('.navbar-toggle');
-            el.classList.toggle('is-active');
-            var menu = this.element.querySelector('.navbar-menu');
-            menu.classList.toggle('is-active');
         };
         Navigation.prototype.logoutClicked = function () {
             this.doLogout();
@@ -609,11 +650,8 @@ var quill;
             this.route('/login');
         };
         Navigation.prototype.markup = function () {
-            return "\n            <nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n              <div class=\"navbar-brand\">\n                <a class=\"navbar-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    <span>Quill</span><span>{{project.name}}</span>\n                </a>\n                <div class=\"navbar-burger navbar-toggle\">\n                  <span></span>\n                  <span></span>\n                  <span></span>\n                </div>\n              </div>\n              <div class=\"navbar-menu\">\n                <div class=\"navbar-end\">\n                    <a class=\"navbar-item logout\">Logout <span class=\"username\">{{user.firstname}}</span></a>\n                    <a class=\"navbar-item\">Documentation</a>\n                    <div  class=\"navbar-item\">\n                        <p class=\"control has-icons-right\" id=\"search\">\n                          <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                          <Icon name=\"search\" align-right=\"right\"></Icon>\n                        </p>\n                    </div>\n                </div>\n              </div>\n            </nav>\n            ";
+            return "\n            <nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n              <div class=\"navbar-brand\">\n                <a class=\"navbar-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    <span>Quill</span>\n                    <span>{{project.name}}</span>\n                </a>\n              </div>\n              <div class=\"navbar-end\">\n                <a class=\"navbar-item settings\"><Icon name=\"cog\"/>Settings</span></a>\n                <a class=\"navbar-item logout\"><Icon name=\"sign-out\"/>Logout <span class=\"username\">{{user.firstname}}</span></a>\n                <div  class=\"navbar-item\">\n                <p class=\"control has-icons-right\" id=\"search\">\n                  <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                  <Icon name=\"search\" align-right=\"right\"/>\n                </p>\n                </div>\n              </div>\n            </nav>\n            ";
         };
-        __decorate([
-            On({ event: 'tap', selector: '.navbar-toggle' })
-        ], Navigation.prototype, "toggle", null);
         __decorate([
             On({ event: 'tap', selector: 'a.logout' })
         ], Navigation.prototype, "logoutClicked", null);
@@ -657,6 +695,7 @@ var quill;
             _this.nodes = [];
             _this.schemaNodes = [];
             _this.project = dummyProject;
+            _this.loading = true;
             _this.currentRootType = 'structure';
             _this.newNode = {
                 name: 'New node',
@@ -667,18 +706,18 @@ var quill;
             return _this;
         }
         ProjectPage.prototype.init = function () {
-            quill.Progress.start();
             this.fetchProject();
         };
         ProjectPage.prototype.fetchProject = function (project) {
             this.project = project;
             (_a = this.nodes).splice.apply(_a, [0, this.nodes.length].concat(project.structure.map(quill.CustomTreeNode.toTreeNode)));
             this.triggerDown('project-loaded', project);
-            quill.Progress.stop();
+            this.loading = false;
             var _a;
         };
-        ProjectPage.prototype.nodeDeselected = function (node) {
+        ProjectPage.prototype.nodeDeselected = function () {
             this.currentTreeNode = undefined;
+            this.triggerDown('defocus-other-nodes');
         };
         ProjectPage.prototype.nodeSelected = function (node) {
             node.element.focus();
@@ -765,7 +804,7 @@ var quill;
             this.moveNodeCall();
         };
         ProjectPage.prototype.projectPage = function () {
-            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                <scroll-pane class=\"grow\">\n                    <horizontal-split class=\"grow\" id=\"app-split\">\n                      <sidebar class=\"v-flex\">\n                        <tree-actions></tree-actions>\n                        <aside class=\"menu\">\n                          <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                          <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                          <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                        </aside>\n                      </sidebar>\n                      <section class=\"v-flex\">\n                         <value-editor/>\n                      </section>\n                    </horizontal-split>\n                </scroll-pane>\n                <footer class=\"no-grow\"/>\n            </panel>";
+            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                    <horizontal-split class=\"grow\" id=\"app-split\">\n                      <sidebar class=\"v-flex\">\n                        <tree-actions></tree-actions>\n                        <scroll-spy class=\"grow\" {{loading}}>\n                          <aside class=\"menu\">\n                            <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                            <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                            <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                            <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                          </aside>\n                        </scroll-spy>\n                      </sidebar>\n                      <section class=\"v-flex value-section\">\n                         <value-editor class=\"grow v-flex\"/>\n                      </section>\n                    </horizontal-split>\n                </scroll-pane>\n                <footer class=\"no-grow\"/>\n            </panel>";
         };
         ProjectPage.prototype.allNodes = function (nodes) {
             return [].concat.apply([], nodes.map(quill.flattenTree));
@@ -779,6 +818,9 @@ var quill;
         __decorate([
             Bind({ bequeath: true })
         ], ProjectPage.prototype, "project", void 0);
+        __decorate([
+            Bind()
+        ], ProjectPage.prototype, "loading", void 0);
         __decorate([
             Rest({ url: '/projects/{{projectId}}', headers: quill.headers })
         ], ProjectPage.prototype, "fetchProject", null);
@@ -1070,7 +1112,7 @@ var feather;
                 this.triggerUp('node-action', el.getAttribute('action'));
             };
             TreeActions.prototype.markup = function () {
-                return "\n            <div class=\"level is-mobile is-marginless\">\n              <div class=\"level-left\">\n                 <a class=\"button is-small\" action=\"node-add\"><Icon name=\"plus\"></Icon></a>\n                 <a class=\"button is-small\" action=\"node-edit\" {{disabled}}><Icon name=\"pencil\"></Icon></a>\n              </div>\n              <div class=\"level-right\">\n                 <a class=\"button is-small\" action=\"node-delete\" {{disabled}}><Icon name=\"trash-o\"/></a>\n              </div>\n            </div>";
+                return "\n            <div class=\"level is-mobile is-marginless tree-actions\">\n              <div class=\"level-left\">\n                 <a class=\"button is-small tooltip\" action=\"node-add\" data-tooltip=\"Add new node\">\n                    <Icon name=\"plus\" icon-class=\"is-small\"/>\n                 </a>\n                 <a class=\"button is-small tooltip\" action=\"node-edit\" data-tooltip=\"Rename node\" {{disabled}}>\n                    <Icon name=\"pencil\" icon-class=\"is-small\"/>\n                 </a>\n                 <a class=\"button is-small tooltip\" action=\"node-configure\" data-tooltip=\"Configure node\" {{disabled}}>\n                    <Icon name=\"cog\" icon-class=\"is-small\"/>\n                 </a>\n              </div>\n              <div class=\"level-right\">\n                 <a class=\"button is-small tooltip\" action=\"node-delete\" data-tooltip=\"Delete node\" {{disabled}}>\n                    <Icon name=\"trash-o\" icon-class=\"is-small\"/>\n                 </a>\n              </div>\n            </div>";
             };
             __decorate([
                 Bind()

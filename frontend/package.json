@@ -8,7 +8,7 @@
     "watch:css": "postcss postcss/all.pcss -w -o ../target/web/public/main/styles.css",
     "watch": "tsc -w -p tsconfig.json --outFile ../target/web/public/main/quill.js",
     "build:css": "postcss postcss/all.pcss -o out/styles.css",
-    "build:ts": "tsc -w -p tsconfig.json --outFile out/quill.js",
+    "build:ts": "tsc -p tsconfig.json --outFile out/quill.js",
     "assemble": "ts-node build/build.ts",
     "publish": "npm-run-all build:css build:ts assemble"
   },
@@ -35,7 +35,9 @@
   },
   "dependencies": {
     "bulma": "0.6.2",
-    "feather-ts": "1.2.61",
-    "feather-components": "1.0.16"
+    "bulma-extensions": "1.0.13",
+    "combined-stream2": "^1.1.2",
+    "feather-components": "1.0.16",
+    "feather-ts": "1.2.61"
   }
 }

@@ -1,5 +1,6 @@
 import * as UglifyJS from 'uglify-js'
 import * as fs from 'fs'
+const CombinedStream = require('combined-stream2')
 
 console.log(' *** building frontend ***')
 
@@ -22,5 +23,8 @@ fs.createReadStream('out/styles.css')
 fs.createReadStream('node_modules/feather-components/feather-components.css')
     .pipe(fs.createWriteStream('../public/feather-components.css'))
 
-fs.createReadStream('node_modules/bulma/css/bulma.css')
-    .pipe(fs.createWriteStream('../public/bulma.css'))
+const combinedStream = CombinedStream.create()
+combinedStream.append(fs.createReadStream('node_modules/bulma/css/bulma.css'))
+combinedStream.append(fs.createReadStream('node_modules/bulma-extensions/bulma-switch/dist/bulma-switch.min.css'))
+
+combinedStream.pipe(fs.createWriteStream('../public/bulma.css'))
