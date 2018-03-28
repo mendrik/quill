@@ -18,11 +18,13 @@ module quill {
         @Subscribe('register-scroll-receiver')
         registerReceiver(sr: ScrollReceiver) {
             this.receivers.push(sr)
+            this.onScroll()
         }
 
         @On({event: 'scroll', scope: Scope.Direct})
         onScroll() {
             const y = this.element.scrollTop
+            console.log(y)
             this.receivers.forEach(sr => sr.scrollTo(y))
         }
     }

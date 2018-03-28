@@ -5,11 +5,13 @@
 
 value-editor {
     font-family: 'Yantramanav', sans-serif;
+    max-height: 100%;
 
     > ul {
         display: flex;
         align-items: stretch;
         list-style: none;
+        max-height: 100%;
 
         > li {
             display: flex;
@@ -37,7 +39,7 @@ value-editor {
             }
 
             scroll-receiver {
-                padding: var(--scroll-top) 10px 10px 10px;
+                padding: var(--scroll-top) 10px 0 10px;
                 line-height: 24px;
             }
         }
