@@ -15,7 +15,6 @@ module quill {
         }
 
         scrollTo(y: number) {
-            console.log(this.element)
             this.element.scrollTop = y
         }
 

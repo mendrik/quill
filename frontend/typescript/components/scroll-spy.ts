@@ -24,7 +24,6 @@ module quill {
         @On({event: 'scroll', scope: Scope.Direct})
         onScroll() {
             const y = this.element.scrollTop
-            console.log(y)
             this.receivers.forEach(sr => sr.scrollTo(y))
         }
     }
