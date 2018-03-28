@@ -18,9 +18,9 @@ module quill.modal {
 
         @Bind() modal: Widget[] = []
         @Bind() showing = false
-        @Bind() title = ''
-        @Bind() successButton = ''
-        @Bind() cancelButton = ''
+        @Bind() title = 'ui.modal.title'
+        @Bind() successButton = 'ui.modal.ok'
+        @Bind() cancelButton = 'ui.modal.cancel'
 
         init() {
             this.render()
@@ -38,16 +38,16 @@ module quill.modal {
         @Template()
         markup() {
             return `<div class="modal {{showing:toActive}}">
-              <div class="modal-background"></div>
+              <div class="modal-background"/>
               <div class="modal-card">
                 <header class="modal-card-head">
-                  <p class="modal-card-title">{{title}}</p>
-                  <button class="delete" aria-label="close"></button>
+                  <p class="modal-card-title">{{title:translate}}</p>
+                  <button class="delete" aria-label="close"/>
                 </header>
                 <section class="modal-card-body" {{modal}}/>
                 <footer class="modal-card-foot">
-                  <button class="button is-success">{{successButton}}</button>
-                  <button class="button">{{cancelButton}}</button>
+                  <button class="button is-success">{{successButton:translate}}</button>
+                  <button class="button">{{cancelButton:translate}}</button>
                 </footer>
               </div>
             </div>`

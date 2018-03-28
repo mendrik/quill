@@ -195,7 +195,7 @@ module quill {
                       </section>
                     </horizontal-split>
                 </scroll-pane>
-                <footer class="no-grow"/>
+                <footer class="no-grow app-footer"/>
             </panel>`
         }
 
