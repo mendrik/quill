@@ -36,13 +36,13 @@ module quill {
                         </span>
                     </div>
                     <div class="level-right">
-                        <a class="button is-small tooltip" action="version-github" data-tooltip="Upload to github">
+                        <a class="button is-small tooltip" action="version-github" tooltip="Upload to github">
                             <Icon name="github" icon-class="is-small"/>
                         </a>
-                        <a class="button is-small tooltip" action="version-download" data-tooltip="Download full JSON">
+                        <a class="button is-small tooltip" action="version-download" tooltip="Download full JSON">
                             <Icon name="download" icon-class="is-small"/>
                         </a>
-                        <a class="button is-small tooltip" action="version-configure" data-tooltip="Configure version">
+                        <a class="button is-small tooltip" action="version-configure" tooltip="Configure version">
                             <Icon name="cog" icon-class="is-small"/>
                         </a>
                     </div>
