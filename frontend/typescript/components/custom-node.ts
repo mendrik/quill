@@ -3,7 +3,7 @@ module quill {
     import TreeNode = feather.ui.tree.TreeNode
     import On       = feather.event.On
     import Scope    = feather.event.Scope
-    import isDef = feather.functions.isDef;
+    import isDef    = feather.functions.isDef
 
     export enum DropPostion {
         inside = 'inside',

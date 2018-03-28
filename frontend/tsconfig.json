@@ -30,6 +30,8 @@
         "typescript/common/utils.ts",
         "typescript/common/headers.ts",
         "typescript/common/polyfill.ts",
+        "typescript/modals/modal-manager.ts",
+        "typescript/modals/node-config.ts",
         "typescript/components/translate.ts",
         "typescript/components/progress.ts",
         "typescript/components/scroll-spy.ts",

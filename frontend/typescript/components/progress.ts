@@ -8,7 +8,7 @@ module quill {
     @Construct({selector: 'progress-bar'})
     export class Progress extends Widget {
 
-        static instance: Progress;
+        static instance: Progress
 
         @Bind() fetching = false
 

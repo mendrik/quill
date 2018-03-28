@@ -8,6 +8,7 @@ module quill {
     import isDef           = feather.functions.isDef
     import removeFromArray = feather.arrays.removeFromArray
     import AjaxWidget      = quill.components.AjaxWidget
+    import NodeConfig      = quill.modal.NodeConfig
 
     interface RenameNode {
         name: string
@@ -94,6 +95,10 @@ module quill {
                 }
                 case 'node-edit': {
                     this.currentTreeNode.focusAndEdit()
+                    break
+                }
+                case 'node-configure': {
+                    this.triggerSingleton('show-modal', new NodeConfig(this.currentTreeNode))
                     break
                 }
                 case 'node-delete': {
