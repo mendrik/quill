@@ -36,12 +36,12 @@ module quill.modal {
             this.showing = true
         }
 
-        @On({event: 'mousedown', selector: '.modal-background,button.is-cancel,button.delete'})
+        @On({event: 'mousedown', selector: '.modal-background'})
         close() {
             this.showing = false
         }
 
-        @On({event: 'click', selector: 'button.is-cancel,button.delete'})
+        @On({event: 'click', selector: 'button.cancel,button.delete'})
         closeButtons() {
             this.close()
         }
@@ -57,8 +57,8 @@ module quill.modal {
                 </header>
                 <section class="modal-card-body is-small" {{modal}}/>
                 <footer class="modal-card-foot">
-                  <button class="button is-inverted">{{successButton:translate}}</button>
-                  <button class="button is-inverted">{{cancelButton:translate}}</button>
+                  <button class="button is-inverted ok">{{successButton:translate}}</button>
+                  <button class="button is-inverted cancel">{{cancelButton:translate}}</button>
                 </footer>
               </div>
             </div>`
