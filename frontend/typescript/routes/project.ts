@@ -202,6 +202,8 @@ module quill {
                     ]
                     if (nextNode) {
                         this.nodeSelected(nextNode)
+                        const el = this.element.querySelector('.tree-node > .selected')
+                        scrollElementIntoView(el as HTMLDivElement)
                     }
                 }
                 if (/enter$/i.test(ev.key)) {

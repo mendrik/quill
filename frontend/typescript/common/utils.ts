@@ -1,6 +1,7 @@
 module quill {
 
     import TreeNodeIcon = feather.ui.tree.TreeNodeIcon
+    import findClippedParent = feather.ui.findClippedParent;
 
     const urlParams = {}
 
@@ -46,4 +47,13 @@ module quill {
     export const flattenTree = <T>(node: HasChildren<T>) =>
         [node].concat(...node.children.map(flattenTree))
 
+    export const scrollElementIntoView = (el: HTMLElement) => {
+        const scroll = findClippedParent(el),
+              scrollRect = scroll.getBoundingClientRect(),
+              rect = el.getBoundingClientRect()
+        if (rect.top <= scrollRect.top || rect.bottom >= scrollRect.bottom) {
+                el.scrollIntoView()
+        }
+
+    }
 }
