@@ -94,12 +94,7 @@ module quill {
         nodeAction(action: string) {
             switch (action) {
                 case 'node-add': {
-                    Progress.start()
-                    if (isDef(this.currentTreeNode)) {
-                        this.createChildNode()
-                    } else {
-                        this.createNode()
-                    }
+                    this.addNode()
                     break
                 }
                 case 'node-edit': {
@@ -107,7 +102,7 @@ module quill {
                     break
                 }
                 case 'node-configure': {
-                    this.triggerSingleton('show-modal', new NodeConfig(this.currentTreeNode))
+                    this.configureNode()
                     break
                 }
                 case 'node-delete': {
@@ -182,20 +177,40 @@ module quill {
             this.moveNodeCall()
         }
 
+        private configureNode() {
+            this.triggerSingleton('show-modal', new NodeConfig(this.currentTreeNode))
+        }
+
+        private addNode() {
+            Progress.start()
+            if (isDef(this.currentTreeNode)) {
+                this.createChildNode()
+            } else {
+                this.createNode()
+            }
+        }
+
         @On({event: 'keydown', selector: '.tree-view'})
         keyEvent(ev: KeyboardEvent) {
-            if (matches(document.activeElement, 'li.tree-node')) {
+            if (/([+c]|left|right|up|down|enter)$/i.test(ev.key) &&
+                matches(document.activeElement, 'li.tree-node')) {
                 ev.preventDefault()
+                if ('+' === ev.key) {
+                    this.addNode()
+                }
+                if ('c' === ev.key) {
+                    this.configureNode()
+                }
                 if (/left$/i.test(ev.key)) {
-                    this.currentTreeNode.open = false
+                    this.configureNode()
                 }
                 if (/right$/i.test(ev.key)) {
                     this.currentTreeNode.open = true
                 }
-                const allNodes = this
-                    .allNodes(this.nodes)
-                    .filter(n => !n.parent || n.allParentsOpen())
                 if (/(down|up)$/i.test(ev.key)) {
+                    const allNodes = this
+                        .allNodes(this.nodes)
+                        .filter(n => !n.parent || n.allParentsOpen())
                     const dir = /down$/i.test(ev.key) ? 1 : -1
                     const nextNode = allNodes[
                         allNodes.findIndex(v => v === this.currentTreeNode) + dir

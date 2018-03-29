@@ -1,6 +1,6 @@
 module quill.modal {
 
-    import Template  = feather.annotations.Template
+    import Template = feather.annotations.Template
 
     export class NodeConfig extends ModalWidget {
 

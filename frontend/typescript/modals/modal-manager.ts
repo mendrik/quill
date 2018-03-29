@@ -12,6 +12,13 @@ module quill.modal {
         abstract getTitle()
         successButton = () => 'ui.modal.ok'
         cancelButton = () => 'ui.modal.cancel'
+
+        @On({event: 'keydown'})
+        escKey(ev: KeyboardEvent) {
+            if (/escape/i.test(ev.key)) {
+                this.triggerUp('close-modal')
+            }
+        }
     }
 
     @Construct({selector: 'modal-manager', singleton: true})
@@ -23,22 +30,35 @@ module quill.modal {
         @Bind() successButton = 'ui.modal.ok'
         @Bind() cancelButton = 'ui.modal.cancel'
 
+        lastFocussedElement: HTMLElement
+
         init() {
             this.render()
         }
 
+        @Subscribe('close-modal')
+        closeCall() {
+            this.close()
+        }
+
         @Subscribe('show-modal')
         show(modal: ModalWidget) {
+            this.lastFocussedElement = document.activeElement as HTMLElement
             this.modal.splice(0, this.modal.length, modal)
             this.title = modal.getTitle()
             this.successButton = modal.successButton()
             this.cancelButton = modal.cancelButton()
             this.showing = true
+            modal.element.setAttribute('tabindex', '-1');
+            (modal.element as HTMLElement).focus()
         }
 
         @On({event: 'mousedown', selector: '.modal-background'})
         close() {
             this.showing = false
+            if (this.lastFocussedElement) {
+                this.lastFocussedElement.focus()
+            }
         }
 
         @On({event: 'click', selector: 'button.cancel,button.delete'})
