@@ -74,8 +74,31 @@ horizontal-split {
 }
 
 
-.modal-card > * {
-    padding: 15px;
+.modal-card {
+    font-family: 'Yantramanav', sans-serif;
+
+    .modal-card-head {
+        border-bottom: var(--light-devider);
+        background-color: white;
+        border-top-right-radius: 2px;
+        border-top-left-radius: 2px;
+    }
+
+    .modal-card-title {
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    > * {
+        padding: 10px 15px;
+    }
+
+    .modal-card-foot {
+        background-color: whitesmoke;
+        border-bottom-right-radius: 2px;
+        border-bottom-left-radius: 2px;
+        box-shadow: 0 5px 13px -6px #bababa inset;
+    }
 }
 
 .modal.is-active {
