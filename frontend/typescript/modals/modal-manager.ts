@@ -57,8 +57,8 @@ module quill.modal {
                 </header>
                 <section class="modal-card-body is-small" {{modal}}/>
                 <footer class="modal-card-foot">
-                  <button class="button is-inverted is-info">{{successButton:translate}}</button>
-                  <button class="button is-inverted is-info is-cancel">{{cancelButton:translate}}</button>
+                  <button class="button is-inverted">{{successButton:translate}}</button>
+                  <button class="button is-inverted">{{cancelButton:translate}}</button>
                 </footer>
               </div>
             </div>`

@@ -17,7 +17,16 @@ module quill.modal {
 
         @Template()
         markup() {
-            return `<div class="">NodeConfig</div>`
+            return `
+            <div class="tabs is-boxed">
+                <ul>
+                    <li class="is-active"><a>Text</a></li>
+                    <li class=""><a>Number</a></li>
+                    <li class=""><a>Date</a></li>
+                    <li class=""><a>On/Off</a></li>
+                    <li class=""><a>List</a></li>
+                </ul>
+            </div>`
         }
     }
 }
