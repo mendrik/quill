@@ -31,6 +31,7 @@
         "typescript/common/headers.ts",
         "typescript/common/polyfill.ts",
         "typescript/modals/modal-manager.ts",
+        "typescript/modals/project-config.ts",
         "typescript/modals/node-config.ts",
         "typescript/components/translate.ts",
         "typescript/components/progress.ts",

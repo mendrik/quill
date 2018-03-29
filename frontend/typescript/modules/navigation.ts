@@ -31,6 +31,11 @@ module quill {
             this.route('/login')
         }
 
+        @On({event: 'click', selector: 'a.settings', preventDefault: true})
+        projectSettings() {
+            this.triggerUp('open-project-settings')
+        }
+
         @Template()
         markup() {
             return `

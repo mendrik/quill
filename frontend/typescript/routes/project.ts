@@ -9,6 +9,7 @@ module quill {
     import removeFromArray = feather.arrays.removeFromArray
     import AjaxWidget      = quill.components.AjaxWidget
     import NodeConfig      = quill.modal.NodeConfig
+    import ProjectConfig = quill.modal.ProjectConfig;
 
     interface RenameNode {
         name: string
@@ -59,6 +60,11 @@ module quill {
                 ...project.structure.map(CustomTreeNode.toTreeNode))
             this.triggerDown('project-loaded', project)
             this.loading = false
+        }
+
+        @Subscribe('open-project-settings')
+        openProjectSettings() {
+            this.triggerSingleton('show-modal', new ProjectConfig(this.project))
         }
 
         @Subscribe('node-defocused')

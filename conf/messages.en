@@ -88,5 +88,6 @@ ui.modal.cancel = Cancel
 ui.modal.title = Modal
 
 ui.modal.node-config.title = Configure node
+ui.modal.project-config.title = Configure project
 
 node.default-name="New node"
