@@ -73,9 +73,20 @@ horizontal-split {
     margin-top: -.51rem;
 }
 
+.modal-card,
+.modal-content {
+    &.is-small {
+        width: 500px;
+    }
+}
+
+.modal-background {
+    background-color: rgba(10, 10, 10, .46);
+}
 
 .modal-card {
     font-family: 'Yantramanav', sans-serif;
+    box-shadow: 5px 5px 20px 0 rgba(0, 0, 0, .5);
 
     .modal-card-head {
         border-bottom: var(--light-devider);
@@ -94,13 +105,18 @@ horizontal-split {
     }
 
     .modal-card-foot {
-        background-color: whitesmoke;
+        padding: 5px;
+        background-color: white;
         border-bottom-right-radius: 2px;
         border-bottom-left-radius: 2px;
-        box-shadow: 0 5px 13px -6px #bababa inset;
+        border-top: var(--light-devider);
     }
 }
 
 .modal.is-active {
     z-index: var(--z-modal);
+}
+
+.is-cancel {
+    color: black
 }
