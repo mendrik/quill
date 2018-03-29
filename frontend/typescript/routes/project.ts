@@ -5,11 +5,13 @@ module quill {
     import Subscribe       = feather.hub.Subscribe
     import Rest            = feather.xhr.Rest
     import Method          = feather.xhr.Method
+    import On              = feather.event.On
+    import matches         = feather.dom.selectorMatches
     import isDef           = feather.functions.isDef
     import removeFromArray = feather.arrays.removeFromArray
     import AjaxWidget      = quill.components.AjaxWidget
     import NodeConfig      = quill.modal.NodeConfig
-    import ProjectConfig = quill.modal.ProjectConfig;
+    import ProjectConfig   = quill.modal.ProjectConfig
 
     interface RenameNode {
         name: string
@@ -77,6 +79,7 @@ module quill {
         nodeSelected(node: CustomTreeNode) {
             (node.element as HTMLLIElement).focus()
             this.currentTreeNode = node
+            this.currentTreeNode.selected = true
             this.triggerDown('defocus-other-nodes', node)
         }
 
@@ -177,6 +180,35 @@ module quill {
             Progress.start()
             this.moveNode = {...drop}
             this.moveNodeCall()
+        }
+
+        @On({event: 'keydown', selector: '.tree-view'})
+        keyEvent(ev: KeyboardEvent) {
+            if (matches(document.activeElement, 'li.tree-node')) {
+                ev.preventDefault()
+                if (ev.code === 'ArrowLeft') {
+                    this.currentTreeNode.open = false
+                }
+                if (ev.code === 'ArrowRight') {
+                    this.currentTreeNode.open = true
+                }
+                const allNodes = this
+                    .allNodes(this.nodes)
+                    .filter(n => !n.parent || n.allParentsOpen())
+                if (ev.code === 'ArrowDown' || ev.code === 'ArrowUp') {
+                    const dir = ev.code === 'ArrowDown' ? 1 : -1
+                    const nextNode = allNodes[
+                        allNodes.findIndex(v => v === this.currentTreeNode) + dir
+                    ]
+                    console.log(nextNode.value.name)
+                    if (nextNode) {
+                        this.nodeSelected(nextNode)
+                    }
+                }
+                if (ev.code === 'Enter') {
+                    this.currentTreeNode.focusAndEdit()
+                }
+            }
         }
 
         @Template()

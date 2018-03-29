@@ -6,7 +6,7 @@ module quill.modal {
     import Subscribe     = feather.hub.Subscribe
     import Widget        = feather.core.Widget
     import Bind          = feather.observe.Bind
-    import On = feather.event.On;
+    import On            = feather.event.On
 
     export abstract class ModalWidget extends Widget {
         abstract getTitle()

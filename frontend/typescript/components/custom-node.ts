@@ -53,6 +53,11 @@ module quill {
                 this.element.removeAttribute('data-dragover'), 30)
         }
 
+        @On({event: 'blur', selector: 'input', scope: Scope.Direct})
+        blur(ev: DragEvent) {
+            (this.element as HTMLElement).focus()
+        }
+
         @On({event: 'drop', scope: Scope.Direct})
         drop(ev: DragEvent) {
             const id = ev.dataTransfer.getData(NODE_DATA_TYPE)
@@ -84,6 +89,21 @@ module quill {
                 this.children.push(node)
             }
             node.parent = this
+        }
+
+        hasChildren(): boolean {
+            return this.children.length > 0
+        }
+
+        allParentsOpen(): boolean {
+            let p = this.parent
+            while(p) {
+                if (!p.open) {
+                    return false
+                }
+                p = p.parent
+            }
+            return true
         }
     }
 }
