@@ -17,7 +17,7 @@ module quill {
 
         @Template()
         markup() {
-            return `<ul class="grow" {{versionValues}}></ul>`
+            return `<ul class="grow h-flex" {{versionValues}}></ul>`
         }
 
         @Subscribe('project-loaded')

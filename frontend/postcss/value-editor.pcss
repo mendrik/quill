@@ -8,20 +8,14 @@ value-editor {
     max-height: 100%;
 
     > ul {
-        display: flex;
-        align-items: stretch;
         list-style: none;
-        max-height: 100%;
 
         > li {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
             max-width: 280px;
             border-right: var(--light-devider);
+            flex: 1;
 
             .version-header {
-                flex: none;
                 padding: 5px;
                 border-bottom: var(--light-devider);
                 margin: 0 !important;
@@ -39,6 +33,8 @@ value-editor {
             scroll-receiver {
                 padding: var(--scroll-top) 10px 0 10px;
                 line-height: 24px;
+                overflow: hidden;
+                max-height: calc(100vh - 20px - 50px - 1.5rem - 10px);
             }
         }
     }

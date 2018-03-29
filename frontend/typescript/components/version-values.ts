@@ -27,8 +27,8 @@ module quill {
         @Template()
         markup() {
             return `
-             <li>
-                <div class="level version-header">
+             <li class="v-flex">
+                <div class="level version-header no-grow">
                     <div class="level-left">
                         <span class="level-item">
                             <span class="icon is-small"><Icon name="book"/></span>
@@ -47,7 +47,7 @@ module quill {
                         </a>
                     </div>
                 </div>
-                <scroll-receiver>
+                <scroll-receiver class="grow">
                     Nu Bass  <br>Nichol Cumbie  <br>Lenna Piercy  <br>See Aispuro  <br>
                     Sophie Troyer  <br>Bryan Cool  <br>Sylvia Mabe  <br>Hue Keele  <br>
                     Kaylee Speaks  <br>Milda Costin  <br>Jennie Dietrich  <br>Reanna Leanos  <br>

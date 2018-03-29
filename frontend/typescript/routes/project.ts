@@ -186,17 +186,17 @@ module quill {
         keyEvent(ev: KeyboardEvent) {
             if (matches(document.activeElement, 'li.tree-node')) {
                 ev.preventDefault()
-                if (ev.code === 'ArrowLeft') {
+                if (/left$/i.test(ev.key)) {
                     this.currentTreeNode.open = false
                 }
-                if (ev.code === 'ArrowRight') {
+                if (/right$/i.test(ev.key)) {
                     this.currentTreeNode.open = true
                 }
                 const allNodes = this
                     .allNodes(this.nodes)
                     .filter(n => !n.parent || n.allParentsOpen())
-                if (ev.code === 'ArrowDown' || ev.code === 'ArrowUp') {
-                    const dir = ev.code === 'ArrowDown' ? 1 : -1
+                if (/(down|up)$/i.test(ev.key)) {
+                    const dir = /down$/i.test(ev.key) ? 1 : -1
                     const nextNode = allNodes[
                         allNodes.findIndex(v => v === this.currentTreeNode) + dir
                     ]
@@ -204,7 +204,7 @@ module quill {
                         this.nodeSelected(nextNode)
                     }
                 }
-                if (ev.code === 'Enter') {
+                if (/enter$/i.test(ev.key)) {
                     this.currentTreeNode.focusAndEdit()
                 }
             }
