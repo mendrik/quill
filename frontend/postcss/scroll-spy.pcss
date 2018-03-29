@@ -6,7 +6,10 @@ scroll-spy {
     position: relative;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: scrollbar;
+    touch-action: none;
     background-color: white;
+
+    /* 100% - footer, navigation, tree-actions, tree-actions padding */
     max-height: calc(100vh - 20px - 50px - 1.5rem - 10px);
 
     .inner-scroll-pane {
