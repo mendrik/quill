@@ -200,7 +200,6 @@ module quill {
                     const nextNode = allNodes[
                         allNodes.findIndex(v => v === this.currentTreeNode) + dir
                     ]
-                    console.log(nextNode.value.name)
                     if (nextNode) {
                         this.nodeSelected(nextNode)
                     }
