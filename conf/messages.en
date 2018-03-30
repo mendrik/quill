@@ -95,11 +95,17 @@ ui.modal.node-config.tabs.boolean=On/Off
 ui.modal.node-config.tabs.list=List
 ui.modal.node-config.tabs.file=File
 
-ui.modal.node-config.text.single-line=String
+ui.modal.node-config.text.single-line.title=String
 ui.modal.node-config.text.multi-line.title=Multiline
 ui.modal.node-config.text.multi-line.normal=Normal
 ui.modal.node-config.text.multi-line.richtext=Richtext
 ui.modal.node-config.text.multi-line.markdown=Markdown
+
+ui.modal.node-config.number.integer.title=Integer
+ui.modal.node-config.number.fraction.title=Fractions
+
+ui.modal.node-config.date.title=Date
+ui.modal.node-config.datetime.title=Datetime
 
 ui.modal.project-config.title=Configure project
 

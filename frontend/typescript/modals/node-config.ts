@@ -21,17 +21,80 @@ module quill.modal {
             return `
             <tabs tabs-class="is-boxed">
                 ${NodeConfig.textTab()}
-                <div title="ui.modal.node-config.tabs.number"
-                     icon=${TreeNodeIcon.number}></div>
-                <div title="ui.modal.node-config.tabs.date"
-                     icon=${TreeNodeIcon.date}></div>
-                <div title="ui.modal.node-config.tabs.boolean"
-                     icon=${TreeNodeIcon.boolean}></div>
-                <div title="ui.modal.node-config.tabs.list"
-                     icon=${TreeNodeIcon.array}></div>
-                <div title="ui.modal.node-config.tabs.file"
-                     icon=${TreeNodeIcon.file}></div>
+                ${NodeConfig.numberTab()}
+                ${NodeConfig.dateTab()}
+                ${NodeConfig.boolTab()}
+                ${NodeConfig.listTab()}
+                ${NodeConfig.fileTab()}
             </tabs>`
+        }
+
+        static fileTab() {
+            return `
+            <div title="ui.modal.node-config.tabs.file"
+                 icon=${TreeNodeIcon.file}></div>`
+        }
+
+        static listTab() {
+            return `
+            <div title="ui.modal.node-config.tabs.list"
+                 icon=${TreeNodeIcon.array}></div>`
+        }
+
+        static boolTab() {
+            return `
+            <div title="ui.modal.node-config.tabs.boolean"
+                 icon=${TreeNodeIcon.boolean}></div>`
+        }
+
+        static dateTab() {
+            return `
+                <div title="ui.modal.node-config.tabs.date"
+                     icon=${TreeNodeIcon.date}>
+                    <tabs class="vertical">
+                        ${NodeConfig.date()}
+                        ${NodeConfig.datetime()}
+                    </tabs>
+                </div>`
+        }
+
+        static date() {
+            return `
+            <div title="ui.modal.node-config.date.title" icon="calendar" active>
+                ABC
+            </div>`
+        }
+
+        static datetime() {
+            return `
+            <div title="ui.modal.node-config.datetime.title" icon="clock-o">
+                ABC
+            </div>`
+        }
+
+        static numberTab() {
+            return `
+                <div title="ui.modal.node-config.tabs.number"
+                     icon=${TreeNodeIcon.number}>
+                    <tabs class="vertical">
+                        ${NodeConfig.integer()}
+                        ${NodeConfig.fractions()}
+                    </tabs>
+                </div>`
+        }
+
+        static integer() {
+            return `
+            <div title="ui.modal.node-config.number.integer.title" icon="thermometer" active>
+                ABC
+            </div>`
+        }
+
+        static fractions() {
+            return `
+            <div title="ui.modal.node-config.number.fraction.title" icon="pie-chart">
+                ABC
+            </div>`
         }
 
         static textTab() {
@@ -47,7 +110,7 @@ module quill.modal {
 
         static singleLine() {
             return `
-            <div title="ui.modal.node-config.text.single-line" icon="font" active>
+            <div title="ui.modal.node-config.text.single-line.title" icon="font" active>
                 ABC
             </div>`
         }
