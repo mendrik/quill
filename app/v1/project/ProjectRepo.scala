@@ -41,14 +41,14 @@ class ProjectRepo @Inject()(dcp: DatabaseConfigProvider) {
     def remove(user: Project): Future[Int] =
         db.run(Projects.filter(_.id === user.id).delete)
 
-    def toProject(row: ProjectsRow): Project = Project(row.id, row.name, Nil, Nil, Nil)
+    def toProject(row: ProjectsRow): Project = Project(row.id, row.name, row.locale, Nil, Nil, Nil)
 
     def toProjects(row: Seq[ProjectsRow]): List[Project] = row.map(toProject).toList
 
     def toProject(row: Option[ProjectsRow]): Option[Project] = row.map(toProject)
 
     implicit def toProjectsRow(p: Project): ProjectsRow =
-        ProjectsRow(p.id, p.name)
+        ProjectsRow(p.id, p.name, p.locale)
 
 
 }

@@ -61,8 +61,66 @@ module quill {
         name: string,
     }
 
-    export type NodeRoot = 'structure' | 'schema'
+    export type NodeRoot =
+        'structure' |
+        'schema'
 
-    export type NodeType = 'string' | 'number' | 'enum' | 'boolean' | 'node' | 'list'
+    export type NodeType =
+        'string'    |
+        'multiline' |
+        'integer'   |
+        'fraction'  |
+        'enum'      |
+        'boolean'   |
+        'list'      |
+        'date'      |
+        'datetime'
 
+    export enum MultilineType {
+        normal = 'normal',
+        richtext = 'richtext',
+        markdown = 'markdown'
+    }
+
+    export enum IntegerType {
+        input = 'input',
+        slider = 'slider'
+    }
+
+    export enum BooleanType {
+        checkbpx = 'checkbox',
+        switch = 'switch'
+    }
+
+    export interface NodeConfig {
+        type: NodeType,
+        multiLine: {
+            type: MultilineType
+        },
+        singleLine: {
+            validation: string
+        },
+        enum: {
+            values: string[]
+        },
+        integer: {
+            min: number,
+            max: number,
+            type: IntegerType
+        },
+        fraction: {
+        },
+        date: {
+        },
+        datetime: {
+        },
+        boolean: {
+            type: BooleanType
+        },
+        list: {
+
+        },
+        file: {
+        }
+    }
 }

@@ -7,6 +7,7 @@ import v1.version.Version
 case class Project(
     id: Long,
     name: Option[String],
+    locale: Option[String],
     structure: Seq[Node],
     schema: Seq[Node],
     versions: Seq[Version]

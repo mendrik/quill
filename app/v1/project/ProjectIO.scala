@@ -14,6 +14,7 @@ package object ProjectIO {
     implicit val projectReads: Reads[Project] = (
         (__ \ "id").read[Long] ~
         (__ \ "name").readNullable[String] ~
+        (__ \ "locale").readNullable[String] ~
         (__ \ "structure").readList[Node] ~
         (__ \ "schema").readList[Node] ~
         (__ \ "versions").readList[Version]
@@ -22,6 +23,7 @@ package object ProjectIO {
     implicit val projectWrites: Writes[Project] = (
         (__ \ "id").write[Long] ~
         (__ \ "name").writeNullable[String] ~
+        (__ \ "locale").writeNullable[String] ~
         (__ \ "structure").write[Seq[Node]] ~
         (__ \ "schema").write[Seq[Node]] ~
         (__ \ "versions").write[Seq[Version]]

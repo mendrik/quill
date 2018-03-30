@@ -107,6 +107,9 @@ ui.modal.node-config.number.fraction.title=Fractions
 ui.modal.node-config.date.title=Date
 ui.modal.node-config.datetime.title=Datetime
 
+ui.modal.node-config.list.title=List
+ui.modal.node-config.enumeration.title=Enumeration
+
 ui.modal.project-config.title=Configure project
 
 ui.tooltip.tree-actions.add=Add new node [+]

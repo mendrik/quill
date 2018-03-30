@@ -38,7 +38,26 @@ module quill.modal {
         static listTab() {
             return `
             <div title="ui.modal.node-config.tabs.list"
-                 icon=${TreeNodeIcon.array}></div>`
+                 icon=${TreeNodeIcon.array}>
+                 <tabs class="vertical">
+                    ${NodeConfig.infiniteList()}
+                    ${NodeConfig.enumeration()}
+                </tabs>
+            </div>`
+        }
+
+        static infiniteList() {
+            return `
+            <div title="ui.modal.node-config.list.title" icon="database" active>
+                ABC
+            </div>`
+        }
+
+        static enumeration() {
+            return `
+            <div title="ui.modal.node-config.enumeration.title" icon="list-alt">
+                ABC
+            </div>`
         }
 
         static boolTab() {
