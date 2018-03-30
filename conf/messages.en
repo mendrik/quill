@@ -83,11 +83,27 @@ ui.page.notfound.title=404
 ui.page.notfound.body=The page you requested has either expired or doesn't exist any longer
 ui.page.notfound.button=Back to front page
 
-ui.modal.ok = Ok
-ui.modal.cancel = Cancel
-ui.modal.title = Modal
+ui.modal.ok=Ok
+ui.modal.cancel=Cancel
+ui.modal.title=Modal
 
-ui.modal.node-config.title = Configure node
-ui.modal.project-config.title = Configure project
+ui.modal.node-config.title=Configure node
+ui.modal.node-config.tabs.text=Text
+ui.modal.node-config.tabs.number=Number
+ui.modal.node-config.tabs.date=Date
+ui.modal.node-config.tabs.boolean=On/Off
+ui.modal.node-config.tabs.list=List
+ui.modal.node-config.tabs.file=File
+
+ui.modal.project-config.title=Configure project
+
+ui.tooltip.tree-actions.add=Add new node [+]
+ui.tooltip.tree-actions.rename=Rename node [Enter]
+ui.tooltip.tree-actions.configure=Configure node [c]
+ui.tooltip.tree-actions.delete=Delete node
+
+ui.tooltip.version.github=Upload to github
+ui.tooltip.version.json-download=Download as JSON
+ui.tooltip.version.configure=Configure version
 
 node.default-name="New node"

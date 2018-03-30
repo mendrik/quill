@@ -1,6 +1,7 @@
 module quill.modal {
 
     import Template = feather.annotations.Template
+    import TreeNodeIcon = feather.ui.tree.TreeNodeIcon
 
     export class NodeConfig extends ModalWidget {
 
@@ -18,15 +19,21 @@ module quill.modal {
         @Template()
         markup() {
             return `
-            <div class="tabs is-boxed">
-                <ul>
-                    <li class="is-active"><a>Text</a></li>
-                    <li class=""><a>Number</a></li>
-                    <li class=""><a>Date</a></li>
-                    <li class=""><a>On/Off</a></li>
-                    <li class=""><a>List</a></li>
-                </ul>
-            </div>`
+            <tabs tabs-class="is-boxed">
+                <div title="ui.modal.node-config.tabs.text"
+                     tooltip="Bla"
+                     icon=${TreeNodeIcon.text} active></div>
+                <div title="ui.modal.node-config.tabs.number"
+                     icon=${TreeNodeIcon.number}></div>
+                <div title="ui.modal.node-config.tabs.date"
+                     icon=${TreeNodeIcon.date}></div>
+                <div title="ui.modal.node-config.tabs.boolean"
+                     icon=${TreeNodeIcon.boolean}></div>
+                <div title="ui.modal.node-config.tabs.list"
+                     icon=${TreeNodeIcon.array}></div>
+                <div title="ui.modal.node-config.tabs.file"
+                     icon=${TreeNodeIcon.file}></div>
+            </tabs>`
         }
     }
 }
