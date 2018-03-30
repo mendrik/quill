@@ -35,6 +35,8 @@
         "typescript/modals/node-config.ts",
         "typescript/components/translate.ts",
         "typescript/components/progress.ts",
+        "typescript/components/radio.ts",
+        "typescript/components/radio-set.ts",
         "typescript/components/scroll-spy.ts",
         "typescript/components/scroll-receiver.ts",
         "typescript/components/html-fragment.ts",
