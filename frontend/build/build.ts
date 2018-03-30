@@ -26,5 +26,6 @@ fs.createReadStream('node_modules/feather-components/feather-components.css')
 const combinedStream = CombinedStream.create()
 combinedStream.append(fs.createReadStream('node_modules/bulma/css/bulma.css'))
 combinedStream.append(fs.createReadStream('node_modules/bulma-extensions/bulma-switch/dist/bulma-switch.min.css'))
+combinedStream.append(fs.createReadStream('node_modules/bulma-extensions/bulma-checkradio/dist/bulma-checkradio.min.css'))
 
 combinedStream.pipe(fs.createWriteStream('../public/bulma.css'))

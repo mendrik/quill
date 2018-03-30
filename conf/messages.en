@@ -96,7 +96,10 @@ ui.modal.node-config.tabs.list=List
 ui.modal.node-config.tabs.file=File
 
 ui.modal.node-config.text.single-line=String
-ui.modal.node-config.text.multi-line=Multiline
+ui.modal.node-config.text.multi-line.title=Multiline
+ui.modal.node-config.text.multi-line.normal=Normal
+ui.modal.node-config.text.multi-line.richtext=Richtext
+ui.modal.node-config.text.multi-line.markdown=Markdown
 
 ui.modal.project-config.title=Configure project
 

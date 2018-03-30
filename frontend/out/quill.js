@@ -8,6 +8,7 @@ var quill;
 var quill;
 (function (quill) {
     var TreeNodeIcon = feather.ui.tree.TreeNodeIcon;
+    var findClippedParent = feather.ui.findClippedParent;
     var urlParams = {};
     var popstate = function () {
         var pl = /\+/g, search = /([^&=]+)=?([^&]*)/g, decode = function (s) {
@@ -40,6 +41,12 @@ var quill;
     quill.flattenTree = function (node) {
         return (_a = [node]).concat.apply(_a, node.children.map(quill.flattenTree));
         var _a;
+    };
+    quill.scrollElementIntoView = function (el) {
+        var scroll = findClippedParent(el), scrollRect = scroll.getBoundingClientRect(), rect = el.getBoundingClientRect();
+        if (rect.top <= scrollRect.top || rect.bottom >= scrollRect.bottom) {
+            el.scrollIntoView();
+        }
     };
 })(quill || (quill = {}));
 var quill;
@@ -75,6 +82,167 @@ if (window['Element'] && !Element.prototype.closest) {
         return el;
     };
 }
+var quill;
+(function (quill) {
+    var modal;
+    (function (modal_1) {
+        var Template = feather.annotations.Template;
+        var Construct = feather.annotations.Construct;
+        var GestureWidget = feather.ui.events.GestureWidget;
+        var Subscribe = feather.hub.Subscribe;
+        var Widget = feather.core.Widget;
+        var Bind = feather.observe.Bind;
+        var On = feather.event.On;
+        var ModalWidget = (function (_super) {
+            __extends(ModalWidget, _super);
+            function ModalWidget() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.successButton = function () { return 'ui.modal.ok'; };
+                _this.cancelButton = function () { return 'ui.modal.cancel'; };
+                return _this;
+            }
+            ModalWidget.prototype.escKey = function (ev) {
+                if (/escape/i.test(ev.key)) {
+                    this.triggerUp('close-modal');
+                }
+            };
+            __decorate([
+                On({ event: 'keydown' })
+            ], ModalWidget.prototype, "escKey", null);
+            return ModalWidget;
+        }(Widget));
+        modal_1.ModalWidget = ModalWidget;
+        var ModalManager = (function (_super) {
+            __extends(ModalManager, _super);
+            function ModalManager() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.modal = [];
+                _this.showing = false;
+                _this.title = 'ui.modal.title';
+                _this.successButton = 'ui.modal.ok';
+                _this.cancelButton = 'ui.modal.cancel';
+                _this.toActive = function (showing) { return showing ? 'is-active' : undefined; };
+                return _this;
+            }
+            ModalManager.prototype.init = function () {
+                this.render();
+            };
+            ModalManager.prototype.closeCall = function () {
+                this.close();
+            };
+            ModalManager.prototype.show = function (modal) {
+                this.lastFocussedElement = document.activeElement;
+                this.modal.splice(0, this.modal.length, modal);
+                this.title = modal.getTitle();
+                this.successButton = modal.successButton();
+                this.cancelButton = modal.cancelButton();
+                this.showing = true;
+                modal.element.setAttribute('tabindex', '-1');
+                modal.element.focus();
+            };
+            ModalManager.prototype.close = function () {
+                this.showing = false;
+                if (this.lastFocussedElement) {
+                    this.lastFocussedElement.focus();
+                }
+            };
+            ModalManager.prototype.closeButtons = function () {
+                this.close();
+            };
+            ModalManager.prototype.markup = function () {
+                return "<div class=\"modal {{showing:toActive}}\">\n              <div class=\"modal-background\"/>\n              <div class=\"modal-card is-small\">\n                <header class=\"modal-card-head\">\n                  <p class=\"modal-card-title\">{{title:translate}}</p>\n                  <button class=\"delete\" aria-label=\"close\"/>\n                </header>\n                <section class=\"modal-card-body is-small\" {{modal}}/>\n                <footer class=\"modal-card-foot\">\n                  <button class=\"button is-inverted ok\">{{successButton:translate}}</button>\n                  <button class=\"button is-inverted cancel\">{{cancelButton:translate}}</button>\n                </footer>\n              </div>\n            </div>";
+            };
+            __decorate([
+                Bind()
+            ], ModalManager.prototype, "modal", void 0);
+            __decorate([
+                Bind()
+            ], ModalManager.prototype, "showing", void 0);
+            __decorate([
+                Bind()
+            ], ModalManager.prototype, "title", void 0);
+            __decorate([
+                Bind()
+            ], ModalManager.prototype, "successButton", void 0);
+            __decorate([
+                Bind()
+            ], ModalManager.prototype, "cancelButton", void 0);
+            __decorate([
+                Subscribe('close-modal')
+            ], ModalManager.prototype, "closeCall", null);
+            __decorate([
+                Subscribe('show-modal')
+            ], ModalManager.prototype, "show", null);
+            __decorate([
+                On({ event: 'mousedown', selector: '.modal-background' })
+            ], ModalManager.prototype, "close", null);
+            __decorate([
+                On({ event: 'click', selector: 'button.cancel,button.delete' })
+            ], ModalManager.prototype, "closeButtons", null);
+            __decorate([
+                Template()
+            ], ModalManager.prototype, "markup", null);
+            ModalManager = __decorate([
+                Construct({ selector: 'modal-manager', singleton: true })
+            ], ModalManager);
+            return ModalManager;
+        }(GestureWidget));
+        modal_1.ModalManager = ModalManager;
+    })(modal = quill.modal || (quill.modal = {}));
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var modal;
+    (function (modal) {
+        var Template = feather.annotations.Template;
+        var ProjectConfig = (function (_super) {
+            __extends(ProjectConfig, _super);
+            function ProjectConfig(project) {
+                var _this = _super.call(this) || this;
+                _this.project = project;
+                return _this;
+            }
+            ProjectConfig.prototype.getTitle = function () {
+                return 'ui.modal.project-config.title';
+            };
+            ProjectConfig.prototype.markup = function () {
+                return "<div class=\"\">Project Config</div>";
+            };
+            __decorate([
+                Template()
+            ], ProjectConfig.prototype, "markup", null);
+            return ProjectConfig;
+        }(modal.ModalWidget));
+        modal.ProjectConfig = ProjectConfig;
+    })(modal = quill.modal || (quill.modal = {}));
+})(quill || (quill = {}));
+var quill;
+(function (quill) {
+    var modal;
+    (function (modal) {
+        var Template = feather.annotations.Template;
+        var TreeNodeIcon = feather.ui.tree.TreeNodeIcon;
+        var NodeConfig = (function (_super) {
+            __extends(NodeConfig, _super);
+            function NodeConfig(node) {
+                var _this = _super.call(this) || this;
+                _this.node = node;
+                return _this;
+            }
+            NodeConfig.prototype.getTitle = function () {
+                return 'ui.modal.node-config.title';
+            };
+            NodeConfig.prototype.markup = function () {
+                return "\n            <tabs tabs-class=\"is-boxed\">\n                <div title=\"ui.modal.node-config.tabs.text\"\n                     icon=" + TreeNodeIcon.text + " active>\n                    <tabs class=\"vertical\">\n                        <div title=\"ui.modal.node-config.text.single-line\" icon=\"font\" active>\n                            ABC\n                        </div>\n                        <div title=\"ui.modal.node-config.text.multi-line\" icon=\"align-justify\">\n                            <div class=\"field\">\n                                <input class=\"is-checkradio\" id=\"multiline-normal\" type=\"radio\" name=\"mutiline-format\" checked=\"checked\">\n                                <label for=\"multiline-normal\">Normal</label>\n                            </div>\n                            <div class=\"field\">\n                                <input class=\"is-checkradio\" id=\"multiline-rtf\" type=\"radio\" name=\"mutiline-format\">\n                                <label for=\" id=\"multiline-rtf\">Richtext</label>\n                            </div>\n                            <div class=\"field\">\n                                <input class=\"is-checkradio\" id=\"multiline-md\" type=\"radio\" name=\"mutiline-format\">\n                                <label for=\" id=\"multiline-md\"\">Markdown</label>\n                            </div>\n                        </div>\n                    </tabs>\n                </div>\n                <div title=\"ui.modal.node-config.tabs.number\"\n                     icon=" + TreeNodeIcon.number + "></div>\n                <div title=\"ui.modal.node-config.tabs.date\"\n                     icon=" + TreeNodeIcon.date + "></div>\n                <div title=\"ui.modal.node-config.tabs.boolean\"\n                     icon=" + TreeNodeIcon.boolean + "></div>\n                <div title=\"ui.modal.node-config.tabs.list\"\n                     icon=" + TreeNodeIcon.array + "></div>\n                <div title=\"ui.modal.node-config.tabs.file\"\n                     icon=" + TreeNodeIcon.file + "></div>\n            </tabs>";
+            };
+            __decorate([
+                Template()
+            ], NodeConfig.prototype, "markup", null);
+            return NodeConfig;
+        }(modal.ModalWidget));
+        modal.NodeConfig = NodeConfig;
+    })(modal = quill.modal || (quill.modal = {}));
+})(quill || (quill = {}));
 var quill;
 (function (quill) {
     var Widget = feather.core.Widget;
@@ -377,7 +545,7 @@ var quill;
         VersionValues.prototype.loadVersionValues = function () {
         };
         VersionValues.prototype.markup = function () {
-            return "\n             <li>\n                <div class=\"level version-header\">\n                    <div class=\"level-left\">\n                        <span class=\"level-item\">\n                            <span class=\"icon is-small\"><Icon name=\"book\"/></span>\n                            <span class=\"version-name\">{{version.name}}</span>\n                        </span>\n                    </div>\n                    <div class=\"level-right\">\n                        <a class=\"button is-small tooltip\" action=\"version-github\" data-tooltip=\"Upload to github\">\n                            <Icon name=\"github\" icon-class=\"is-small\"/>\n                        </a>\n                        <a class=\"button is-small tooltip\" action=\"version-download\" data-tooltip=\"Download full JSON\">\n                            <Icon name=\"download\" icon-class=\"is-small\"/>\n                        </a>\n                        <a class=\"button is-small tooltip\" action=\"version-configure\" data-tooltip=\"Configure version\">\n                            <Icon name=\"cog\" icon-class=\"is-small\"/>\n                        </a>\n                    </div>\n                </div>\n                <scroll-receiver>\n                    Nu Bass \u00A0<br>Nichol Cumbie \u00A0<br>Lenna Piercy \u00A0<br>See Aispuro \u00A0<br>\n                    Sophie Troyer \u00A0<br>Bryan Cool \u00A0<br>Sylvia Mabe \u00A0<br>Hue Keele \u00A0<br>\n                    Kaylee Speaks \u00A0<br>Milda Costin \u00A0<br>Jennie Dietrich \u00A0<br>Reanna Leanos \u00A0<br>\n                    Ruby Dehn \u00A0<br>Asa Estes \u00A0<br>Tennie Steverson \u00A0<br>Despina Schnur \u00A0<br>\n                    Lakeisha Getman \u00A0<br>Mara Heng \u00A0<br>Carroll Down \u00A0<br>Florencio Fazzino \u00A0<br>\n                    Hailey Causey \u00A0<br>Babara Friscia \u00A0<br>Chanell Stgermain \u00A0<br>Annette Deangelis \u00A0<br>\n                    Sulema Pulley \u00A0<br>Kylee Penman \u00A0<br>Ariel Pridgen \u00A0<br>Mitch Granado \u00A0<br>\n                    Vernia Dates \u00A0<br>Darnell Pablo \u00A0<br>Anneliese Alderman \u00A0<br>Brad Dahl \u00A0<br>\n                    Valentin Amburgey \u00A0<br>Kemberly Pelzer \u00A0<br>Ronald Boney \u00A0<br>Adah Boateng \u00A0<br>\n                    Marcelina Alls \u00A0<br>Felicia Guss \u00A0<br>Linn Mershon \u00A0<br>Chere Scioneaux \u00A0<br>\n                    Madalyn Glisson \u00A0<br>Kimberely Hagwood \u00A0<br>Roxanne Ouimet \u00A0<br>Annalisa Armagost \u00A0<br>\n                    Doris Troy \u00A0<br>Angeline Shelor \u00A0<br>Zada Manjarrez \u00A0<br>Marvella Ritch \u00A0<br>\n                    Larisa Burruel \u00A0<br>Margrett Canino \u00A0<br><br>\n                </scroll-receiver>\n            </li>";
+            return "\n             <li class=\"v-flex\">\n                <div class=\"level version-header no-grow\">\n                    <div class=\"level-left\">\n                        <span class=\"level-item\">\n                            <span class=\"icon is-small\"><Icon name=\"book\"/></span>\n                            <span class=\"version-name\">{{version.name}}</span>\n                        </span>\n                    </div>\n                    <div class=\"level-right\">\n                        <a class=\"button is-small tooltip\"\n                           action=\"version-github\"\n                           tooltip=\"ui.tooltip.version.github\">\n                            <Icon name=\"github\" icon-class=\"is-small\"/>\n                        </a>\n                        <a class=\"button is-small tooltip\"\n                           action=\"version-download\"\n                           tooltip=\"ui.tooltip.version.json-download\">\n                            <Icon name=\"download\" icon-class=\"is-small\"/>\n                        </a>\n                        <a class=\"button is-small tooltip\"\n                           action=\"version-configure\"\n                           tooltip=\"ui.tooltip.version.configure\">\n                            <Icon name=\"cog\" icon-class=\"is-small\"/>\n                        </a>\n                    </div>\n                </div>\n                <scroll-receiver class=\"grow\">\n                    Nu Bass \u00A0<br>Nichol Cumbie \u00A0<br>Lenna Piercy \u00A0<br>See Aispuro \u00A0<br>\n                    Sophie Troyer \u00A0<br>Bryan Cool \u00A0<br>Sylvia Mabe \u00A0<br>Hue Keele \u00A0<br>\n                    Kaylee Speaks \u00A0<br>Milda Costin \u00A0<br>Jennie Dietrich \u00A0<br>Reanna Leanos \u00A0<br>\n                    Ruby Dehn \u00A0<br>Asa Estes \u00A0<br>Tennie Steverson \u00A0<br>Despina Schnur \u00A0<br>\n                    Lakeisha Getman \u00A0<br>Mara Heng \u00A0<br>Carroll Down \u00A0<br>Florencio Fazzino \u00A0<br>\n                    Hailey Causey \u00A0<br>Babara Friscia \u00A0<br>Chanell Stgermain \u00A0<br>Annette Deangelis \u00A0<br>\n                    Sulema Pulley \u00A0<br>Kylee Penman \u00A0<br>Ariel Pridgen \u00A0<br>Mitch Granado \u00A0<br>\n                    Vernia Dates \u00A0<br>Darnell Pablo \u00A0<br>Anneliese Alderman \u00A0<br>Brad Dahl \u00A0<br>\n                    Valentin Amburgey \u00A0<br>Kemberly Pelzer \u00A0<br>Ronald Boney \u00A0<br>Adah Boateng \u00A0<br>\n                    Marcelina Alls \u00A0<br>Felicia Guss \u00A0<br>Linn Mershon \u00A0<br>Chere Scioneaux \u00A0<br>\n                    Madalyn Glisson \u00A0<br>Kimberely Hagwood \u00A0<br>Roxanne Ouimet \u00A0<br>Annalisa Armagost \u00A0<br>\n                    Doris Troy \u00A0<br>Angeline Shelor \u00A0<br>Zada Manjarrez \u00A0<br>Marvella Ritch \u00A0<br>\n                    Larisa Burruel \u00A0<br>Margrett Canino \u00A0<br><br>\n                </scroll-receiver>\n            </li>";
         };
         __decorate([
             Bind()
@@ -410,7 +578,7 @@ var quill;
             this.render();
         };
         ValueEditor.prototype.markup = function () {
-            return "<ul class=\"grow\" {{versionValues}}></ul>";
+            return "<ul class=\"grow h-flex\" {{versionValues}}></ul>";
         };
         ValueEditor.prototype.projectLoaded = function (project) {
             (_a = this.versionValues).splice.apply(_a, [0, this.versionValues.length].concat(project.versions.map(function (version) { return new quill.VersionValues(version); })));
@@ -549,6 +717,9 @@ var quill;
                 return _this.element.removeAttribute('data-dragover');
             }, 30);
         };
+        CustomTreeNode.prototype.blur = function (ev) {
+            this.element.focus();
+        };
         CustomTreeNode.prototype.drop = function (ev) {
             var id = ev.dataTransfer.getData(NODE_DATA_TYPE);
             this.dragleave();
@@ -570,6 +741,19 @@ var quill;
             }
             node.parent = this;
         };
+        CustomTreeNode.prototype.hasChildren = function () {
+            return this.children.length > 0;
+        };
+        CustomTreeNode.prototype.allParentsOpen = function () {
+            var p = this.parent;
+            while (p) {
+                if (!p.open) {
+                    return false;
+                }
+                p = p.parent;
+            }
+            return true;
+        };
         CustomTreeNode.toTreeNode = function (n) {
             var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
             (_a = tn.children).push.apply(_a, n.children.map(function (n) {
@@ -589,6 +773,9 @@ var quill;
         __decorate([
             On({ event: 'dragleave', scope: Scope.Direct })
         ], CustomTreeNode.prototype, "dragleave", null);
+        __decorate([
+            On({ event: 'blur', selector: 'input', scope: Scope.Direct })
+        ], CustomTreeNode.prototype, "blur", null);
         __decorate([
             On({ event: 'drop', scope: Scope.Direct })
         ], CustomTreeNode.prototype, "drop", null);
@@ -649,6 +836,9 @@ var quill;
             quill.removeToken();
             this.route('/login');
         };
+        Navigation.prototype.projectSettings = function () {
+            this.triggerUp('open-project-settings');
+        };
         Navigation.prototype.markup = function () {
             return "\n            <nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n              <div class=\"navbar-brand\">\n                <a class=\"navbar-item\" href=\"/\" id=\"logo\">\n                    <img src=\"/assets/images/quill.svg\" alt=\"Quill Logo\">\n                    <span>Quill</span>\n                    <span>{{project.name}}</span>\n                </a>\n              </div>\n              <div class=\"navbar-end\">\n                <a class=\"navbar-item settings\"><Icon name=\"cog\"/>Settings</span></a>\n                <a class=\"navbar-item logout\"><Icon name=\"sign-out\"/>Logout <span class=\"username\">{{user.firstname}}</span></a>\n                <div  class=\"navbar-item\">\n                <p class=\"control has-icons-right\" id=\"search\">\n                  <input class=\"input\" type=\"text\" placeholder=\"Search...\">\n                  <Icon name=\"search\" align-right=\"right\"/>\n                </p>\n                </div>\n              </div>\n            </nav>\n            ";
         };
@@ -661,6 +851,9 @@ var quill;
         __decorate([
             Subscribe('xhr-failure-401')
         ], Navigation.prototype, "logoutFailed", null);
+        __decorate([
+            On({ event: 'click', selector: 'a.settings', preventDefault: true })
+        ], Navigation.prototype, "projectSettings", null);
         __decorate([
             Template()
         ], Navigation.prototype, "markup", null);
@@ -678,9 +871,13 @@ var quill;
     var Subscribe = feather.hub.Subscribe;
     var Rest = feather.xhr.Rest;
     var Method = feather.xhr.Method;
+    var On = feather.event.On;
+    var matches = feather.dom.selectorMatches;
     var isDef = feather.functions.isDef;
     var removeFromArray = feather.arrays.removeFromArray;
     var AjaxWidget = quill.components.AjaxWidget;
+    var NodeConfig = quill.modal.NodeConfig;
+    var ProjectConfig = quill.modal.ProjectConfig;
     var dummyProject = {
         id: 0,
         name: '',
@@ -715,6 +912,9 @@ var quill;
             this.loading = false;
             var _a;
         };
+        ProjectPage.prototype.openProjectSettings = function () {
+            this.triggerSingleton('show-modal', new ProjectConfig(this.project));
+        };
         ProjectPage.prototype.nodeDeselected = function () {
             this.currentTreeNode = undefined;
             this.triggerDown('defocus-other-nodes');
@@ -722,6 +922,7 @@ var quill;
         ProjectPage.prototype.nodeSelected = function (node) {
             node.element.focus();
             this.currentTreeNode = node;
+            this.currentTreeNode.selected = true;
             this.triggerDown('defocus-other-nodes', node);
         };
         ProjectPage.prototype.rootTypeSelected = function (type) {
@@ -732,17 +933,15 @@ var quill;
         ProjectPage.prototype.nodeAction = function (action) {
             switch (action) {
                 case 'node-add': {
-                    quill.Progress.start();
-                    if (isDef(this.currentTreeNode)) {
-                        this.createChildNode();
-                    }
-                    else {
-                        this.createNode();
-                    }
+                    this.addNode();
                     break;
                 }
                 case 'node-edit': {
                     this.currentTreeNode.focusAndEdit();
+                    break;
+                }
+                case 'node-configure': {
+                    this.configureNode();
                     break;
                 }
                 case 'node-delete': {
@@ -803,8 +1002,54 @@ var quill;
             this.moveNode = __assign({}, drop);
             this.moveNodeCall();
         };
+        ProjectPage.prototype.configureNode = function () {
+            this.triggerSingleton('show-modal', new NodeConfig(this.currentTreeNode));
+        };
+        ProjectPage.prototype.addNode = function () {
+            quill.Progress.start();
+            if (isDef(this.currentTreeNode)) {
+                this.createChildNode();
+            }
+            else {
+                this.createNode();
+            }
+        };
+        ProjectPage.prototype.keyEvent = function (ev) {
+            var _this = this;
+            if (/[+c]|(left|right|up|down|enter)$/i.test(ev.key) &&
+                matches(document.activeElement, 'li.tree-node')) {
+                ev.preventDefault();
+                if ('+' === ev.key) {
+                    this.addNode();
+                }
+                if ('c' === ev.key) {
+                    this.configureNode();
+                }
+                if (/left$/i.test(ev.key)) {
+                    this.currentTreeNode.open = false;
+                }
+                if (/right$/i.test(ev.key)) {
+                    this.currentTreeNode.open = true;
+                }
+                if (/(down|up)$/i.test(ev.key)) {
+                    var allNodes = this
+                        .allNodes(this.nodes)
+                        .filter(function (n) { return !n.parent || n.allParentsOpen(); });
+                    var dir = /down$/i.test(ev.key) ? 1 : -1;
+                    var nextNode = allNodes[allNodes.findIndex(function (v) { return v === _this.currentTreeNode; }) + dir];
+                    if (nextNode) {
+                        this.nodeSelected(nextNode);
+                        var el = this.element.querySelector('.tree-node > .selected');
+                        quill.scrollElementIntoView(el);
+                    }
+                }
+                if (/enter$/i.test(ev.key)) {
+                    this.currentTreeNode.focusAndEdit();
+                }
+            }
+        };
         ProjectPage.prototype.projectPage = function () {
-            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                    <horizontal-split class=\"grow\" id=\"app-split\">\n                      <sidebar class=\"v-flex\">\n                        <tree-actions></tree-actions>\n                        <scroll-spy class=\"grow\" {{loading}}>\n                          <aside class=\"menu\">\n                            <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                            <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                            <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                            <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                          </aside>\n                        </scroll-spy>\n                      </sidebar>\n                      <section class=\"v-flex value-section\">\n                         <value-editor class=\"grow v-flex\"/>\n                      </section>\n                    </horizontal-split>\n                </scroll-pane>\n                <footer class=\"no-grow\"/>\n            </panel>";
+            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                    <horizontal-split class=\"grow\" id=\"app-split\">\n                      <sidebar class=\"v-flex\">\n                        <tree-actions></tree-actions>\n                        <scroll-spy class=\"grow\" {{loading}}>\n                          <aside class=\"menu\">\n                            <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                            <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                            <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                            <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                          </aside>\n                        </scroll-spy>\n                      </sidebar>\n                      <section class=\"v-flex value-section\">\n                         <value-editor class=\"grow v-flex\"/>\n                      </section>\n                    </horizontal-split>\n                </scroll-pane>\n                <footer class=\"no-grow app-footer\"/>\n            </panel>";
         };
         ProjectPage.prototype.allNodes = function (nodes) {
             return [].concat.apply([], nodes.map(quill.flattenTree));
@@ -824,6 +1069,9 @@ var quill;
         __decorate([
             Rest({ url: '/projects/{{projectId}}', headers: quill.headers })
         ], ProjectPage.prototype, "fetchProject", null);
+        __decorate([
+            Subscribe('open-project-settings')
+        ], ProjectPage.prototype, "openProjectSettings", null);
         __decorate([
             Subscribe('node-defocused')
         ], ProjectPage.prototype, "nodeDeselected", null);
@@ -857,6 +1105,9 @@ var quill;
         __decorate([
             Subscribe('node-drop')
         ], ProjectPage.prototype, "dragNode", null);
+        __decorate([
+            On({ event: 'keydown', selector: '.tree-view' })
+        ], ProjectPage.prototype, "keyEvent", null);
         __decorate([
             Template()
         ], ProjectPage.prototype, "projectPage", null);
@@ -1112,7 +1363,7 @@ var feather;
                 this.triggerUp('node-action', el.getAttribute('action'));
             };
             TreeActions.prototype.markup = function () {
-                return "\n            <div class=\"level is-mobile is-marginless tree-actions\">\n              <div class=\"level-left\">\n                 <a class=\"button is-small tooltip\" action=\"node-add\" data-tooltip=\"Add new node\">\n                    <Icon name=\"plus\" icon-class=\"is-small\"/>\n                 </a>\n                 <a class=\"button is-small tooltip\" action=\"node-edit\" data-tooltip=\"Rename node\" {{disabled}}>\n                    <Icon name=\"pencil\" icon-class=\"is-small\"/>\n                 </a>\n                 <a class=\"button is-small tooltip\" action=\"node-configure\" data-tooltip=\"Configure node\" {{disabled}}>\n                    <Icon name=\"cog\" icon-class=\"is-small\"/>\n                 </a>\n              </div>\n              <div class=\"level-right\">\n                 <a class=\"button is-small tooltip\" action=\"node-delete\" data-tooltip=\"Delete node\" {{disabled}}>\n                    <Icon name=\"trash-o\" icon-class=\"is-small\"/>\n                 </a>\n              </div>\n            </div>";
+                return "\n            <div class=\"level is-mobile is-marginless tree-actions\">\n              <div class=\"level-left\">\n                 <a class=\"button is-small tooltip\"\n                    action=\"node-add\"\n                    tooltip=\"ui.tooltip.tree-actions.add\">\n                    <Icon name=\"plus\" icon-class=\"is-small\"/>\n                 </a>\n                 <a class=\"button is-small tooltip\"\n                    action=\"node-edit\"\n                    tooltip=\"ui.tooltip.tree-actions.rename\" {{disabled}}>\n                    <Icon name=\"pencil\" icon-class=\"is-small\"/>\n                 </a>\n                 <a class=\"button is-small tooltip\"\n                    action=\"node-configure\"\n                    tooltip=\"ui.tooltip.tree-actions.configure\" {{disabled}}>\n                    <Icon name=\"cog\" icon-class=\"is-small\"/>\n                 </a>\n              </div>\n              <div class=\"level-right\">\n                 <a class=\"button is-small tooltip\"\n                    action=\"node-delete\"\n                    tooltip=\"ui.tooltip.tree-actions.delete\" {{disabled}}>\n                    <Icon name=\"trash-o\" icon-class=\"is-small\"/>\n                 </a>\n              </div>\n            </div>";
             };
             __decorate([
                 Bind()
@@ -1227,7 +1478,7 @@ var quill;
             this.checkLogin();
         };
         QuillApplication.prototype.applicationHTML = function () {
-            return "<progress-bar></progress-bar>\n                    <panel class=\"fullscreen v-flex\" {{pages}}></panel>\n                    <localization translations={translations}/>\n            ";
+            return "<progress-bar></progress-bar>\n                    <panel class=\"fullscreen v-flex\" {{pages}}></panel>\n                    <localization translations={translations}/>\n                    <modal-manager/>\n            ";
         };
         __decorate([
             Bind()
