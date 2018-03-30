@@ -202,7 +202,7 @@ module quill {
                     this.configureNode()
                 }
                 if (/left$/i.test(ev.key)) {
-                    this.configureNode()
+                    this.currentTreeNode.open = false
                 }
                 if (/right$/i.test(ev.key)) {
                     this.currentTreeNode.open = true
