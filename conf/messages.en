@@ -95,6 +95,9 @@ ui.modal.node-config.tabs.boolean=On/Off
 ui.modal.node-config.tabs.list=List
 ui.modal.node-config.tabs.file=File
 
+ui.modal.node-config.text.single-line=String
+ui.modal.node-config.text.multi-line=Multiline
+
 ui.modal.project-config.title=Configure project
 
 ui.tooltip.tree-actions.add=Add new node [+]
