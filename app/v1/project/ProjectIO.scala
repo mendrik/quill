@@ -16,7 +16,6 @@ package object ProjectIO {
         (__ \ "name").readNullable[String] ~
         (__ \ "locale").readNullable[String] ~
         (__ \ "structure").readList[Node] ~
-        (__ \ "schema").readList[Node] ~
         (__ \ "versions").readList[Version]
     ) (Project.apply _)
 
@@ -25,7 +24,6 @@ package object ProjectIO {
         (__ \ "name").writeNullable[String] ~
         (__ \ "locale").writeNullable[String] ~
         (__ \ "structure").write[Seq[Node]] ~
-        (__ \ "schema").write[Seq[Node]] ~
         (__ \ "versions").write[Seq[Version]]
     )(unlift(Project.unapply))
 

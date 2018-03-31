@@ -17,7 +17,7 @@ class ProjectService @Inject()(
     versionRepo: VersionRepo,
     puRepo: ProjectUserRepo
 ) {
-    val newProject = Project(0, None, None, Nil, Nil, Nil)
+    val newProject = Project(0, None, None, Nil, Nil)
 
     def createProject(user: User): Future[Project] = {
         for {
@@ -59,9 +59,8 @@ class ProjectService @Inject()(
         for {
             versions <- versionRepo.findByProjectId(project.id)
             structure <- nodeService.structureNodes(project.id)
-            schema    <- nodeService.schemaNodes(project.id)
         } yield {
-            project.copy(versions = versions, structure = structure, schema = schema)
+            project.copy(versions = versions, structure = structure)
         }
     }
 }

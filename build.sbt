@@ -85,7 +85,8 @@ lazy val scalacOpts = Seq(
     "-Ywarn-dead-code", // Warn when dead code is identified.
     "-Ywarn-inaccessible", // Warn about inaccessible types in method signatures.
     "-Ywarn-nullary-override", // Warn when non-nullary overrides nullary, e.g. def foo() over def foo.
-    "-Ywarn-unused:-explicits,-implicits,-imports"
+    "-Ywarn-unused:-explicits,-implicits,-imports",
+    "-Ypatmat-exhaust-depth","off"
 )
 
 val codegenSettings = Seq(

@@ -9,6 +9,5 @@ case class Project(
     name: Option[String],
     locale: Option[String],
     structure: Seq[Node],
-    schema: Seq[Node],
     versions: Seq[Version]
 ) extends Entity

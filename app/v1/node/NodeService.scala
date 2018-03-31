@@ -1,6 +1,7 @@
 package v1.node
 
 import javax.inject._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -18,12 +19,9 @@ class NodeService @Inject()(repo: NodeRepo) {
         repo.rename(nodeId, name)
 
     def structureNodes(project: Long): Future[Seq[Node]] =
-        repo.findByProjectAndType(project, Structure)
+        repo.findByProject(project)
 
     def byId(nodeId: Long): Future[Option[Node]] = repo.findById(nodeId)
-
-    def schemaNodes(project: Long): Future[Seq[Node]] =
-        repo.findByProjectAndType(project, Schema)
 
     def isChildNode(nodeId: Long, parentId: Long): Future[Boolean] = {
         for {

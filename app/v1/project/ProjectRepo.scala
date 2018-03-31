@@ -41,7 +41,7 @@ class ProjectRepo @Inject()(dcp: DatabaseConfigProvider) {
     def remove(user: Project): Future[Int] =
         db.run(Projects.filter(_.id === user.id).delete)
 
-    def toProject(row: ProjectsRow): Project = Project(row.id, row.name, row.locale, Nil, Nil, Nil)
+    def toProject(row: ProjectsRow): Project = Project(row.id, row.name, row.locale, Nil, Nil)
 
     def toProjects(row: Seq[ProjectsRow]): List[Project] = row.map(toProject).toList
 
