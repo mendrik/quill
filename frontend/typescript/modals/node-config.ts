@@ -3,13 +3,15 @@ module quill.modal {
     import Template = feather.annotations.Template
     import TreeNodeIcon = feather.ui.tree.TreeNodeIcon
 
-    export class NodeConfig extends ModalWidget {
+    export class NodeConfigModal extends ModalWidget {
 
         node: CustomTreeNode
+        nodeConfig: NodeConfig
 
-        constructor(node: CustomTreeNode) {
+        constructor(node: CustomTreeNode, nodeConfig: NodeConfig) {
             super()
             this.node = node
+            this.nodeConfig = nodeConfig
         }
 
         getTitle () {
@@ -20,12 +22,12 @@ module quill.modal {
         markup() {
             return `
             <tabs tabs-class="is-boxed">
-                ${NodeConfig.textTab()}
-                ${NodeConfig.numberTab()}
-                ${NodeConfig.dateTab()}
-                ${NodeConfig.boolTab()}
-                ${NodeConfig.listTab()}
-                ${NodeConfig.fileTab()}
+                ${NodeConfigModal.textTab()}
+                ${NodeConfigModal.numberTab()}
+                ${NodeConfigModal.dateTab()}
+                ${NodeConfigModal.boolTab()}
+                ${NodeConfigModal.listTab()}
+                ${NodeConfigModal.fileTab()}
             </tabs>`
         }
 
@@ -40,8 +42,8 @@ module quill.modal {
             <div title="ui.modal.node-config.tabs.list"
                  icon=${TreeNodeIcon.array}>
                  <tabs class="vertical">
-                    ${NodeConfig.infiniteList()}
-                    ${NodeConfig.enumeration()}
+                    ${NodeConfigModal.infiniteList()}
+                    ${NodeConfigModal.enumeration()}
                 </tabs>
             </div>`
         }
@@ -71,8 +73,8 @@ module quill.modal {
                 <div title="ui.modal.node-config.tabs.date"
                      icon=${TreeNodeIcon.date}>
                     <tabs class="vertical">
-                        ${NodeConfig.date()}
-                        ${NodeConfig.datetime()}
+                        ${NodeConfigModal.date()}
+                        ${NodeConfigModal.datetime()}
                     </tabs>
                 </div>`
         }
@@ -96,8 +98,8 @@ module quill.modal {
                 <div title="ui.modal.node-config.tabs.number"
                      icon=${TreeNodeIcon.number}>
                     <tabs class="vertical">
-                        ${NodeConfig.integer()}
-                        ${NodeConfig.fractions()}
+                        ${NodeConfigModal.integer()}
+                        ${NodeConfigModal.fractions()}
                     </tabs>
                 </div>`
         }
@@ -121,8 +123,8 @@ module quill.modal {
                 <div title="ui.modal.node-config.tabs.text"
                      icon=${TreeNodeIcon.text} active>
                     <tabs class="vertical">
-                        ${NodeConfig.singleLine()}
-                        ${NodeConfig.multiLine()}
+                        ${NodeConfigModal.singleLine()}
+                        ${NodeConfigModal.multiLine()}
                     </tabs>
                 </div>`
         }
@@ -136,20 +138,26 @@ module quill.modal {
 
         static multiLine() {
             return `
-            <div title="ui.modal.node-config.text.multi-line.title" icon="align-justify">
-                <div class="field">
-                    <input class="is-checkradio has-no-border" id="multiline-normal" type="radio" name="mutiline-format" checked="checked">
-                    <label for="multiline-normal" key="ui.modal.node-config.text.multi-line.normal"/>
-                </div>
-                <div class="field">
-                    <input class="is-checkradio has-no-border" id="multiline-rtf" type="radio" name="mutiline-format">
-                    <label for="multiline-rtf" key="ui.modal.node-config.text.multi-line.richtext"/>
-                </div>
-                <div class="field">
-                    <input class="is-checkradio has-no-border" id="multiline-md" type="radio" name="mutiline-format">
-                    <label for="multiline-md" key="ui.modal.node-config.text.multi-line.markdown"/>
-                </div>
+            <div title="ui.modal.node-config.text.multi-line.title"
+                 icon="align-justify">
+                <RadioSet config={this.multilineRadioConfig}/>
             </div>`
+        }
+
+        multilineRadioConfig: RadiosetConfig<MultilineType> = {
+            label: 'ui.modal.node-config.text.multi-line.type',
+            name: 'multiline-type',
+            selected: MultilineType.normal,
+            radios: [
+                {key: 'ui.modal.node-config.text.multi-line.normal',
+                    value: MultilineType.normal},
+                {key: 'ui.modal.node-config.text.multi-line.richtext',
+                    value: MultilineType.richtext},
+                {key: 'ui.modal.node-config.text.multi-line.markdown',
+                    value: MultilineType.markdown}
+            ],
+            onChange: (value: MultilineType) =>
+                this.nodeConfig.multiLine.type = value
         }
     }
 }

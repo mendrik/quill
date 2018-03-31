@@ -6,18 +6,17 @@ module quill {
     import FormField     = feather.ui.types.FormFieldConfig
     import FormComponent = feather.ui.types.FormComponent
 
-    export interface RadioConfig extends FormField<boolean> {
+    export interface RadioConfig<T> extends FormField<T> {
         checked: boolean
     }
 
-    export class Radio extends FormComponent<RadioConfig> {
+    export class RadioWidget<T> extends FormComponent<RadioConfig<T>> {
 
         input: HTMLInputElement
         @Bind() label: string
         @Bind() checked: boolean
 
-
-        constructor(config: RadioConfig) {
+        constructor(config: RadioConfig<T>) {
             super(config)
             this.checked = config.checked
         }
@@ -25,7 +24,7 @@ module quill {
         @On({event: 'change', selector: 'label + label'})
         clicked() {
             this.checked = this.input.checked
-            this.config.onChange(this.checked)
+        //    this.config.onChange(this.checked)
         }
 
         init(element: HTMLElement) {
@@ -37,12 +36,12 @@ module quill {
         markup() {
             return `
             <div class="field">
-                <input class="is-checkradio has-no-border"
-                       id="multiline-normal"
-                       type="radio"
-                       name="mutiline-format"
-                       checked="checked">
-                <label for="multiline-normal">{{config.label:translate}}</label>
+               <input class="is-checkradio has-no-border"
+                      type="radio"
+                      {{config.checked}}>
+               <label for="multiline-normal">
+                  {{config.label:translate}}
+               </label>
             </div>`
         }
     }

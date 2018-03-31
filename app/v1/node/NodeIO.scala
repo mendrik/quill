@@ -23,7 +23,6 @@ package object NodeIO {
         (__ \ "project").read[Long] ~
         (__ \ "name").read[String] ~
         (__ \ "nodeRoot").read[String].map(toNodeRoot) ~
-        (__ \ "nodeType").read[String].map(toNodeType) ~
         (__ \ "sort").read[Int] ~
         (__ \ "children").lazyRead(Reads.list[Node](nodeReads))
     )(Node.apply _)
@@ -33,10 +32,21 @@ package object NodeIO {
         (__ \ "project").write[Long] ~
         (__ \ "name").write[String] ~
         (__ \ "rootType").write[NodeRoot] ~
-        (__ \ "type").write[NodeType] ~
         (__ \ "sort").write[Int] ~
         (__ \ "children").lazyWrite[List[Node]](Writes.list(nodeWrites))
     )(unlift(Node.unapply))
+
+    implicit val nodeConfigReads: Reads[NodeConfig] = (
+        (__ \ "id").read[Long] ~
+        (__ \ "node").read[Long] ~
+        (__ \ "type").read[String].map(toNodeType)
+    )(NodeConfig.apply _)
+
+    implicit val nodeConfigWrites: Writes[NodeConfig] = (
+        (__ \ "id").write[Long] ~
+        (__ \ "node").write[Long] ~
+        (__ \ "type").write[NodeType]
+    )(unlift(NodeConfig.unapply))
 
     implicit def nodeRootWrites: Writes[NodeRoot] = new Writes[NodeRoot] {
         def writes(n: NodeRoot) = JsString(asString(n))
@@ -49,18 +59,24 @@ package object NodeIO {
     implicit def toNodeType(s: String): NodeType = s.toLowerCase match {
         case "bool" => BoolType
         case "number" => NumberType
+        case "fraction" => FractionType
         case "string" => StringType
+        case "multiline" => MultilineType
         case "date" => DateType
-        case "node" => NodeType
+        case "datetime" => DatetimeType
+        case "enum" => EnumType
         case "list" => ListType
     }
 
     implicit def asString(nodeType: NodeType): String = nodeType match {
         case BoolType => "bool"
         case NumberType => "number"
+        case FractionType => "fraction"
         case StringType => "string"
+        case MultilineType => "multiline"
         case DateType => "date"
-        case NodeType => "node"
+        case DatetimeType => "datetime"
+        case EnumType => "enum"
         case ListType => "list"
     }
 

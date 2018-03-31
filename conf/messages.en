@@ -97,6 +97,7 @@ ui.modal.node-config.tabs.file=File
 
 ui.modal.node-config.text.single-line.title=String
 ui.modal.node-config.text.multi-line.title=Multiline
+ui.modal.node-config.text.multi-line.type=Type
 ui.modal.node-config.text.multi-line.normal=Normal
 ui.modal.node-config.text.multi-line.richtext=Richtext
 ui.modal.node-config.text.multi-line.markdown=Markdown

@@ -17,6 +17,8 @@ POST		/node/:nodeId                                   controllers.Node.createChi
 DELETE	/node/:nodeId                                   controllers.Node.deleteNode(nodeId: Long)
 PUT	    /node/:nodeId/rename                            controllers.Node.renameNode(nodeId: Long)
 PUT	    /node/:nodeId/move                              controllers.Node.moveNode(nodeId: Long)
+GET	    /node/:nodeId/configure                         controllers.Node.getNodeConfig(nodeId: Long)
+PUT	    /node/:nodeId/configure                         controllers.Node.saveNodeConfig(nodeId: Long)
 
 # VALUES
 

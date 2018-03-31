@@ -5,9 +5,12 @@ import v1.generic.Entity
 sealed trait NodeType
 case object BoolType extends NodeType
 case object NumberType extends NodeType
+case object FractionType extends NodeType
 case object StringType extends NodeType
+case object MultilineType extends NodeType
+case object EnumType extends NodeType
 case object DateType extends NodeType
-case object NodeType extends NodeType
+case object DatetimeType extends NodeType
 case object ListType extends NodeType
 
 sealed trait NodeRoot
@@ -24,7 +27,6 @@ case class Node(
     project: Long,
     name: String,
     nodeRoot: NodeRoot,
-    nodeType: NodeType,
     sort: Int,
     children: List[Node]
 ) extends Entity
@@ -47,3 +49,9 @@ case class MoveNode(
 case class RenameNode(
     name: String
 )
+
+case class NodeConfig(
+   id: Long,
+   node: Long,
+   nodeType: NodeType
+) extends Entity

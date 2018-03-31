@@ -10,7 +10,7 @@ module quill {
     import isDef           = feather.functions.isDef
     import removeFromArray = feather.arrays.removeFromArray
     import AjaxWidget      = quill.components.AjaxWidget
-    import NodeConfig      = quill.modal.NodeConfig
+    import NodeConfigModal = quill.modal.NodeConfigModal
     import ProjectConfig   = quill.modal.ProjectConfig
 
     interface RenameNode {
@@ -177,8 +177,10 @@ module quill {
             this.moveNodeCall()
         }
 
-        private configureNode() {
-            this.triggerSingleton('show-modal', new NodeConfig(this.currentTreeNode))
+        @Rest({url: '/node/{{currentTreeNode.id}}/configure', method: Method.GET, headers: quill.headers})
+        private configureNode(config?: NodeConfig) {
+            this.triggerSingleton('show-modal',
+                new NodeConfigModal(this.currentTreeNode, config))
         }
 
         private addNode() {
