@@ -1,7 +1,7 @@
 module quill {
 
-    import TreeNodeIcon = feather.ui.tree.TreeNodeIcon
-    import findClippedParent = feather.ui.findClippedParent;
+    import TreeNodeIcon      = feather.ui.tree.TreeNodeIcon
+    import findClippedParent = feather.ui.findClippedParent
 
     const urlParams = {}
 
@@ -33,10 +33,10 @@ module quill {
                 return TreeNodeIcon.enum
             case 'list':
                 return TreeNodeIcon.array
-            case 'node':
-                return TreeNodeIcon.object
             case 'boolean':
                 return TreeNodeIcon.boolean
+            default:
+                return TreeNodeIcon.config
         }
     }
 

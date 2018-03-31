@@ -6,32 +6,30 @@ module quill {
     import Template      = feather.annotations.Template
     import Construct     = feather.annotations.Construct
 
-    export interface Radio {
+    export interface Radio<T> {
         key: string
-        value: string
+        value: T
     }
 
-    export interface RadiosetConfig<T> extends FormField<T> {
-        radios: Radio[]
+    export interface RadioSetConfig<T> extends FormField<T> {
+        radios: Radio<T>[]
         selected: T
     }
 
     @Construct({selector: 'RadioSet'})
-    export class RadioSet<T> extends FormComponent<RadiosetConfig<T>> {
+    export class RadioSet<T> extends FormComponent<RadioSetConfig<T>> {
 
-        @Bind() radios: Radio[] = []
+        @Bind() radios: RadioWidget<T>[] = []
 
-        constructor(config: RadiosetConfig<T>) {
+        constructor(config: RadioSetConfig<T>) {
             super(config)
-            this.radios.splice(0, this.radios.length,
-                ...config.radios.map(rc => new RadioWidget({
-                    label: rc.key,
-                    name: config.name,
-                    checked: rc.value === config.selected,
-                    value: rc.value,
-                    onChange: (value: T) => config.onChange(value)
-
-                } as RadioConfig)))
+            const radioWidgets = config.radios.map(rc => new RadioWidget<T>({
+                label: rc.key,
+                name: config.name,
+                checked: rc.value === config.selected,
+                onChange: (value: T) => config.onChange(value)
+            }))
+            this.radios.splice(0, this.radios.length, ...radioWidgets)
         }
 
         init(element: HTMLElement) {

@@ -144,7 +144,7 @@ module quill.modal {
             </div>`
         }
 
-        multilineRadioConfig: RadiosetConfig<MultilineType> = {
+        multilineRadioConfig: RadioSetConfig<MultilineType> = {
             label: 'ui.modal.node-config.text.multi-line.type',
             name: 'multiline-type',
             selected: MultilineType.normal,
