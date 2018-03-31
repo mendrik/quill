@@ -27,14 +27,7 @@ module quill.modal {
                 ${NodeConfigModal.dateTab()}
                 ${NodeConfigModal.boolTab()}
                 ${NodeConfigModal.listTab()}
-                ${NodeConfigModal.fileTab()}
             </tabs>`
-        }
-
-        static fileTab() {
-            return `
-            <div title="ui.modal.node-config.tabs.file"
-                 icon=${TreeNodeIcon.file}></div>`
         }
 
         static listTab() {

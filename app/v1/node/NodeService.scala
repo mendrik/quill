@@ -29,7 +29,7 @@ class NodeService @Inject()(repo: NodeRepo) {
         for {
             Some(node: Node)   <- repo.findById(nodeId)
             Some(parent: Node) <- repo.findById(parentId)
-            nodes              <- repo.pathToRoot(parent) if node.nodeRoot == parent.nodeRoot
+            nodes              <- repo.pathToRoot(parent)
         } yield nodes.contains(nodeId)
     }
 }

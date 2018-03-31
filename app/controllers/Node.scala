@@ -33,7 +33,7 @@ class Node @Inject()(
         val Some(projectId) = decodeHash(hash)
         for {
             _               <- securityRules.checkRules(request.identity, ProjectOwner(hash))
-            newNode         <- successful(Node(0, projectId, node.name, Structure, node.sort, Nil))
+            newNode         <- successful(Node(0, projectId, node.name, node.sort, Nil))
             Some(node)      <- nodeService.createNode(newNode, None)
         } yield {
             Ok(Json.toJson(node))
@@ -65,19 +65,11 @@ class Node @Inject()(
         }
     }
 
-    def createSchemaNode(hash: String): Action[AnyContent] = secured { request =>
-        for {
-            _ <- securityRules.checkRules(request.identity, ProjectOwner(hash))
-        } yield {
-            Ok(Json.toJson(""))
-        }
-    }
-
     def createChildNode(parentNodeId: Long): Action[JsValue] = securedJson[NewNode] { (node, request) =>
         for {
             _            <- securityRules.checkRules(request.identity, NodeOwner(parentNodeId))
             Some(target) <- nodeService.byId(parentNodeId)
-            newNode      <- successful(Node(0, target.project, node.name, Structure, node.sort, Nil))
+            newNode      <- successful(Node(0, target.project, node.name, node.sort, Nil))
             Some(node)   <- nodeService.createNode(newNode, Some(parentNodeId))
         } yield {
             Ok(Json.toJson(node))

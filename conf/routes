@@ -10,7 +10,6 @@ GET			/project/:hash                                  controllers.Home.project(h
 # PROJECT
 GET			/projects/:hash                                 controllers.Project.project(hash: String)
 POST		/projects/:hash/structure                       controllers.Node.createStructureNode(hash: String)
-POST		/projects/:hash/schema                          controllers.Node.createSchemaNode(hash: String)
 
 # NODE
 POST		/node/:nodeId                                   controllers.Node.createChildNode(nodeId: Long)

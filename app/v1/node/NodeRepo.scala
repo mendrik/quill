@@ -37,9 +37,9 @@ class NodeRepo @Inject()(
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
-    def findByProjectAndType(project: Long, nodeRoot: NodeRoot): Future[Seq[Node]] = db.run {
+    def findByProject(project: Long): Future[Seq[Node]] = db.run {
         Nodes
-            .filter(p => p.project === project && p.nodeRoot === (nodeRoot: String))
+            .filter(p => p.project === project)
             .sortBy(_.sort.asc)
             .result
     }.map(toTree(None, _))
@@ -65,15 +65,14 @@ class NodeRepo @Inject()(
                     parent,
                     node.project,
                     node.name,
-                    node.nodeRoot,
                     sort.map(_ + 1).getOrElse(0)
                 )
         }).flatMap(findById)
 
     def update(project: Project, node: Node, parent: Option[Node]): Future[Int] =
         db.run(Nodes.filter(_.id === node.id)
-            .map(n => (n.name, n.parent, n.project, n.nodeRoot, n.sort))
-            .update((node.name, parent.map(_.id), project.id, node.nodeRoot, node.sort)))
+            .map(n => (n.name, n.parent, n.project, n.sort))
+            .update((node.name, parent.map(_.id), project.id, node.sort)))
 
     def remove(id: Long): Future[Int] =
         db.run(Nodes.filter(_.id === id).delete)
@@ -86,7 +85,7 @@ class NodeRepo @Inject()(
     def toNodes(row: Seq[NodesRow]): List[Node] = row.map(toNode).toList
 
     def toNode(row: NodesRow): Node = {
-        Node(row.id, row.project, row.name, row.nodeRoot, row.sort, Nil)
+        Node(row.id, row.project, row.name, row.sort, Nil)
     }
 
     def toTree(parent: Option[NodesRow], nodes: Seq[NodesRow]): List[Node] = {

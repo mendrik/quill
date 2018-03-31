@@ -3,26 +3,15 @@ package v1
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.libs.json.Reads._
-import v1.node._
+import v1.node.{MultilineEditor, _}
 
 package object NodeIO {
 
-
-    implicit val newNodeReads: Reads[NewNode] = Json.reads[NewNode]
-
-    implicit val renameNodeReads: Reads[RenameNode] = Json.reads[RenameNode]
-
-    implicit val moveNodeReads: Reads[MoveNode] = (
-        (__ \ "to").read[Long] ~
-        (__ \ "open").read[Boolean] ~
-        (__ \ "position").read[String].map(toPosition)
-    )(MoveNode.apply _)
 
     implicit val nodeReads: Reads[Node] = (
         (__ \ "id").read[Long] ~
         (__ \ "project").read[Long] ~
         (__ \ "name").read[String] ~
-        (__ \ "nodeRoot").read[String].map(toNodeRoot) ~
         (__ \ "sort").read[Int] ~
         (__ \ "children").lazyRead(Reads.list[Node](nodeReads))
     )(Node.apply _)
@@ -31,75 +20,98 @@ package object NodeIO {
         (__ \ "id").write[Long] ~
         (__ \ "project").write[Long] ~
         (__ \ "name").write[String] ~
-        (__ \ "rootType").write[NodeRoot] ~
         (__ \ "sort").write[Int] ~
         (__ \ "children").lazyWrite[List[Node]](Writes.list(nodeWrites))
     )(unlift(Node.unapply))
 
-    implicit val nodeConfigReads: Reads[NodeConfig] = (
-        (__ \ "id").read[Long] ~
-        (__ \ "node").read[Long] ~
-        (__ \ "type").read[String].map(toNodeType)
-    )(NodeConfig.apply _)
-
-    implicit val nodeConfigWrites: Writes[NodeConfig] = (
-        (__ \ "id").write[Long] ~
-        (__ \ "node").write[Long] ~
-        (__ \ "type").write[NodeType]
-    )(unlift(NodeConfig.unapply))
-
-    implicit def nodeRootWrites: Writes[NodeRoot] = new Writes[NodeRoot] {
-        def writes(n: NodeRoot) = JsString(asString(n))
+    implicit val nodeTypeReads: Reads[NodeType] = {
+        case JsString("string") => JsSuccess(StringType)
+        case JsString("multiline") => JsSuccess(MultilineType)
+        case JsString("number") => JsSuccess(NumberType)
+        case JsString("fraction") => JsSuccess(FractionType)
+        case JsString("bool") => JsSuccess(BoolType)
+        case JsString("date") => JsSuccess(DateType)
+        case JsString("datetime") => JsSuccess(DatetimeType)
+        case JsString("enum") => JsSuccess(EnumType)
+        case JsString("list") => JsSuccess(ListType)
     }
 
-    implicit def nodeTypeWrites: Writes[NodeType] = new Writes[NodeType] {
-        def writes(n: NodeType) = JsString(asString(n))
+    implicit val nodeTypeWrites: Writes[NodeType] = {
+        case StringType => JsString("string")
+        case MultilineType => JsString("multiline")
+        case NumberType => JsString("number")
+        case FractionType => JsString("fraction")
+        case BoolType => JsString("bool")
+        case DateType => JsString("date")
+        case DatetimeType => JsString("datetime")
+        case EnumType => JsString("enum")
+        case ListType => JsString("list")
     }
 
-    implicit def toNodeType(s: String): NodeType = s.toLowerCase match {
-        case "bool" => BoolType
-        case "number" => NumberType
-        case "fraction" => FractionType
-        case "string" => StringType
-        case "multiline" => MultilineType
-        case "date" => DateType
-        case "datetime" => DatetimeType
-        case "enum" => EnumType
-        case "list" => ListType
+    implicit val positionReads: Reads[Position] = {
+        case JsString("inside") => JsSuccess(Inside)
+        case JsString("below") => JsSuccess(Below)
+        case JsString("above") => JsSuccess(Above)
     }
 
-    implicit def asString(nodeType: NodeType): String = nodeType match {
-        case BoolType => "bool"
-        case NumberType => "number"
-        case FractionType => "fraction"
-        case StringType => "string"
-        case MultilineType => "multiline"
-        case DateType => "date"
-        case DatetimeType => "datetime"
-        case EnumType => "enum"
-        case ListType => "list"
+    implicit val positionWrites: Writes[Position] = {
+        case Inside => JsString("inside")
+        case Below => JsString("below")
+        case Above => JsString("above")
     }
 
-    implicit def toNodeRoot(s: String): NodeRoot = s.toLowerCase match {
-        case "structure" => Structure
-        case "schema" => Schema
+    implicit val multilineReads: Reads[MultilineEditor] = {
+        case JsString("normal") => JsSuccess(Normal)
+        case JsString("richtext") => JsSuccess(Richtext)
+        case JsString("markdown") => JsSuccess(Markdown)
     }
 
-    implicit def asString(nodeRoot: NodeRoot): String = nodeRoot match {
-        case Structure => "structure"
-        case Schema => "schema"
+    implicit val multilineWrites: Writes[MultilineEditor] = {
+        case Normal => JsString("normal")
+        case Richtext => JsString("richtext")
+        case Markdown => JsString("markdown")
     }
 
-    implicit def toPosition(s: String): Position = s.toLowerCase match {
-        case "inside" => Inside
-        case "below" => Below
-        case "above" => Above
+    implicit val numberReads: Reads[NumberEditor] = {
+        case JsString("input") => JsSuccess(NumberInput)
+        case JsString("slider") => JsSuccess(Slider)
     }
 
-    implicit def asString(position: Position): String = position match {
-        case Inside => "inside"
-        case Above => "above"
-        case Below => "below"
+    implicit val numberWrites: Writes[NumberEditor] = {
+        case NumberInput => JsString("input")
+        case Slider => JsString("slider")
     }
+
+    implicit val booleanReads: Reads[BooleanEditor] = {
+        case JsString("checkbox") => JsSuccess(Checkbox)
+        case JsString("switch") => JsSuccess(Switch)
+    }
+
+    implicit val booleanWrites: Writes[BooleanEditor] = {
+        case Checkbox => JsString("checkbox")
+        case Switch => JsString("switch")
+    }
+
+    implicit val moveNodeReads: Reads[MoveNode] = (
+       (__ \ "to").read[Long] ~
+       (__ \ "open").read[Boolean] ~
+       (__ \ "position").read[Position]
+    )(MoveNode.apply _)
+
+    implicit val newNodeReads: Reads[NewNode] = Json.reads[NewNode]
+    implicit val renameNodeReads: Reads[RenameNode] = Json.reads[RenameNode]
+    implicit val multilineEditorFormat: Format[MultilineEditor] = Json.format[MultilineEditor]
+    implicit val numberEditorFormat: Format[NumberEditor] = Json.format[NumberEditor]
+    implicit val booleanEditorFormat: Format[BooleanEditor] = Json.format[BooleanEditor]
+    implicit val nodeTypeFormat: Format[NodeType] = Json.format[NodeType]
+    implicit val nodeConfigStringFormat: Format[NodeConfigString] = Json.format[NodeConfigString]
+    implicit val nodeConfigMultilineFormat: Format[NodeConfigMultiline] = Json.format[NodeConfigMultiline]
+    implicit val nodeConfigNumberFormat: Format[NodeConfigNumber] = Json.format[NodeConfigNumber]
+    implicit val nodeConfigFractionFormat: Format[NodeConfigFraction] = Json.format[NodeConfigFraction]
+    implicit val nodeConfigBooleanFormat: Format[NodeConfigBoolean] = Json.format[NodeConfigBoolean]
+    implicit val nodeConfigEnumFormat: Format[NodeConfigEnum] = Json.format[NodeConfigEnum]
+    implicit val nodeConfigDateFormat: Format[NodeConfigDate] = Json.format[NodeConfigDate]
+    implicit val nodeConfigDatetimeFormat: Format[NodeConfigDatetime] = Json.format[NodeConfigDatetime]
+    implicit val nodeConfigFormat: Format[NodeConfig] = Json.format[NodeConfig]
 }
 

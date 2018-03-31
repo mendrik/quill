@@ -76,37 +76,37 @@ module quill {
         'date'      |
         'datetime'
 
-    export enum MultilineType {
+    export enum MultilineEditor {
         normal = 'normal',
         richtext = 'richtext',
         markdown = 'markdown'
     }
 
-    export enum IntegerType {
+    export enum NumberEditor {
         input = 'input',
         slider = 'slider'
     }
 
-    export enum BooleanType {
+    export enum BooleanEditor {
         checkbpx = 'checkbox',
         switch = 'switch'
     }
 
     export interface NodeConfig {
         type: NodeType,
-        multiLine: {
-            type: MultilineType
-        },
-        singleLine: {
+        string: {
             validation: string
+        },
+        multiLine: {
+            editor: MultilineEditor
         },
         enum: {
             values: string[]
         },
-        integer: {
+        number: {
             min: number,
-            max: number,
-            type: IntegerType
+            max: number
+            editor: NumberEditor
         },
         fraction: {
         },
@@ -115,12 +115,10 @@ module quill {
         datetime: {
         },
         boolean: {
-            type: BooleanType
+            editor: BooleanEditor
         },
         list: {
 
-        },
-        file: {
         }
     }
 }
