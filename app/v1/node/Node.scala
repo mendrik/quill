@@ -67,33 +67,36 @@ case class NodeConfig(
    number: NodeConfigNumber,
    fraction: NodeConfigFraction,
    boolean: NodeConfigBoolean,
-   enum: NodeConfigEnum
+   enum: NodeConfigEnum,
+   list: NodeConfigList
 ) extends Entity
 
 case class NodeConfigString(
-    validation: String
+    validation: Option[String]
 )
 case class NodeConfigMultiline(
     editor: MultilineEditor
 )
 case class NodeConfigNumber(
+    min: Option[Long],
+    max: Option[Long],
     editor: NumberEditor
 )
 case class NodeConfigBoolean(
     editor: BooleanEditor
 )
 case class NodeConfigEnum(
-    values: List[String]
+    values: Seq[String]
 )
 case class NodeConfigFraction(
-    format: String
+    format: Option[String]
 )
 case class NodeConfigDate(
-    format: String
+    format: Option[String]
 )
 case class NodeConfigDatetime(
-    format: String
+    format: Option[String]
 )
 case class NodeConfigList(
-    filter: String
+    format: Option[String]
 )

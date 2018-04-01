@@ -114,5 +114,7 @@ package object NodeIO {
     implicit val nodeConfigDateFormat: Format[NodeConfigDate] = Json.format[NodeConfigDate]
     implicit val nodeConfigDatetimeFormat: Format[NodeConfigDatetime] = Json.format[NodeConfigDatetime]
     implicit val nodeConfigFormat: Format[NodeConfig] = Json.format[NodeConfig]
+
+    implicit def traitRead[A](input: String)(implicit r: Reads[A]) = r.reads(JsString(input)).get
 }
 

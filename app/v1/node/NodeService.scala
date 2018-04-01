@@ -1,11 +1,20 @@
 package v1.node
 
 import javax.inject._
+import play.api.Configuration
+import v1.project.Project
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class NodeService @Inject()(repo: NodeRepo) {
+class NodeService @Inject()(
+  conf: Configuration,
+  repo: NodeRepo,
+  configRepo: NodeConfigRepo,
+  enumRepo: NodeConfigEnumRepo
+) {
+    val getDefaultNodeConfig: Future[NodeConfig] =
+        Future.successful(conf.get[NodeConfig]("nodeConfig"))
 
     def moveNode(nodeId: Long, move: MoveNode) = Future.successful(())
 
@@ -23,11 +32,28 @@ class NodeService @Inject()(repo: NodeRepo) {
 
     def byId(nodeId: Long): Future[Option[Node]] = repo.findById(nodeId)
 
+    def getNodeConfigByNodeId(nodeId: Long): Future[NodeConfig] =
+        (for {
+            Some(conf) <- configRepo.findByNodeId(nodeId)
+            conf <- enhance(conf)
+        } yield {
+            conf
+        })
+        .fallbackTo(getDefaultNodeConfig)
+
     def isChildNode(nodeId: Long, parentId: Long): Future[Boolean] = {
         for {
             Some(node: Node)   <- repo.findById(nodeId)
             Some(parent: Node) <- repo.findById(parentId)
             nodes              <- repo.pathToRoot(parent)
         } yield nodes.contains(nodeId)
+    }
+
+    def enhance(conf: NodeConfig): Future[NodeConfig] = {
+        for {
+            enums <- enumRepo.findByConfigId(conf.id)
+        } yield {
+            conf.copy(enum = NodeConfigEnum(enums))
+        }
     }
 }

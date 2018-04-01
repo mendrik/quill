@@ -109,16 +109,19 @@ module quill {
             editor: NumberEditor
         },
         fraction: {
+            format: string
         },
         date: {
+            format: string
         },
         datetime: {
+            format: string
         },
         boolean: {
             editor: BooleanEditor
         },
         list: {
-
+            filter: string
         }
     }
 }
