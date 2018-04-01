@@ -115,6 +115,10 @@ package object NodeIO {
     implicit val nodeConfigDatetimeFormat: Format[NodeConfigDatetime] = Json.format[NodeConfigDatetime]
     implicit val nodeConfigFormat: Format[NodeConfig] = Json.format[NodeConfig]
 
-    implicit def traitRead[A](input: String)(implicit r: Reads[A]) = r.reads(JsString(input)).get
+    implicit def traitRead[A](input: String)(implicit r: Reads[A]): A =
+        r.reads(JsString(input)).get
+
+    implicit def traitWrites[A](a: A)(implicit w: Writes[A]): String =
+        w.writes(a).toString
 }
 

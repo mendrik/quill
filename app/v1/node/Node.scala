@@ -66,6 +66,8 @@ case class NodeConfig(
    multiline: NodeConfigMultiline,
    number: NodeConfigNumber,
    fraction: NodeConfigFraction,
+   date: NodeConfigDate,
+   datetime: NodeConfigDatetime,
    boolean: NodeConfigBoolean,
    enum: NodeConfigEnum,
    list: NodeConfigList
@@ -98,5 +100,5 @@ case class NodeConfigDatetime(
     format: Option[String]
 )
 case class NodeConfigList(
-    format: Option[String]
+    filter: Option[String]
 )

@@ -69,7 +69,8 @@ lazy val dependencies = Seq(
     "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion,
     "net.codingwell" %% "scala-guice" % "4.1.0",
-    "org.scalaz" %% "scalaz-core" % "7.2.20"
+    "org.scalaz" %% "scalaz-core" % "7.2.20",
+    specs2 % Test
 )
 
 lazy val scalacOpts = Seq(

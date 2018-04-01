@@ -5,10 +5,8 @@ import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.language.implicitConversions
 import v1.NodeIO._
 
 @Singleton
@@ -30,7 +28,7 @@ class NodeConfigRepo @Inject()(
     }
 
     def createNodeConfig(conf: NodeConfig): Future[Option[NodeConfig]] =
-        db.run(NodeConfigs returning NodeConfigs.map(_.id) += conf)
+        db.run(NodeConfigs returning NodeConfigs.map(_.id) += toNodeConfigRow(conf))
             .flatMap(findById)
 
     def toNodeConfig(row: NodeConfigsRow): NodeConfig = {
@@ -42,9 +40,29 @@ class NodeConfigRepo @Inject()(
             NodeConfigMultiline(row.multilineEditor),
             NodeConfigNumber(row.numberMin, row.numberMax, row.numberEditor),
             NodeConfigFraction(row.fractionFormat),
+            NodeConfigDate(row.dateFormat),
+            NodeConfigDatetime(row.datetimeFormat),
             NodeConfigBoolean(row.booleanEdtitor),
             NodeConfigEnum(Nil),
             NodeConfigList(row.listFilter)
+        )
+    }
+
+    def toNodeConfigRow(n: NodeConfig): NodeConfigsRow = {
+        NodeConfigsRow(
+            n.id,
+            n.node,
+            n.nodeType,
+            n.string.validation,
+            n.multiline.editor,
+            n.number.min,
+            n.number.max,
+            n.number.editor,
+            n.fraction.format,
+            n.date.format,
+            n.datetime.format,
+            n.boolean.editor,
+            n.list.filter
         )
     }
 }
