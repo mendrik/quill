@@ -1,9 +1,9 @@
 package v1.node
 
 import javax.inject._
+import json.readConf
 import play.api.Configuration
-import v1.project.Project
-
+import v1.NodeIO._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -13,8 +13,9 @@ class NodeService @Inject()(
   configRepo: NodeConfigRepo,
   enumRepo: NodeConfigEnumRepo
 ) {
-    val getDefaultNodeConfig: Future[NodeConfig] =
-        Future.successful(conf.get[NodeConfig]("nodeConfig"))
+    val getDefaultNodeConfig: Future[NodeConfig] = Future.successful {
+        readConf[NodeConfig](conf, "nodeConfig")
+    }
 
     def moveNode(nodeId: Long, move: MoveNode) = Future.successful(())
 

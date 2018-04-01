@@ -1,3 +1,6 @@
+import com.typesafe.config.ConfigRenderOptions
+import play.api.Configuration
+import play.api.libs.json.JsResult.Exception
 import play.api.libs.json.Reads._
 import play.api.libs.json.{Reads, _}
 
@@ -27,4 +30,15 @@ package object json {
 
     }
 
+
+    def readConf[A](conf: Configuration, key: String)
+                   (implicit r: Reads[A]): A = {
+        val json = conf.get[Configuration](key).underlying.root()
+            .render(ConfigRenderOptions.concise())
+        Json.parse(json).validate[A](r) match {
+            case JsSuccess(conf, _) => conf
+            case JsError(errors) =>
+                throw Exception(JsError(errors))
+        }
+    }
 }
