@@ -113,12 +113,22 @@ package object NodeIO {
     implicit val nodeConfigEnumFormat: Format[NodeConfigEnum] = Json.format[NodeConfigEnum]
     implicit val nodeConfigDateFormat: Format[NodeConfigDate] = Json.format[NodeConfigDate]
     implicit val nodeConfigDatetimeFormat: Format[NodeConfigDatetime] = Json.format[NodeConfigDatetime]
+    implicit val nodeConfigListFormat: Format[NodeConfigList] = Json.format[NodeConfigList]
     implicit val nodeConfigFormat: Format[NodeConfig] = Json.format[NodeConfig]
 
-    implicit def traitRead[A](input: String)(implicit r: Reads[A]): A =
-        r.reads(JsString(input)).get
+    implicit class StringOps(string: String) {
 
-    implicit def traitWrites[A](a: A)(implicit w: Writes[A]): String =
-        w.writes(a).toString
+        def toTrait[A](implicit r: Reads[A]): A =
+            r.reads(JsString(string)).get
+
+    }
+
+    implicit class TraitOps[A](input: A) {
+
+        def toString(implicit w: Writes[A]): String =
+            w.writes(input).toString
+
+    }
+
 }
 

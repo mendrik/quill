@@ -35,14 +35,17 @@ class NodeConfigRepo @Inject()(
         NodeConfig(
             row.id,
             row.node,
-            row.nodeType,
+            row.nodeType.toTrait[NodeType],
             NodeConfigString(row.stringValidation),
-            NodeConfigMultiline(row.multilineEditor),
-            NodeConfigNumber(row.numberMin, row.numberMax, row.numberEditor),
+            NodeConfigMultiline(row.multilineEditor.toTrait[MultilineEditor]),
+            NodeConfigNumber(
+                row.numberMin,
+                row.numberMax,
+                row.numberEditor.toTrait[NumberEditor]),
             NodeConfigFraction(row.fractionFormat),
             NodeConfigDate(row.dateFormat),
             NodeConfigDatetime(row.datetimeFormat),
-            NodeConfigBoolean(row.booleanEdtitor),
+            NodeConfigBoolean(row.booleanEdtitor.toTrait[BooleanEditor]),
             NodeConfigEnum(Nil),
             NodeConfigList(row.listFilter)
         )
@@ -52,16 +55,16 @@ class NodeConfigRepo @Inject()(
         NodeConfigsRow(
             n.id,
             n.node,
-            n.nodeType,
+            n.nodeType.toString,
             n.string.validation,
-            n.multiline.editor,
+            n.multiline.editor.toString,
             n.number.min,
             n.number.max,
-            n.number.editor,
+            n.number.editor.toString,
             n.fraction.format,
             n.date.format,
             n.datetime.format,
-            n.boolean.editor,
+            n.boolean.editor.toString,
             n.list.filter
         )
     }
