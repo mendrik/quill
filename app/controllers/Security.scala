@@ -119,9 +119,7 @@ class Security @Inject()(
             mailer.forgotPassword(user.email, link = routes.Security.changePasswordPage(token.id).absoluteURL())
             Ok
         })
-        .fallbackTo {
-            Unauthorized(Json.toJson(userNotFoundError))
-        }
+        .fallbackTo (Unauthorized(Json.toJson(userNotFoundError)))
     }
 
     def changePasswordPage(id: String): Action[AnyContent] = Action.async { implicit request =>
@@ -135,7 +133,7 @@ class Security @Inject()(
                 Ok(views.html.index(conf, assetFinder))
             }
         })
-        .fallbackTo(Redirect("/404"))
+        .fallbackTo (Redirect("/404"))
     }
 
     def changePassword: Action[JsValue] = Actions.json[PasswordChange] { (pc, r) =>
@@ -150,7 +148,7 @@ class Security @Inject()(
             mailTokenService.consume(pc.id)
             result
         })
-        .fallbackTo(Unauthorized)
+        .fallbackTo (Unauthorized)
     }
 
     private def updatedAuthenticator(a: BearerTokenAuthenticator) = a.copy(

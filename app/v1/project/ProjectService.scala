@@ -37,7 +37,9 @@ class ProjectService @Inject()(
         } yield {
             project
         })
-        .fallbackTo(createProject(user))
+        .recoverWith { case _: Throwable =>
+            createProject(user)
+        }
     }
 
     def userInProject(user: Long, project: Long): Future[Boolean] = {
