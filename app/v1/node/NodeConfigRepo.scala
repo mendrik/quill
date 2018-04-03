@@ -5,9 +5,9 @@ import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
+import v1.NodeIO._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import v1.NodeIO._
 
 @Singleton
 class NodeConfigRepo @Inject()(
@@ -27,44 +27,75 @@ class NodeConfigRepo @Inject()(
             .headOption.map(_.map(toNodeConfig))
     }
 
-    def createNodeConfig(conf: NodeConfig): Future[Option[NodeConfig]] =
-        db.run(NodeConfigs returning NodeConfigs.map(_.id) += toNodeConfigRow(conf))
+    def createNodeConfig(nodeId: Long, conf: NodeConfig): Future[Option[NodeConfig]] =
+        db.run(NodeConfigs returning NodeConfigs.map(_.id) += toNodeConfigRow(nodeId, conf))
             .flatMap(findById)
+
+    def update(conf: NodeConfig): Future[Int] = db.run {
+        NodeConfigs
+            .filter(_.id === conf.id)
+            .map(p => (
+                p.nodeType,
+                p.stringValidation,
+                p.multilineEditor,
+                p.numberMin,
+                p.numberMax,
+                p.numberEditor,
+                p.fractionFormat,
+                p.dateFormat,
+                p.datetimeFormat,
+                p.booleanEdtitor,
+                p.listFilter
+            ))
+            .update((
+                conf.nodeType,
+                conf.string.validation,
+                conf.multiline.editor,
+                conf.number.min,
+                conf.number.max,
+                conf.number.editor,
+                conf.fraction.format,
+                conf.date.format,
+                conf.datetime.format,
+                conf.boolean.editor,
+                conf.list.filter
+            ))
+    }
+
 
     def toNodeConfig(row: NodeConfigsRow): NodeConfig = {
         NodeConfig(
             row.id,
-            row.node,
-            row.nodeType.toTrait[NodeType],
+            row.nodeType,
             NodeConfigString(row.stringValidation),
-            NodeConfigMultiline(row.multilineEditor.toTrait[MultilineEditor]),
+            NodeConfigMultiline(row.multilineEditor),
             NodeConfigNumber(
                 row.numberMin,
                 row.numberMax,
-                row.numberEditor.toTrait[NumberEditor]),
+                row.numberEditor),
             NodeConfigFraction(row.fractionFormat),
             NodeConfigDate(row.dateFormat),
             NodeConfigDatetime(row.datetimeFormat),
-            NodeConfigBoolean(row.booleanEdtitor.toTrait[BooleanEditor]),
+            NodeConfigBoolean(row.booleanEdtitor),
             NodeConfigEnum(Nil),
             NodeConfigList(row.listFilter)
         )
     }
 
-    def toNodeConfigRow(n: NodeConfig): NodeConfigsRow = {
+    def toNodeConfigRow(nodeId: Long, n: NodeConfig): NodeConfigsRow = {
         NodeConfigsRow(
             n.id,
-            n.node,
-            n.nodeType.toString,
+            nodeId,
+            n.nodeType,
             n.string.validation,
-            n.multiline.editor.toString,
+            n.multiline.editor,
             n.number.min,
             n.number.max,
-            n.number.editor.toString,
+            n.number.editor,
             n.fraction.format,
             n.date.format,
             n.datetime.format,
-            n.boolean.editor.toString,
+            n.boolean.editor,
             n.list.filter
         )
     }

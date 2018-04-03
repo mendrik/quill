@@ -1,9 +1,8 @@
 package v1.node
 
 import javax.inject._
-import json.readConf
 import play.api.Configuration
-import v1.NodeIO._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -13,19 +12,16 @@ class NodeService @Inject()(
   configRepo: NodeConfigRepo,
   enumRepo: NodeConfigEnumRepo
 ) {
-    val getDefaultNodeConfig: Future[NodeConfig] = Future.successful {
-        readConf[NodeConfig](conf, "nodeConfig")
-    }
 
-    def moveNode(nodeId: Long, move: MoveNode) = Future.successful(())
+    def moveNode(nodeId: Long, move: MoveNode): Future[Unit] = Future.successful(())
 
-    def createNode(node: Node, parent: Option[Long]) =
+    def createNode(node: Node, parent: Option[Long]): Future[Option[Node]] =
         repo.createNode(node, parent)
 
-    def deleteNode(nodeId: Long) =
+    def deleteNode(nodeId: Long): Future[Int] =
         repo.remove(nodeId)
 
-    def renameNode(nodeId: Long, name: String) =
+    def renameNode(nodeId: Long, name: String): Future[Int] =
         repo.rename(nodeId, name)
 
     def structureNodes(project: Long): Future[Seq[Node]] =
@@ -33,14 +29,45 @@ class NodeService @Inject()(
 
     def byId(nodeId: Long): Future[Option[Node]] = repo.findById(nodeId)
 
-    def getNodeConfigByNodeId(nodeId: Long): Future[NodeConfig] =
+    def createNodeConfig(nodeId: Long): Future[NodeConfig] = {
+        for (
+            Some(conf) <- configRepo.createNodeConfig(
+                nodeId,
+                NodeConfig(
+                    0,
+                    StringType,
+                    NodeConfigString(None),
+                    NodeConfigMultiline(Normal),
+                    NodeConfigNumber(None, None, NumberInput),
+                    NodeConfigFraction(None),
+                    NodeConfigDate(None),
+                    NodeConfigDatetime(None),
+                    NodeConfigBoolean(Switch),
+                    NodeConfigEnum(Nil),
+                    NodeConfigList(None)
+               )
+            )
+        ) yield conf
+    }
+
+    def updateNodeConfig(conf: NodeConfig): Future[NodeConfig] = {
+        for {
+            _ <- configRepo.update(conf)
+            _ <- enumRepo.deleteByConfId(conf.id)
+            _ <- enumRepo.insertAll(conf.enum)
+        } yield {
+            conf
+        }
+    }
+
+    def nodeConfigByNodeId(nodeId: Long): Future[NodeConfig] =
         (for {
             Some(conf) <- configRepo.findByNodeId(nodeId)
-            conf <- enhance(conf)
+            conf       <- enhance(conf)
         } yield {
             conf
         })
-        .fallbackTo(getDefaultNodeConfig)
+        .fallbackTo(createNodeConfig(nodeId))
 
     def isChildNode(nodeId: Long, parentId: Long): Future[Boolean] = {
         for {

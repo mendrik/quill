@@ -16,7 +16,7 @@ module quill {
         selected: T
     }
 
-    @Construct({selector: 'RadioSet'})
+    @Construct({selector: 'RadioSet', attributes: ['config']})
     export class RadioSet<T> extends FormComponent<RadioSetConfig<T>> {
 
         @Bind() radios: RadioWidget<T>[] = []

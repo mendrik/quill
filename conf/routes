@@ -17,7 +17,7 @@ DELETE	/node/:nodeId                                   controllers.Node.deleteNo
 PUT	    /node/:nodeId/rename                            controllers.Node.renameNode(nodeId: Long)
 PUT	    /node/:nodeId/move                              controllers.Node.moveNode(nodeId: Long)
 GET	    /node/:nodeId/configure                         controllers.Node.getNodeConfig(nodeId: Long)
-PUT	    /node/:nodeId/configure                         controllers.Node.saveNodeConfig(nodeId: Long)
+PUT	    /node/:nodeId/configure                         controllers.Node.updateNodeConfig(nodeId: Long)
 
 # VALUES
 

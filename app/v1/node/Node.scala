@@ -2,7 +2,25 @@ package v1.node
 
 import v1.generic.Entity
 
-sealed trait NodeType
+sealed trait WritableTrait {
+    val name: String
+}
+
+// ---
+
+sealed trait NodeType extends WritableTrait {
+    override val name: String = this match {
+        case StringType => "string"
+        case MultilineType => "text"
+        case NumberType => "number"
+        case FractionType => "fraction"
+        case BoolType => "boolean"
+        case DateType => "date"
+        case DatetimeType => "datetime"
+        case EnumType => "enum"
+        case ListType => "list"
+    }
+}
 case object StringType extends NodeType
 case object MultilineType extends NodeType
 case object NumberType extends NodeType
@@ -13,21 +31,51 @@ case object DatetimeType extends NodeType
 case object EnumType extends NodeType
 case object ListType extends NodeType
 
-sealed trait Position
+// ---
+
+sealed trait Position extends WritableTrait {
+    override val name: String = this match {
+        case Inside => "inside"
+        case Above => "above"
+        case Below => "below"
+    }
+}
 case object Inside extends Position
 case object Above extends Position
 case object Below extends Position
 
-sealed trait MultilineEditor
+// ---
+
+sealed trait MultilineEditor extends WritableTrait {
+    override val name: String = this match {
+        case Normal => "normal"
+        case Richtext => "richtext"
+        case Markdown => "markdown"
+    }
+}
 case object Normal extends MultilineEditor
 case object Richtext extends MultilineEditor
 case object Markdown extends MultilineEditor
 
-sealed trait NumberEditor
+// ---
+
+sealed trait NumberEditor extends WritableTrait {
+    override val name: String = this match {
+        case NumberInput => "input"
+        case Slider => "slider"
+    }
+}
 case object NumberInput extends NumberEditor
 case object Slider extends NumberEditor
 
-sealed trait BooleanEditor
+// ---
+
+sealed trait BooleanEditor extends WritableTrait {
+    override val name: String = this match {
+        case Checkbox => "checkbox"
+        case Switch => "switch"
+    }
+}
 case object Checkbox extends BooleanEditor
 case object Switch extends BooleanEditor
 
@@ -60,7 +108,6 @@ case class RenameNode(
 
 case class NodeConfig(
    id: Long,
-   node: Long,
    nodeType: NodeType,
    string: NodeConfigString,
    multiline: NodeConfigMultiline,

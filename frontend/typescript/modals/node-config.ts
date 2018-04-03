@@ -133,24 +133,24 @@ module quill.modal {
             return `
             <div title="ui.modal.node-config.text.multi-line.title"
                  icon="align-justify">
-                <RadioSet config={this.multilineRadioConfig}/>
+                <RadioSet config={multilineRadioConfig}/>
             </div>`
         }
 
-        multilineRadioConfig: RadioSetConfig<MultilineType> = {
+        multilineRadioConfig: RadioSetConfig<MultilineEditor> = {
             label: 'ui.modal.node-config.text.multi-line.type',
             name: 'multiline-type',
-            selected: MultilineType.normal,
+            selected: MultilineEditor.normal,
             radios: [
                 {key: 'ui.modal.node-config.text.multi-line.normal',
-                    value: MultilineType.normal},
+                    value: MultilineEditor.normal},
                 {key: 'ui.modal.node-config.text.multi-line.richtext',
-                    value: MultilineType.richtext},
+                    value: MultilineEditor.richtext},
                 {key: 'ui.modal.node-config.text.multi-line.markdown',
-                    value: MultilineType.markdown}
+                    value: MultilineEditor.markdown}
             ],
-            onChange: (value: MultilineType) =>
-                this.nodeConfig.multiLine.type = value
+            onChange: (value: MultilineEditor) =>
+                this.nodeConfig.multiLine.editor = value
         }
     }
 }

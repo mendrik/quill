@@ -51,15 +51,17 @@ class Node @Inject()(
 
     def getNodeConfig(nodeId: Long): Action[AnyContent] = secured { request =>
         for {
-            _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
+            _    <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
+            conf <- nodeService.nodeConfigByNodeId(nodeId)
         } yield {
-            Ok(Json.toJson(""))
+            Ok(Json.toJson(conf))
         }
     }
 
-    def saveNodeConfig(nodeId: Long): Action[JsValue] = securedJson[NodeConfig] { (nodeConfig, request) =>
+    def updateNodeConfig(nodeId: Long): Action[JsValue] = securedJson[NodeConfig] { (nodeConfig, request) =>
         for {
             _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
+            nodeConf <- nodeService.updateNodeConfig(nodeConfig)
         } yield {
             Ok(Json.toJson(nodeConfig))
         }

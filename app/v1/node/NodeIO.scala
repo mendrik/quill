@@ -7,7 +7,6 @@ import v1.node.{MultilineEditor, _}
 
 package object NodeIO {
 
-
     implicit val nodeReads: Reads[Node] = (
         (__ \ "id").read[Long] ~
         (__ \ "project").read[Long] ~
@@ -25,76 +24,62 @@ package object NodeIO {
     )(unlift(Node.unapply))
 
     implicit val nodeTypeReads: Reads[NodeType] = {
-        case JsString("string") => JsSuccess(StringType)
-        case JsString("multiline") => JsSuccess(MultilineType)
-        case JsString("number") => JsSuccess(NumberType)
-        case JsString("fraction") => JsSuccess(FractionType)
-        case JsString("boolean") => JsSuccess(BoolType)
-        case JsString("date") => JsSuccess(DateType)
-        case JsString("datetime") => JsSuccess(DatetimeType)
-        case JsString("enum") => JsSuccess(EnumType)
-        case JsString("list") => JsSuccess(ListType)
+        case JsString(StringType.name) => JsSuccess(StringType)
+        case JsString(MultilineType.name) => JsSuccess(MultilineType)
+        case JsString(NumberType.name) => JsSuccess(NumberType)
+        case JsString(FractionType.name) => JsSuccess(FractionType)
+        case JsString(BoolType.name) => JsSuccess(BoolType)
+        case JsString(DateType.name) => JsSuccess(DateType)
+        case JsString(DatetimeType.name) => JsSuccess(DatetimeType)
+        case JsString(EnumType.name) => JsSuccess(EnumType)
+        case JsString(ListType.name) => JsSuccess(ListType)
         case _ => JsError()
     }
 
     implicit val nodeTypeWrites: Writes[NodeType] = {
-        case StringType => JsString("string")
-        case MultilineType => JsString("multiline")
-        case NumberType => JsString("number")
-        case FractionType => JsString("fraction")
-        case BoolType => JsString("boolean")
-        case DateType => JsString("date")
-        case DatetimeType => JsString("datetime")
-        case EnumType => JsString("enum")
-        case ListType => JsString("list")
+        case n: NodeType => JsString(n.name)
     }
 
     implicit val positionReads: Reads[Position] = {
-        case JsString("inside") => JsSuccess(Inside)
-        case JsString("below") => JsSuccess(Below)
-        case JsString("above") => JsSuccess(Above)
+        case JsString(Inside.name) => JsSuccess(Inside)
+        case JsString(Below.name) => JsSuccess(Below)
+        case JsString(Above.name) => JsSuccess(Above)
         case _ => JsError()
     }
 
     implicit val positionWrites: Writes[Position] = {
-        case Inside => JsString("inside")
-        case Below => JsString("below")
-        case Above => JsString("above")
+        case p: Position => JsString(p.name)
     }
 
     implicit val multilineReads: Reads[MultilineEditor] = {
-        case JsString("normal") => JsSuccess(Normal)
-        case JsString("richtext") => JsSuccess(Richtext)
-        case JsString("markdown") => JsSuccess(Markdown)
+        case JsString(Normal.name) => JsSuccess(Normal)
+        case JsString(Richtext.name) => JsSuccess(Richtext)
+        case JsString(Markdown.name) => JsSuccess(Markdown)
         case _ => JsError()
     }
 
     implicit val multilineWrites: Writes[MultilineEditor] = {
-        case Normal => JsString("normal")
-        case Richtext => JsString("richtext")
-        case Markdown => JsString("markdown")
+        case m: MultilineEditor => JsString(m.name)
     }
 
     implicit val numberReads: Reads[NumberEditor] = {
-        case JsString("input") => JsSuccess(NumberInput)
-        case JsString("slider") => JsSuccess(Slider)
+        case JsString(NumberInput.name) => JsSuccess(NumberInput)
+        case JsString(Slider.name) => JsSuccess(Slider)
         case _ => JsError()
     }
 
     implicit val numberWrites: Writes[NumberEditor] = {
-        case NumberInput => JsString("input")
-        case Slider => JsString("slider")
+        case n: NumberEditor => JsString(n.name)
     }
 
     implicit val booleanReads: Reads[BooleanEditor] = {
-        case JsString("checkbox") => JsSuccess(Checkbox)
-        case JsString("switch") => JsSuccess(Switch)
+        case JsString(Checkbox.name) => JsSuccess(Checkbox)
+        case JsString(Switch.name) => JsSuccess(Switch)
         case _ => JsError()
     }
 
     implicit val booleanWrites: Writes[BooleanEditor] = {
-        case Checkbox => JsString("checkbox")
-        case Switch => JsString("switch")
+        case b: BooleanEditor => JsString(b.name)
     }
 
     implicit val moveNodeReads: Reads[MoveNode] = (
@@ -116,19 +101,12 @@ package object NodeIO {
     implicit val nodeConfigListFormat: Format[NodeConfigList] = Json.format[NodeConfigList]
     implicit val nodeConfigFormat: Format[NodeConfig] = Json.format[NodeConfig]
 
-    implicit class StringOps(string: String) {
+    implicit def multilineFromString[A <: MultilineEditor](str: String)(implicit r: Reads[A]): A = r.reads(JsString(str)).get
+    implicit def nodeTypeFromString[A <: NodeType](str: String)(implicit r: Reads[A]): A = r.reads(JsString(str)).get
+    implicit def numberFromString[A <: NumberEditor](str: String)(implicit r: Reads[A]): A = r.reads(JsString(str)).get
+    implicit def booleanFromString[A <: BooleanEditor](str: String)(implicit r: Reads[A]): A = r.reads(JsString(str)).get
 
-        def toTrait[A](implicit r: Reads[A]): A =
-            r.reads(JsString(string)).get
-
-    }
-
-    implicit class TraitOps[A](input: A) {
-
-        def toString(implicit w: Writes[A]): String =
-            w.writes(input).toString
-
-    }
+    implicit def traitToString[A <: WritableTrait](a: A): String = a.name
 
 }
 
