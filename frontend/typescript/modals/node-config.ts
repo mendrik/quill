@@ -1,7 +1,10 @@
 module quill.modal {
 
-    import Template = feather.annotations.Template
+    import Template     = feather.annotations.Template
     import TreeNodeIcon = feather.ui.tree.TreeNodeIcon
+    import Subscribe    = feather.hub.Subscribe
+    import Tab          = feather.ui.Tab
+    import Tabs         = feather.ui.Tabs
 
     export class NodeConfigModal extends ModalWidget {
 
@@ -16,6 +19,32 @@ module quill.modal {
 
         getTitle () {
             return 'ui.modal.node-config.title'
+        }
+
+        @Subscribe('activate-tab')
+        onTabClicked(tab: Tab) {
+            const text = tab.text.substr('ui.modal.node-config.'.length)
+            if (text.startsWith('tabs.')) { // activate first tab
+                this.childWidgets.filter(t => t instanceof Tabs && t.childWidgets.length === 2).forEach(tab => {
+                    tab.triggerDown('activate-tab', tab.childWidgets[0])
+                })
+            }
+            switch (text) {
+                case 'tabs.text': this.nodeConfig.type = 'string'; break
+                case 'text.single-line.title': this.nodeConfig.type = 'string'; break
+                case 'text.multi-line.title': this.nodeConfig.type = 'text'; break
+                case 'tabs.number': this.nodeConfig.type = 'number'; break
+                case 'number.integer.title': this.nodeConfig.type = 'number'; break
+                case 'number.fraction.title': this.nodeConfig.type = 'fraction'; break
+                case 'tabs.date': this.nodeConfig.type = 'date'; break
+                case 'date.title': this.nodeConfig.type = 'date'; break
+                case 'datetime.title': this.nodeConfig.type = 'datetime'; break
+                case 'tabs.boolean': this.nodeConfig.type = 'boolean'; break
+                case 'tabs.list': this.nodeConfig.type = 'list'; break
+                case 'list.title': this.nodeConfig.type = 'list'; break
+                case 'enumeration.title': this.nodeConfig.type = 'enum'; break
+            }
+            console.log(this.nodeConfig.type)
         }
 
         @Template()
@@ -63,13 +92,13 @@ module quill.modal {
 
         dateTab() {
             return `
-                <div title="ui.modal.node-config.tabs.date"
-                     icon=${TreeNodeIcon.date}>
-                    <tabs class="vertical">
-                        ${this.date()}
-                        ${this.datetime()}
-                    </tabs>
-                </div>`
+            <div title="ui.modal.node-config.tabs.date"
+                 icon=${TreeNodeIcon.date}>
+                <tabs class="vertical">
+                    ${this.date()}
+                    ${this.datetime()}
+                </tabs>
+            </div>`
         }
 
         date() {
@@ -113,13 +142,13 @@ module quill.modal {
 
         textTab() {
             return `
-                <div title="ui.modal.node-config.tabs.text"
-                     icon=${TreeNodeIcon.text} active>
-                    <tabs class="vertical">
-                        ${this.singleLine()}
-                        ${this.multiLine()}
-                    </tabs>
-                </div>`
+            <div title="ui.modal.node-config.tabs.text"
+                 icon=${TreeNodeIcon.text} active>
+                <tabs class="vertical">
+                    ${this.singleLine()}
+                    ${this.multiLine()}
+                </tabs>
+            </div>`
         }
 
         singleLine() {

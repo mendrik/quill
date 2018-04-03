@@ -67,7 +67,7 @@ module quill {
 
     export type NodeType =
         'string'    |
-        'multiline' |
+        'text'      |
         'number'    |
         'fraction'  |
         'enum'      |
