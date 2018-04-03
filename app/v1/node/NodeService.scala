@@ -62,12 +62,15 @@ class NodeService @Inject()(
 
     def nodeConfigByNodeId(nodeId: Long): Future[NodeConfig] =
         (for {
-            Some(conf) <- configRepo.findByNodeId(nodeId)
-            conf       <- enhance(conf)
+            Some(c) <- configRepo.findByNodeId(nodeId)
+            conf    <- enhance(c)
         } yield {
             conf
         })
-        .fallbackTo(createNodeConfig(nodeId))
+        .fallbackTo {
+            // why do we get here?
+            createNodeConfig(nodeId)
+        }
 
     def isChildNode(nodeId: Long, parentId: Long): Future[Boolean] = {
         for {

@@ -133,7 +133,8 @@ module quill.modal {
             return `
             <div title="ui.modal.node-config.text.multi-line.title"
                  icon="align-justify">
-                <RadioSet config={multilineRadioConfig} selected={nodeConfig.multiline.editor}/>
+                <RadioSet config={multilineRadioConfig}
+                          selected={nodeConfig.multiline.editor}/>
             </div>`
         }
 
