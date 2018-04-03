@@ -97,7 +97,7 @@ module quill {
         string: {
             validation: string
         },
-        multiLine: {
+        multiline: {
             editor: MultilineEditor
         },
         enum: {

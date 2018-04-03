@@ -8,6 +8,7 @@ module quill {
 
     export interface RadioConfig<T> extends FormField<T> {
         checked: boolean
+        order: number
     }
 
     export class RadioWidget<T> extends FormComponent<RadioConfig<T>> {
@@ -15,10 +16,12 @@ module quill {
         input: HTMLInputElement
         @Bind() label: string
         @Bind() checked: boolean
+        id: string
 
         constructor(config: RadioConfig<T>) {
             super(config)
             this.checked = config.checked
+            this.id = `${config.name}-${config.order}`
         }
 
         @On({event: 'change', selector: 'label + label'})
@@ -28,7 +31,6 @@ module quill {
         }
 
         init(element: HTMLElement) {
-            this.render()
             this.input = element.querySelector('input')
         }
 
@@ -38,8 +40,10 @@ module quill {
             <div class="field">
                <input class="is-checkradio has-no-border"
                       type="radio"
-                      {{config.checked}}>
-               <label for="multiline-normal">
+                      id={id}
+                      name={config.name}
+                      {{checked}}>
+               <label for={id}>
                   {{config.label:translate}}
                </label>
             </div>`

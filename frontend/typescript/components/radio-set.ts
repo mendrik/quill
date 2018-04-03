@@ -13,20 +13,20 @@ module quill {
 
     export interface RadioSetConfig<T> extends FormField<T> {
         radios: Radio<T>[]
-        selected: T
     }
 
-    @Construct({selector: 'RadioSet', attributes: ['config']})
+    @Construct({selector: 'RadioSet', attributes: ['config', 'selected']})
     export class RadioSet<T> extends FormComponent<RadioSetConfig<T>> {
 
         @Bind() radios: RadioWidget<T>[] = []
 
-        constructor(config: RadioSetConfig<T>) {
+        constructor(config: RadioSetConfig<T>, selected: T) {
             super(config)
-            const radioWidgets = config.radios.map(rc => new RadioWidget<T>({
+            const radioWidgets = config.radios.map((rc, order) => new RadioWidget<T>({
                 label: rc.key,
                 name: config.name,
-                checked: rc.value === config.selected,
+                checked: rc.value === selected,
+                order,
                 onChange: (value: T) => config.onChange(value)
             }))
             this.radios.splice(0, this.radios.length, ...radioWidgets)

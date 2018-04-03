@@ -22,125 +22,124 @@ module quill.modal {
         markup() {
             return `
             <tabs tabs-class="is-boxed">
-                ${NodeConfigModal.textTab()}
-                ${NodeConfigModal.numberTab()}
-                ${NodeConfigModal.dateTab()}
-                ${NodeConfigModal.boolTab()}
-                ${NodeConfigModal.listTab()}
+                ${this.textTab()}
+                ${this.numberTab()}
+                ${this.dateTab()}
+                ${this.boolTab()}
+                ${this.listTab()}
             </tabs>`
         }
 
-        static listTab() {
+        listTab() {
             return `
             <div title="ui.modal.node-config.tabs.list"
                  icon=${TreeNodeIcon.array}>
                  <tabs class="vertical">
-                    ${NodeConfigModal.infiniteList()}
-                    ${NodeConfigModal.enumeration()}
+                    ${this.infiniteList()}
+                    ${this.enumeration()}
                 </tabs>
             </div>`
         }
 
-        static infiniteList() {
+        infiniteList() {
             return `
             <div title="ui.modal.node-config.list.title" icon="database" active>
                 ABC
             </div>`
         }
 
-        static enumeration() {
+        enumeration() {
             return `
             <div title="ui.modal.node-config.enumeration.title" icon="list-alt">
                 ABC
             </div>`
         }
 
-        static boolTab() {
+        boolTab() {
             return `
             <div title="ui.modal.node-config.tabs.boolean"
                  icon=${TreeNodeIcon.boolean}></div>`
         }
 
-        static dateTab() {
+        dateTab() {
             return `
                 <div title="ui.modal.node-config.tabs.date"
                      icon=${TreeNodeIcon.date}>
                     <tabs class="vertical">
-                        ${NodeConfigModal.date()}
-                        ${NodeConfigModal.datetime()}
+                        ${this.date()}
+                        ${this.datetime()}
                     </tabs>
                 </div>`
         }
 
-        static date() {
+        date() {
             return `
             <div title="ui.modal.node-config.date.title" icon="calendar" active>
                 ABC
             </div>`
         }
 
-        static datetime() {
+        datetime() {
             return `
             <div title="ui.modal.node-config.datetime.title" icon="clock-o">
                 ABC
             </div>`
         }
 
-        static numberTab() {
+        numberTab() {
             return `
                 <div title="ui.modal.node-config.tabs.number"
                      icon=${TreeNodeIcon.number}>
                     <tabs class="vertical">
-                        ${NodeConfigModal.integer()}
-                        ${NodeConfigModal.fractions()}
+                        ${this.integer()}
+                        ${this.fractions()}
                     </tabs>
                 </div>`
         }
 
-        static integer() {
+        integer() {
             return `
             <div title="ui.modal.node-config.number.integer.title" icon="thermometer" active>
                 ABC
             </div>`
         }
 
-        static fractions() {
+        fractions() {
             return `
             <div title="ui.modal.node-config.number.fraction.title" icon="pie-chart">
                 ABC
             </div>`
         }
 
-        static textTab() {
+        textTab() {
             return `
                 <div title="ui.modal.node-config.tabs.text"
                      icon=${TreeNodeIcon.text} active>
                     <tabs class="vertical">
-                        ${NodeConfigModal.singleLine()}
-                        ${NodeConfigModal.multiLine()}
+                        ${this.singleLine()}
+                        ${this.multiLine()}
                     </tabs>
                 </div>`
         }
 
-        static singleLine() {
+        singleLine() {
             return `
             <div title="ui.modal.node-config.text.single-line.title" icon="font" active>
                 ABC
             </div>`
         }
 
-        static multiLine() {
+        multiLine() {
             return `
             <div title="ui.modal.node-config.text.multi-line.title"
                  icon="align-justify">
-                <RadioSet config={multilineRadioConfig}/>
+                <RadioSet config={multilineRadioConfig} selected={nodeConfig.multiline.editor}/>
             </div>`
         }
 
         multilineRadioConfig: RadioSetConfig<MultilineEditor> = {
             label: 'ui.modal.node-config.text.multi-line.type',
             name: 'multiline-type',
-            selected: MultilineEditor.normal,
             radios: [
                 {key: 'ui.modal.node-config.text.multi-line.normal',
                     value: MultilineEditor.normal},
@@ -150,7 +149,7 @@ module quill.modal {
                     value: MultilineEditor.markdown}
             ],
             onChange: (value: MultilineEditor) =>
-                this.nodeConfig.multiLine.editor = value
+                this.nodeConfig.multiline.editor = value
         }
     }
 }
