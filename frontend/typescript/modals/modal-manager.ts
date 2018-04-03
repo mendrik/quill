@@ -53,6 +53,7 @@ module quill.modal {
             (modal.element as HTMLElement).focus()
         }
 
+        @Subscribe('close-modal')
         @On({event: 'mousedown', selector: '.modal-background'})
         close() {
             this.showing = false
@@ -64,6 +65,11 @@ module quill.modal {
         @On({event: 'click', selector: 'button.cancel,button.delete'})
         closeButtons() {
             this.close()
+        }
+
+        @On({event: 'click', selector: 'button.ok'})
+        okClicked() {
+            this.triggerDown('ok-clicked')
         }
 
         @Template()

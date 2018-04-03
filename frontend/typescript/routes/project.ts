@@ -194,7 +194,7 @@ module quill {
 
         @On({event: 'keydown', selector: '.tree-view'})
         keyEvent(ev: KeyboardEvent) {
-            if (/[+c]|(left|right|up|down|enter)$/i.test(ev.key) &&
+            if (isDef(this.currentTreeNode) && /[+c]|(left|right|up|down|enter)$/i.test(ev.key) &&
                 matches(document.activeElement, 'li.tree-node')) {
                 ev.preventDefault()
                 if ('+' === ev.key) {

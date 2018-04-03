@@ -5,6 +5,7 @@ module quill.modal {
     import Subscribe    = feather.hub.Subscribe
     import Tab          = feather.ui.Tab
     import Tabs         = feather.ui.Tabs
+    import NodeType = quill.NodeType
 
     export class NodeConfigModal extends ModalWidget {
 
@@ -15,6 +16,30 @@ module quill.modal {
             super()
             this.node = node
             this.nodeConfig = nodeConfig
+        }
+
+        init(el: Element) {
+            switch (this.nodeConfig.nodeType) { // open correct tab
+                case 'string': this.goToTab('tabs.text', 'single-line.title'); break
+                case 'text': this.goToTab('tabs.text', 'multi-line.title'); break
+                case 'number': this.goToTab('tabs.number', 'integer.title'); break
+                case 'fraction': this.goToTab('tabs.number', 'fraction.title'); break
+                case 'boolean': this.goToTab('tabs.boolean'); break
+                case 'date': this.goToTab('tabs.date', 'date.title'); break
+                case 'datetime': this.goToTab('tabs.date', 'datetime.title'); break
+                case 'list': this.goToTab('tabs.list', 'list.title'); break
+                case 'enum': this.goToTab('tabs.list', 'enum.title'); break
+            }
+        }
+
+        goToTab(...tabs: string[]) {
+            tabs.forEach(text => this.triggerDown('tab-text-activate', 'ui.modal.node-config.' + text))
+        }
+
+        @Subscribe('ok-clicked')
+        okClicked() {
+            // todo save config
+            this.triggerUp('close-modal')
         }
 
         getTitle () {
@@ -30,21 +55,20 @@ module quill.modal {
                 })
             }
             switch (text) {
-                case 'tabs.text': this.nodeConfig.type = 'string'; break
-                case 'text.single-line.title': this.nodeConfig.type = 'string'; break
-                case 'text.multi-line.title': this.nodeConfig.type = 'text'; break
-                case 'tabs.number': this.nodeConfig.type = 'number'; break
-                case 'number.integer.title': this.nodeConfig.type = 'number'; break
-                case 'number.fraction.title': this.nodeConfig.type = 'fraction'; break
-                case 'tabs.date': this.nodeConfig.type = 'date'; break
-                case 'date.title': this.nodeConfig.type = 'date'; break
-                case 'datetime.title': this.nodeConfig.type = 'datetime'; break
-                case 'tabs.boolean': this.nodeConfig.type = 'boolean'; break
-                case 'tabs.list': this.nodeConfig.type = 'list'; break
-                case 'list.title': this.nodeConfig.type = 'list'; break
-                case 'enumeration.title': this.nodeConfig.type = 'enum'; break
+                case 'tabs.text': this.nodeConfig.nodeType = 'string'; break
+                case 'single-line.title': this.nodeConfig.nodeType = 'string'; break
+                case 'multi-line.title': this.nodeConfig.nodeType = 'text'; break
+                case 'tabs.number': this.nodeConfig.nodeType = 'number'; break
+                case 'integer.title': this.nodeConfig.nodeType = 'number'; break
+                case 'fraction.title': this.nodeConfig.nodeType = 'fraction'; break
+                case 'tabs.date': this.nodeConfig.nodeType = 'date'; break
+                case 'date.title': this.nodeConfig.nodeType = 'date'; break
+                case 'datetime.title': this.nodeConfig.nodeType = 'datetime'; break
+                case 'tabs.boolean': this.nodeConfig.nodeType = 'boolean'; break
+                case 'tabs.list': this.nodeConfig.nodeType = 'list'; break
+                case 'list.title': this.nodeConfig.nodeType = 'list'; break
+                case 'enumeration.title': this.nodeConfig.nodeType = 'enum'; break
             }
-            console.log(this.nodeConfig.type)
         }
 
         @Template()
@@ -128,14 +152,14 @@ module quill.modal {
 
         integer() {
             return `
-            <div title="ui.modal.node-config.number.integer.title" icon="thermometer" active>
+            <div title="ui.modal.node-config.integer.title" icon="thermometer" active>
                 ABC
             </div>`
         }
 
         fractions() {
             return `
-            <div title="ui.modal.node-config.number.fraction.title" icon="pie-chart">
+            <div title="ui.modal.node-config.fraction.title" icon="pie-chart">
                 ABC
             </div>`
         }
@@ -153,14 +177,14 @@ module quill.modal {
 
         singleLine() {
             return `
-            <div title="ui.modal.node-config.text.single-line.title" icon="font" active>
+            <div title="ui.modal.node-config.single-line.title" icon="font" active>
                 ABC
             </div>`
         }
 
         multiLine() {
             return `
-            <div title="ui.modal.node-config.text.multi-line.title"
+            <div title="ui.modal.node-config.multi-line.title"
                  icon="align-justify">
                 <RadioSet config={multilineRadioConfig}
                           selected={nodeConfig.multiline.editor}/>
@@ -168,14 +192,14 @@ module quill.modal {
         }
 
         multilineRadioConfig: RadioSetConfig<MultilineEditor> = {
-            label: 'ui.modal.node-config.text.multi-line.type',
+            label: 'ui.modal.node-config.multi-line.type',
             name: 'multiline-type',
             radios: [
-                {key: 'ui.modal.node-config.text.multi-line.normal',
+                {key: 'ui.modal.node-config.multi-line.normal',
                     value: MultilineEditor.normal},
-                {key: 'ui.modal.node-config.text.multi-line.richtext',
+                {key: 'ui.modal.node-config.multi-line.richtext',
                     value: MultilineEditor.richtext},
-                {key: 'ui.modal.node-config.text.multi-line.markdown',
+                {key: 'ui.modal.node-config.multi-line.markdown',
                     value: MultilineEditor.markdown}
             ],
             onChange: (value: MultilineEditor) =>

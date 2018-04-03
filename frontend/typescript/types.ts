@@ -93,7 +93,7 @@ module quill {
     }
 
     export interface NodeConfig {
-        type: NodeType,
+        nodeType: NodeType,
         string: {
             validation: string
         },
