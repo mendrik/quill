@@ -33,7 +33,7 @@ class Node @Inject()(
         val Some(projectId) = decodeHash(hash)
         for {
             _               <- securityRules.checkRules(request.identity, ProjectOwner(hash))
-            newNode         <- successful(Node(0, projectId, node.name, node.sort, Nil))
+            newNode         <- successful(Node(0, projectId, node.name, StringType, Nil))
             Some(node)      <- nodeService.createNode(newNode, None)
         } yield {
             Ok(Json.toJson(node))
@@ -71,7 +71,7 @@ class Node @Inject()(
         for {
             _            <- securityRules.checkRules(request.identity, NodeOwner(parentNodeId))
             Some(target) <- nodeService.byId(parentNodeId)
-            newNode      <- successful(Node(0, target.project, node.name, node.sort, Nil))
+            newNode      <- successful(Node(0, target.project, node.name, StringType, Nil))
             Some(node)   <- nodeService.createNode(newNode, Some(parentNodeId))
         } yield {
             Ok(Json.toJson(node))

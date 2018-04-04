@@ -7,22 +7,6 @@ import v1.node.{MultilineEditor, _}
 
 package object NodeIO {
 
-    implicit val nodeReads: Reads[Node] = (
-        (__ \ "id").read[Long] ~
-        (__ \ "project").read[Long] ~
-        (__ \ "name").read[String] ~
-        (__ \ "sort").read[Int] ~
-        (__ \ "children").lazyRead(Reads.list[Node](nodeReads))
-    )(Node.apply _)
-
-    implicit val nodeWrites: Writes[Node] = (
-        (__ \ "id").write[Long] ~
-        (__ \ "project").write[Long] ~
-        (__ \ "name").write[String] ~
-        (__ \ "sort").write[Int] ~
-        (__ \ "children").lazyWrite[List[Node]](Writes.list(nodeWrites))
-    )(unlift(Node.unapply))
-
     implicit val nodeTypeReads: Reads[NodeType] = {
         case JsString(StringType.name) => JsSuccess(StringType)
         case JsString(MultilineType.name) => JsSuccess(MultilineType)
@@ -39,6 +23,22 @@ package object NodeIO {
     implicit val nodeTypeWrites: Writes[NodeType] = {
         case n: NodeType => JsString(n.name)
     }
+
+    implicit val nodeReads: Reads[Node] = (
+        (__ \ "id").read[Long] ~
+        (__ \ "project").read[Long] ~
+        (__ \ "name").read[String] ~
+        (__ \ "nodeType").read[NodeType] ~
+        (__ \ "children").lazyRead(Reads.list[Node](nodeReads))
+    )(Node.apply _)
+
+    implicit val nodeWrites: Writes[Node] = (
+        (__ \ "id").write[Long] ~
+        (__ \ "project").write[Long] ~
+        (__ \ "name").write[String] ~
+        (__ \ "type").write[NodeType] ~
+        (__ \ "children").lazyWrite[List[Node]](Writes.list(nodeWrites))
+    )(unlift(Node.unapply))
 
     implicit val positionReads: Reads[Position] = {
         case JsString(Inside.name) => JsSuccess(Inside)

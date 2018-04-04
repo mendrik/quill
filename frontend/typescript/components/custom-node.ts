@@ -18,6 +18,18 @@ module quill {
         open
     }
 
+    export enum NodeIcon {
+        string = 'fa-font' as any,
+        text = 'fa-align-justify' as any,
+        number = 'fa-thermometer' as any,
+        fraction = 'fa-pie-chart' as any,
+        date = 'fa-calendar' as any,
+        datetime = 'fa-clock' as any,
+        boolean = 'fa-toggle-on' as any,
+        list = 'fa-database' as any,
+        enum = 'fa-list-alt' as any
+    }
+
     const NODE_DATA_TYPE = 'quill/node-id'
 
     export class CustomTreeNode extends TreeNode<Node> implements HasChildren<TreeNode<Node>> {
@@ -73,7 +85,7 @@ module quill {
         }
 
         static toTreeNode = (n: Node) => {
-            const tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type))
+            const tn = new CustomTreeNode(n.name, n, NodeIcon[n.type] as any)
             tn.children.push(...n.children.map(n => {
                 const child = CustomTreeNode.toTreeNode(n)
                 child.parent = tn

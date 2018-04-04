@@ -19,6 +19,7 @@ sealed trait NodeType extends WritableTrait {
         case DatetimeType => "datetime"
         case EnumType => "enum"
         case ListType => "list"
+        case EmptyType => "none"
     }
 }
 case object StringType extends NodeType
@@ -30,6 +31,7 @@ case object DateType extends NodeType
 case object DatetimeType extends NodeType
 case object EnumType extends NodeType
 case object ListType extends NodeType
+case object EmptyType extends NodeType
 
 // ---
 
@@ -83,7 +85,7 @@ case class Node(
     id: Long,
     project: Long,
     name: String,
-    sort: Int,
+    nodeType: NodeType,
     children: List[Node]
 ) extends Entity
 

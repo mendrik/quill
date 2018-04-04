@@ -3,13 +3,13 @@ package v1.node
 import database.Tables._
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.PostgresProfile
-import v1.NodeIO._
+import slick.jdbc.PostgresProfile.api._
 import v1.project.{Project, ProjectRepo}
-import scala.language.implicitConversions
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.language.implicitConversions
 
 @Singleton
 class NodeRepo @Inject()(
@@ -37,12 +37,15 @@ class NodeRepo @Inject()(
         Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
     }
 
-    def findByProject(project: Long): Future[Seq[Node]] = db.run {
-        Nodes
-            .filter(p => p.project === project)
-            .sortBy(_.sort.asc)
-            .result
-    }.map(toTree(None, _))
+    def findByProject(project: Long): Future[Seq[Node]] = {
+        for {
+            nodes   <- db.run(Nodes.filter(_.project === project).sortBy(_.sort.asc).result)
+            nodeIds <- Future.successful(nodes.map(_.id))
+            configs <- db.run(NodeConfigs.filter(_.node inSet nodeIds).result)
+        } yield {
+            toTree(None, nodes, configs)
+        }
+    }
 
     def getHighestSort(parent: Option[Long]): Future[Option[Int]] = db.run {
         val select = parent match {
@@ -71,8 +74,8 @@ class NodeRepo @Inject()(
 
     def update(project: Project, node: Node, parent: Option[Node]): Future[Int] =
         db.run(Nodes.filter(_.id === node.id)
-            .map(n => (n.name, n.parent, n.project, n.sort))
-            .update((node.name, parent.map(_.id), project.id, node.sort)))
+            .map(n => (n.name, n.parent, n.project))
+            .update((node.name, parent.map(_.id), project.id)))
 
     def remove(id: Long): Future[Int] =
         db.run(Nodes.filter(_.id === id).delete)
@@ -85,13 +88,21 @@ class NodeRepo @Inject()(
     def toNodes(row: Seq[NodesRow]): List[Node] = row.map(toNode).toList
 
     def toNode(row: NodesRow): Node = {
-        Node(row.id, row.project, row.name, row.sort, Nil)
+        Node(row.id, row.project, row.name, EmptyType, Nil)
     }
 
-    def toTree(parent: Option[NodesRow], nodes: Seq[NodesRow]): List[Node] = {
+    def findType(nr: NodesRow, configs: Seq[NodeConfigsRow]): NodeType = {
+        import v1.NodeIO._
+        configs
+            .find(conf => nr.id == conf.node)
+            .map(conf => nodeTypeFromString(conf.nodeType))
+            .getOrElse(StringType)
+    }
+
+    def toTree(parent: Option[NodesRow], nodes: Seq[NodesRow], configs: Seq[NodeConfigsRow]): List[Node] = {
         nodes.filter(n => parent.isEmpty   && n.parent.isEmpty ||
                           parent.isDefined && n.parent.contains(parent.map(_.id).get))
-            .map(nr => toNode(nr).copy(children = toTree(Some(nr), nodes))).toList
+            .map(nr => toNode(nr).copy(nodeType = findType(nr, configs),children = toTree(Some(nr), nodes, configs))).toList
     }
 
 }
