@@ -16,7 +16,7 @@ module quill {
         input: HTMLInputElement
         @Bind() label: string
         @Bind() checked: boolean
-        id: string
+        @Bind() id: string
 
         constructor(config: RadioConfig<T>) {
             super(config)
@@ -40,10 +40,10 @@ module quill {
             <div class="field">
                <input class="is-checkradio has-no-border"
                       type="radio"
-                      id={id}
+                      id={{id}}
                       name={config.name}
                       {{checked}}>
-               <label for={id}>
+               <label for={{id}}>
                   {{config.label:translate}}
                </label>
             </div>`
