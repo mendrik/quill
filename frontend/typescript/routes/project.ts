@@ -172,6 +172,11 @@ module quill {
             }
         }
 
+        @Subscribe('node-configured')
+        nodeConfigured(conf: NodeConfig) {
+            // todo set icon
+        }
+
         @Subscribe('node-drop')
         dragNode(drop: NodeDrop) {
             Progress.start()
@@ -238,24 +243,24 @@ module quill {
             return `
             <panel class="fullscreen v-flex">
                 <navigation class="no-grow"></navigation>
-                    <horizontal-split class="grow" id="app-split">
-                      <sidebar class="v-flex">
-                        <tree-actions></tree-actions>
-                        <scroll-spy class="grow" {{loading}}>
-                          <aside class="menu">
-                            <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
-                            <ul class="tree-view is-marginless" {{nodes}}></ul>
-                            <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
-                            <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
-                          </aside>
-                        </scroll-spy>
-                      </sidebar>
-                      <section class="v-flex value-section">
-                         <value-editor class="grow v-flex"/>
-                      </section>
-                    </horizontal-split>
-                </scroll-pane>
+                <horizontal-split class="grow" id="app-split">
+                  <sidebar class="v-flex">
+                    <tree-actions></tree-actions>
+                    <scroll-spy class="grow" {{loading}}>
+                      <aside class="menu">
+                        <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
+                        <ul class="tree-view is-marginless" {{nodes}}></ul>
+                        <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
+                        <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
+                      </aside>
+                    </scroll-spy>
+                  </sidebar>
+                  <section class="v-flex value-section">
+                     <value-editor class="grow v-flex"/>
+                  </section>
+                </horizontal-split>
                 <footer class="no-grow app-footer"/>
+                <modal-manager/>
             </panel>`
         }
 

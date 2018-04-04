@@ -47,6 +47,7 @@ module quill.modal {
 
         @Rest({url: '/node/{{node.id}}/configure', method: Method.PUT, body: 'nodeConfig', headers: quill.headers})
         saveConfig(conf?: NodeConfig) {
+            this.triggerUp('node-configured', conf)
             this.triggerUp('close-modal')
         }
 
