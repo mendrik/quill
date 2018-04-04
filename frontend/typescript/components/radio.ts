@@ -41,7 +41,7 @@ module quill {
                <input class="is-checkradio has-no-border"
                       type="radio"
                       id={{id}}
-                      name={config.name}
+                      name={{config.name}}
                       {{checked}}>
                <label for={{id}}>
                   {{config.label:translate}}
