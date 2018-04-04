@@ -174,7 +174,7 @@ module quill {
 
         @Subscribe('node-configured')
         nodeConfigured(conf: NodeConfig) {
-            // todo set icon
+            console.log(conf)
         }
 
         @Subscribe('node-drop')
@@ -187,7 +187,7 @@ module quill {
         @Rest({url: '/node/{{currentTreeNode.id}}/configure', method: Method.GET, headers: quill.headers})
         private configureNode(config?: NodeConfig) {
             this.triggerSingleton('show-modal',
-                new NodeConfigModal(this.currentTreeNode, config))
+                new NodeConfigModal(this.currentTreeNode, config, this.nodeConfigured))
         }
 
         private addNode() {
@@ -260,7 +260,6 @@ module quill {
                   </section>
                 </horizontal-split>
                 <footer class="no-grow app-footer"/>
-                <modal-manager/>
             </panel>`
         }
 

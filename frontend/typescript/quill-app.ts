@@ -94,7 +94,8 @@ module quill {
         applicationHTML() {
             return `<progress-bar></progress-bar>
                     <panel class="fullscreen v-flex" {{pages}}></panel>
-                    <localization translations={translations}/>`
+                    <localization translations={translations}/>
+                    <modal-manager/>`
         }
     }
 }

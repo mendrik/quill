@@ -25,11 +25,13 @@ module quill.modal {
 
         node: CustomTreeNode
         nodeConfig: NodeConfig
+        private configured: Function
 
-        constructor(node: CustomTreeNode, nodeConfig: NodeConfig) {
+        constructor(node: CustomTreeNode, nodeConfig: NodeConfig, configured: Function) {
             super()
             this.node = node
             this.nodeConfig = nodeConfig
+            this.configured = configured
         }
 
         init(el: Element) {
@@ -47,7 +49,7 @@ module quill.modal {
 
         @Rest({url: '/node/{{node.id}}/configure', method: Method.PUT, body: 'nodeConfig', headers: quill.headers})
         saveConfig(conf?: NodeConfig) {
-            this.triggerUp('node-configured', conf)
+            this.configured(conf)
             this.triggerUp('close-modal')
         }
 
