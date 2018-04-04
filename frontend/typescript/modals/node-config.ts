@@ -4,8 +4,19 @@ module quill.modal {
     import TreeNodeIcon = feather.ui.tree.TreeNodeIcon
     import Subscribe    = feather.hub.Subscribe
     import Tab          = feather.ui.Tab
-    import Tabs         = feather.ui.Tabs
-    import NodeType = quill.NodeType
+    import NodeType     = quill.NodeType
+
+    const parentTabs = {
+        string: 'tab.string',
+        text: 'tab.string',
+        number: 'tab.number',
+        fraction: 'tab.number',
+        date: 'tab.date',
+        datetime: 'tab.date',
+        boolean: 'tab.boolean',
+        list: 'tab.list',
+        enum: 'tab.list',
+    }
 
     export class NodeConfigModal extends ModalWidget {
 
@@ -19,21 +30,11 @@ module quill.modal {
         }
 
         init(el: Element) {
-            switch (this.nodeConfig.nodeType) { // open correct tab
-                case 'string': this.goToTab('tabs.text', 'single-line.title'); break
-                case 'text': this.goToTab('tabs.text', 'multi-line.title'); break
-                case 'number': this.goToTab('tabs.number', 'integer.title'); break
-                case 'fraction': this.goToTab('tabs.number', 'fraction.title'); break
-                case 'boolean': this.goToTab('tabs.boolean'); break
-                case 'date': this.goToTab('tabs.date', 'date.title'); break
-                case 'datetime': this.goToTab('tabs.date', 'datetime.title'); break
-                case 'list': this.goToTab('tabs.list', 'list.title'); break
-                case 'enum': this.goToTab('tabs.list', 'enum.title'); break
+            this.triggerDown('tab-key-activate', this.nodeConfig.nodeType)
+            const parentTab = parentTabs[this.nodeConfig.nodeType]
+            if (parentTab !== this.nodeConfig.nodeType) {
+                this.triggerDown('tab-key-activate', parentTab)
             }
-        }
-
-        goToTab(...tabs: string[]) {
-            tabs.forEach(text => this.triggerDown('tab-text-activate', 'ui.modal.node-config.' + text))
         }
 
         @Subscribe('ok-clicked')
@@ -47,27 +48,13 @@ module quill.modal {
         }
 
         @Subscribe('activate-tab')
-        onTabClicked(tab: Tab) {
-            const text = tab.text.substr('ui.modal.node-config.'.length)
-            if (text.startsWith('tabs.')) { // activate first tab
-                this.childWidgets.filter(t => t instanceof Tabs && t.childWidgets.length === 2).forEach(tab => {
-                    tab.triggerDown('activate-tab', tab.childWidgets[0])
-                })
-            }
-            switch (text) {
-                case 'tabs.text': this.nodeConfig.nodeType = 'string'; break
-                case 'single-line.title': this.nodeConfig.nodeType = 'string'; break
-                case 'multi-line.title': this.nodeConfig.nodeType = 'text'; break
-                case 'tabs.number': this.nodeConfig.nodeType = 'number'; break
-                case 'integer.title': this.nodeConfig.nodeType = 'number'; break
-                case 'fraction.title': this.nodeConfig.nodeType = 'fraction'; break
-                case 'tabs.date': this.nodeConfig.nodeType = 'date'; break
-                case 'date.title': this.nodeConfig.nodeType = 'date'; break
-                case 'datetime.title': this.nodeConfig.nodeType = 'datetime'; break
-                case 'tabs.boolean': this.nodeConfig.nodeType = 'boolean'; break
-                case 'tabs.list': this.nodeConfig.nodeType = 'list'; break
-                case 'list.title': this.nodeConfig.nodeType = 'list'; break
-                case 'enumeration.title': this.nodeConfig.nodeType = 'enum'; break
+        activateTab(tab: Tab) {
+            const tabKey = tab.getTabKey()
+            if (!/^tab\..*$/.test(tabKey)) { // sub tab clicked
+                this.nodeConfig.nodeType = tabKey as NodeType
+            } else {
+                this.nodeConfig.nodeType =
+                    tab.container.querySelector('[tab-key]:not([hidden])').getAttribute('tab-key') as NodeType
             }
         }
 
@@ -86,6 +73,7 @@ module quill.modal {
         listTab() {
             return `
             <div title="ui.modal.node-config.tabs.list"
+                 tab-key="tab.list"
                  icon=${TreeNodeIcon.array}>
                  <tabs class="vertical">
                     ${this.infiniteList()}
@@ -96,14 +84,18 @@ module quill.modal {
 
         infiniteList() {
             return `
-            <div title="ui.modal.node-config.list.title" icon="database" active>
+            <div title="ui.modal.node-config.list.title"
+                 icon="database"
+                 tab-key="list" active>
                 ABC
             </div>`
         }
 
         enumeration() {
             return `
-            <div title="ui.modal.node-config.enumeration.title" icon="list-alt">
+            <div title="ui.modal.node-config.enumeration.title"
+                 tab-key="enum"
+                 icon="list-alt">
                 ABC
             </div>`
         }
@@ -111,12 +103,14 @@ module quill.modal {
         boolTab() {
             return `
             <div title="ui.modal.node-config.tabs.boolean"
+                 tab-key="boolean"
                  icon=${TreeNodeIcon.boolean}></div>`
         }
 
         dateTab() {
             return `
             <div title="ui.modal.node-config.tabs.date"
+                 tab-key="tab.date"
                  icon=${TreeNodeIcon.date}>
                 <tabs class="vertical">
                     ${this.date()}
@@ -127,14 +121,18 @@ module quill.modal {
 
         date() {
             return `
-            <div title="ui.modal.node-config.date.title" icon="calendar" active>
+            <div title="ui.modal.node-config.date.title"
+                 tab-key="date"
+                 icon="calendar" active>
                 ABC
             </div>`
         }
 
         datetime() {
             return `
-            <div title="ui.modal.node-config.datetime.title" icon="clock-o">
+            <div title="ui.modal.node-config.datetime.title"
+                  tab-key="datetime"
+                 icon="clock-o">
                 ABC
             </div>`
         }
@@ -142,6 +140,7 @@ module quill.modal {
         numberTab() {
             return `
                 <div title="ui.modal.node-config.tabs.number"
+                     tab-key="tab.number"
                      icon=${TreeNodeIcon.number}>
                     <tabs class="vertical">
                         ${this.integer()}
@@ -152,14 +151,18 @@ module quill.modal {
 
         integer() {
             return `
-            <div title="ui.modal.node-config.integer.title" icon="thermometer" active>
+            <div title="ui.modal.node-config.integer.title"
+                 tab-key="number"
+                 icon="thermometer" active>
                 ABC
             </div>`
         }
 
         fractions() {
             return `
-            <div title="ui.modal.node-config.fraction.title" icon="pie-chart">
+            <div title="ui.modal.node-config.fraction.title"
+                 tab-key="fraction"
+                 icon="pie-chart">
                 ABC
             </div>`
         }
@@ -167,6 +170,7 @@ module quill.modal {
         textTab() {
             return `
             <div title="ui.modal.node-config.tabs.text"
+                 tab-key="tab.string"
                  icon=${TreeNodeIcon.text} active>
                 <tabs class="vertical">
                     ${this.singleLine()}
@@ -177,7 +181,9 @@ module quill.modal {
 
         singleLine() {
             return `
-            <div title="ui.modal.node-config.single-line.title" icon="font" active>
+            <div title="ui.modal.node-config.single-line.title"
+                 tab-key="string"
+                 icon="font" active>
                 ABC
             </div>`
         }
@@ -185,6 +191,7 @@ module quill.modal {
         multiLine() {
             return `
             <div title="ui.modal.node-config.multi-line.title"
+                 tab-key="text"
                  icon="align-justify">
                 <RadioSet config={multilineRadioConfig}
                           selected={nodeConfig.multiline.editor}/>
