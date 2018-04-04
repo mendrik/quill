@@ -1,10 +1,11 @@
 module quill.modal {
 
-    import Template     = feather.annotations.Template
-    import TreeNodeIcon = feather.ui.tree.TreeNodeIcon
-    import Subscribe    = feather.hub.Subscribe
-    import Tab          = feather.ui.Tab
-    import NodeType     = quill.NodeType
+    import Template       = feather.annotations.Template
+    import TreeNodeIcon   = feather.ui.tree.TreeNodeIcon
+    import Subscribe      = feather.hub.Subscribe
+    import Tab            = feather.ui.Tab
+    import NodeType       = quill.NodeType
+    import RadioSetConfig = quill.ui.RadioSetConfig
 
     const parentTabs = {
         string: 'tab.string',
@@ -209,8 +210,9 @@ module quill.modal {
                 {key: 'ui.modal.node-config.multi-line.markdown',
                     value: MultilineEditor.markdown}
             ],
-            onChange: (value: MultilineEditor) =>
+            onChange: (value: MultilineEditor) => {
                 this.nodeConfig.multiline.editor = value
+            }
         }
     }
 }
