@@ -6,6 +6,8 @@ module quill.modal {
     import Tab            = feather.ui.Tab
     import NodeType       = quill.NodeType
     import RadioSetConfig = quill.ui.RadioSetConfig
+    import Rest = feather.xhr.Rest
+    import Method = feather.xhr.Method
 
     const parentTabs = {
         string: 'tab.string',
@@ -40,7 +42,11 @@ module quill.modal {
 
         @Subscribe('ok-clicked')
         okClicked() {
-            // todo save config
+            this.saveConfig()
+        }
+
+        @Rest({url: '/node/{{node.id}}/configure', method: Method.PUT, body: 'nodeConfig', headers: quill.headers})
+        saveConfig(conf?: NodeConfig) {
             this.triggerUp('close-modal')
         }
 
