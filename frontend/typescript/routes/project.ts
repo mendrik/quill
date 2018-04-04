@@ -12,6 +12,8 @@ module quill {
     import AjaxWidget      = quill.components.AjaxWidget
     import NodeConfigModal = quill.modal.NodeConfigModal
     import ProjectConfig   = quill.modal.ProjectConfig
+    import isKey = keys.isKey
+    import Key = keys.Key
 
     interface RenameNode {
         name: string
@@ -194,26 +196,28 @@ module quill {
 
         @On({event: 'keydown', selector: '.tree-view'})
         keyEvent(ev: KeyboardEvent) {
-            if (isDef(this.currentTreeNode) && /[+c]|(left|right|up|down|enter)$/i.test(ev.key) &&
+            if (isDef(this.currentTreeNode) &&
+                isKey(ev, Key.C, Key.Plus, Key.Left, Key.Right, Key.Up, Key.Down, Key.Enter) &&
                 matches(document.activeElement, 'li.tree-node')) {
                 ev.preventDefault()
-                if ('+' === ev.key) {
+
+                if (isKey(ev, Key.Plus)) {
                     this.addNode()
                 }
-                if ('c' === ev.key) {
+                if (isKey(ev, Key.C)) {
                     this.configureNode()
                 }
-                if (/left$/i.test(ev.key)) {
+                if (isKey(ev, Key.Left)) {
                     this.currentTreeNode.open = false
                 }
-                if (/right$/i.test(ev.key)) {
+                if (isKey(ev, Key.Right)) {
                     this.currentTreeNode.open = true
                 }
-                if (/(down|up)$/i.test(ev.key)) {
+                if (isKey(ev, Key.Down, Key.Up)) {
                     const allNodes = this
                         .allNodes(this.nodes)
                         .filter(n => !n.parent || n.allParentsOpen())
-                    const dir = /down$/i.test(ev.key) ? 1 : -1
+                    const dir = isKey(ev, Key.Down) ? 1 : -1
                     const nextNode = allNodes[
                         allNodes.findIndex(v => v === this.currentTreeNode) + dir
                     ]
@@ -223,7 +227,7 @@ module quill {
                         scrollElementIntoView(el as HTMLDivElement)
                     }
                 }
-                if (/enter$/i.test(ev.key)) {
+                if (isKey(ev, Key.Enter)) {
                     this.currentTreeNode.focusAndEdit()
                 }
             }

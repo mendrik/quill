@@ -7,6 +7,8 @@ module quill.modal {
     import Widget        = feather.core.Widget
     import Bind          = feather.observe.Bind
     import On            = feather.event.On
+    import isKey         = keys.isKey
+    import Key           = keys.Key
 
     export abstract class ModalWidget extends Widget {
         abstract getTitle()
@@ -15,7 +17,7 @@ module quill.modal {
 
         @On({event: 'keydown'})
         escKey(ev: KeyboardEvent) {
-            if (/escape/i.test(ev.key)) {
+            if (isKey(ev, Key.Esc)) {
                 this.triggerUp('close-modal')
             }
         }

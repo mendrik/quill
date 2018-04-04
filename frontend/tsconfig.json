@@ -27,6 +27,7 @@
     },
     "files": [
         "typescript/types.ts",
+        "typescript/common/keys.ts",
         "typescript/common/utils.ts",
         "typescript/common/headers.ts",
         "typescript/common/polyfill.ts",
@@ -35,8 +36,6 @@
         "typescript/modals/node-config.ts",
         "typescript/components/translate.ts",
         "typescript/components/progress.ts",
-        "typescript/components/radio.ts",
-        "typescript/components/radio-set.ts",
         "typescript/components/scroll-spy.ts",
         "typescript/components/scroll-receiver.ts",
         "typescript/components/html-fragment.ts",
