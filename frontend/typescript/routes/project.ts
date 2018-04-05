@@ -158,14 +158,15 @@ module quill {
             Progress.stop()
             const mn       = this.moveNode
             const allNodes = this.allNodes(this.nodes)
-            const from     = allNodes.find(n => n.id() === mn.from)
-            const to       = allNodes.find(n => n.id() === mn.to)
+            const from     = allNodes.find(n => parseInt(n.id(), 10) === mn.from)
+            const to       = allNodes.find(n => parseInt(n.id(), 10) === mn.to)
             const nodes    = isDef(from.parent) ? from.parent.children : this.nodes
             const toNodes  = isDef(to.parent) ? to.parent.children : this.nodes
             removeFromArray(nodes, [from])
             if (mn.position === DropPostion.inside) {
                 const position = nodes.indexOf(to)
                 to.add(from, position + 1)
+                to.open = true
             } else {
                 const index = toNodes.indexOf(to) + (mn.position === DropPostion.below ? 1 : 0)
                 toNodes.splice(index, 0, from)
@@ -242,16 +243,16 @@ module quill {
         projectPage() {
             return `
             <panel class="fullscreen v-flex">
-                <navigation class="no-grow"></navigation>
+                <navigation class="no-grow"/>
                 <horizontal-split class="grow" id="app-split">
                   <sidebar class="v-flex">
-                    <tree-actions></tree-actions>
+                    <tree-actions/>
                     <scroll-spy class="grow" {{loading}}>
                       <aside class="menu">
-                        <selectable-tree-label label="Structure" selected={true} type="structure"></selectable-tree-label>
-                        <ul class="tree-view is-marginless" {{nodes}}></ul>
-                        <selectable-tree-label label="Schemas" selected={false} type="schema"></selectable-tree-label>
-                        <ul class="tree-view is-marginless" {{schemaNodes}}></ul>
+                        <selectable-tree-label label="Structure" selected={true} type="structure"/>
+                        <ul class="tree-view is-marginless" {{nodes}}/>
+                        <selectable-tree-label label="Schemas" selected={false} type="schema"/>
+                        <ul class="tree-view is-marginless" {{schemaNodes}}/>
                       </aside>
                     </scroll-spy>
                   </sidebar>

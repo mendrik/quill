@@ -175,7 +175,7 @@ module quill {
                         </div>
                       </div>
                       <div class="form-components" title="ui.login.tabs.forgot-password" icon="unlock">
-                        <html-fragment html-key="ui.forgot-password.info"></html-fragment>
+                        <html-fragment html-key="ui.forgot-password.info"/>
                         <Text config="{forgotPasswordConfig}"/>
                         <div class="block has-text-right">
                              <a class="button is-primary forgot-password-action" key="ui.forgot-password.button"/>
