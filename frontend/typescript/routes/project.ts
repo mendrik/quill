@@ -63,6 +63,7 @@ module quill {
             this.nodes.splice(0, this.nodes.length,
                 ...project.structure.map(CustomTreeNode.toTreeNode))
             this.triggerDown('project-loaded', project)
+            this.triggerDown('visible-nodes', this.getVisibleNodes())
             this.loading = false
         }
 
@@ -230,9 +231,7 @@ module quill {
                     this.currentTreeNode.openNode(true)
                 }
                 if (isKey(ev, Key.Down, Key.Up)) {
-                    const visibleNodes = this
-                        .allNodes(this.nodes)
-                        .filter(n => !n.parent || n.allParentsOpen())
+                    const visibleNodes = this.getVisibleNodes()
                     const dir = isKey(ev, Key.Down) ? 1 : -1
                     const nextNode = visibleNodes[
                         visibleNodes.findIndex(v => v === this.currentTreeNode) + dir
@@ -272,6 +271,12 @@ module quill {
                 </horizontal-split>
                 <footer class="no-grow app-footer"/>
             </panel>`
+        }
+
+        private getVisibleNodes(): CustomTreeNode[] {
+            return this
+                .allNodes(this.nodes)
+                .filter(n => !n.parent || n.allParentsOpen())
         }
 
         private allNodes(nodes: CustomTreeNode[]) {

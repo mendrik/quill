@@ -9,7 +9,8 @@ import security.{QuillEnv, SecurityRules}
 import utils.Actions.secured
 import v1.value.ValueService
 import v1.version.VersionService
-import v1.ValueIO._
+import v1.VersionIO._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.successful
 
@@ -24,10 +25,9 @@ class Value @Inject()(
     def valuesForVersion(versionId: Long): Action[AnyContent] = secured { implicit request =>
         (for {
             _             <- securityRules.checkRules(request.identity, VersionOwner(versionId))
-            Some(version) <- versionService.getById(versionId)
-            values        <- valueService.getByVersion(version)
+            version <- versionService.getById(versionId)
         } yield {
-            Ok(Json.toJson(values))
+            Ok(Json.toJson(version))
         })
         .fallbackTo(successful(Unauthorized))
     }

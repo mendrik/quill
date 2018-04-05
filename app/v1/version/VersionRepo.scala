@@ -34,7 +34,7 @@ class VersionRepo @Inject()(dcp: DatabaseConfigProvider) {
         db.run(Versions.filter(_.id === version.id).delete)
 
     def toVersion(row: VersionsRow): Version =
-        Version(row.id, row.project, row.name, row.icon)
+        Version(row.id, row.project, row.name, row.icon, Nil)
 
     def toVersionsRow(version: Version, project: Project): VersionsRow =
         VersionsRow(version.id, version.name, project.id, version.icon)

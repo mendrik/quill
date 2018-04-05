@@ -4,6 +4,7 @@ module quill {
     import Template  = feather.annotations.Template
     import Rest      = feather.xhr.Rest
     import Bind      = feather.observe.Bind
+    import Subscribe = feather.hub.Subscribe
 
     export class VersionValues extends Widget {
 
@@ -15,14 +16,14 @@ module quill {
             this.version = version
         }
 
-        init(el: Element) {
-            this.loadVersionValues()
+        @Subscribe('visible-nodes')
+        async nodesInitialized(nodes: CustomTreeNode[]) {
+            const version = await this.loadVersionValue()
+            console.log(version)
         }
 
         @Rest({url: '/values/version/{{version.id}}', headers: quill.headers})
-        loadVersionValues() {
-            // ignore
-        }
+        async loadVersionValue() {}
 
         @Template()
         markup() {

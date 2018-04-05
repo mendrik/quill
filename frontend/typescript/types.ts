@@ -56,9 +56,22 @@ module quill {
         id: string
     }
 
+    export interface Value {
+        nodeId: number,
+        arrVal: boolean,
+        strVal: string
+        numVal: number,
+        decVal: number,
+        dateVal: string,
+        boolVal: boolean
+    }
+
     export interface Version {
         id: string,
         name: string,
+        project: number,
+        icon: string,
+        values: Value[]
     }
 
     export type NodeRoot =
