@@ -4,6 +4,7 @@ module quill {
     import On       = feather.event.On
     import Scope    = feather.event.Scope
     import isDef    = feather.functions.isDef
+    import Bind = feather.observe.Bind
 
     export enum DropPostion {
         inside = 'inside',

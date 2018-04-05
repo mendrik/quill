@@ -85,6 +85,16 @@ module quill {
             this.triggerDown('defocus-other-nodes', node)
         }
 
+        @Subscribe('node-opened')
+        nodeOpened(node: CustomTreeNode) {
+            console.log(node)
+        }
+
+        @Subscribe('node-closed')
+        nodeClosed(node: CustomTreeNode) {
+            console.log(node)
+        }
+
         @Subscribe('root-type-selected')
         rootTypeSelected(type: NodeRoot) {
             this.currentRootType = type
@@ -158,8 +168,8 @@ module quill {
             Progress.stop()
             const mn       = this.moveNode
             const allNodes = this.allNodes(this.nodes)
-            const from     = allNodes.find(n => parseInt(n.id(), 10) === mn.from)
-            const to       = allNodes.find(n => parseInt(n.id(), 10) === mn.to)
+            const from     = this.findNode(allNodes, mn.from)
+            const to       = this.findNode(allNodes, mn.to)
             const nodes    = isDef(from.parent) ? from.parent.children : this.nodes
             const toNodes  = isDef(to.parent) ? to.parent.children : this.nodes
             removeFromArray(nodes, [from])
@@ -214,18 +224,18 @@ module quill {
                     this.configureNode()
                 }
                 if (isKey(ev, Key.Left)) {
-                    this.currentTreeNode.open = false
+                    this.currentTreeNode.openNode(false)
                 }
                 if (isKey(ev, Key.Right)) {
-                    this.currentTreeNode.open = true
+                    this.currentTreeNode.openNode(true)
                 }
                 if (isKey(ev, Key.Down, Key.Up)) {
-                    const allNodes = this
+                    const visibleNodes = this
                         .allNodes(this.nodes)
                         .filter(n => !n.parent || n.allParentsOpen())
                     const dir = isKey(ev, Key.Down) ? 1 : -1
-                    const nextNode = allNodes[
-                        allNodes.findIndex(v => v === this.currentTreeNode) + dir
+                    const nextNode = visibleNodes[
+                        visibleNodes.findIndex(v => v === this.currentTreeNode) + dir
                     ]
                     if (nextNode) {
                         this.nodeSelected(nextNode)
@@ -266,6 +276,10 @@ module quill {
 
         private allNodes(nodes: CustomTreeNode[]) {
             return [].concat(...nodes.map(flattenTree))
+        }
+
+        private findNode(nodes: CustomTreeNode[], id: number) {
+            return nodes.find(n => parseInt(n.id(), 10) === id)
         }
     }
 }
