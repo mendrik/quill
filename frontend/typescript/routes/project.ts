@@ -156,7 +156,6 @@ module quill {
         renameNodeCall(node?: Node) {
             this.currentTreeNode.value = node
             this.triggerDown('node-changed', this.currentTreeNode)
-            console.log(node)
             Progress.stop()
         }
 
@@ -190,6 +189,7 @@ module quill {
         @Subscribe('node-configured')
         nodeConfigured(conf: NodeConfig) {
             this.currentTreeNode.icon = NodeIcon[conf.nodeType] as any
+            this.currentTreeNode.value.type = conf.nodeType
             this.triggerDown('node-changed', this.currentTreeNode)
         }
 

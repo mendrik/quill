@@ -36,6 +36,9 @@ module quill {
 
         @Subscribe('node-changed')
         nodeChanged(node: CustomTreeNode) {
+            const index = this.findNodeValueIndex(node)
+            const value = this.findNodeValue(node)
+            this.nodes.splice(index, 1, this.valueNodeFactory(node, value.value))
         }
 
         @Template()
@@ -79,6 +82,14 @@ module quill {
             } else {
                 return new DefaultValueNode(node, value)
             }
+        }
+
+        private findNodeValueIndex(node: CustomTreeNode): number {
+            return this.nodes.findIndex(vn => vn.node.id() === node.id())
+        }
+
+        private findNodeValue(node: CustomTreeNode): ValueNode {
+            return this.nodes.find(vn => vn.node.id() === node.id())
         }
     }
 }
