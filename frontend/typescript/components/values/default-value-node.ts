@@ -8,10 +8,6 @@ module quill {
 
         @Bind({}) selected = false
 
-        constructor(node: CustomTreeNode, value?: Value) {
-            super(node, value)
-        }
-
         @Template()
         markup() {
             return `

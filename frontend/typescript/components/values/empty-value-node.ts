@@ -4,10 +4,6 @@ module quill {
 
     export class EmptyValueNode extends ValueNode {
 
-        constructor(node: CustomTreeNode, value?: Value) {
-            super(node, value)
-        }
-
         @Template()
         markup() {
             return `<li class="value-line empty"/>`
