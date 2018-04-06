@@ -4,7 +4,50 @@ var quill;
     (function (Keys) {
         Keys[Keys["ENTER"] = 13] = "ENTER";
     })(Keys = quill.Keys || (quill.Keys = {}));
+    var MultilineEditor;
+    (function (MultilineEditor) {
+        MultilineEditor["normal"] = "normal";
+        MultilineEditor["richtext"] = "richtext";
+        MultilineEditor["markdown"] = "markdown";
+    })(MultilineEditor = quill.MultilineEditor || (quill.MultilineEditor = {}));
+    var NumberEditor;
+    (function (NumberEditor) {
+        NumberEditor["input"] = "input";
+        NumberEditor["slider"] = "slider";
+    })(NumberEditor = quill.NumberEditor || (quill.NumberEditor = {}));
+    var BooleanEditor;
+    (function (BooleanEditor) {
+        BooleanEditor["checkbpx"] = "checkbox";
+        BooleanEditor["switch"] = "switch";
+    })(BooleanEditor = quill.BooleanEditor || (quill.BooleanEditor = {}));
 })(quill || (quill = {}));
+var keys;
+(function (keys_1) {
+    keys_1.Key = {
+        Left: ['Left', 'ArrowLeft'],
+        Right: ['Right', 'ArrowRight'],
+        Up: ['Up', 'ArrowUp'],
+        Down: ['Down', 'ArrowDown'],
+        Esc: ['Esc', 'Escape'],
+        Enter: ['Enter', 'Return'],
+        Plus: ['+Equal', '+'],
+        C: ['C', 'KeyC'],
+    };
+    keys_1.isKey = function (ev) {
+        var keys = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            keys[_i - 1] = arguments[_i];
+        }
+        var flat = [].concat.apply([], keys);
+        return !!flat.find(function (k) {
+            var code = ev.code || ev.key;
+            if (k.charAt(0) === '+' && k.length > 1) {
+                return ev.shiftKey && k.substr(1).toLocaleLowerCase() === code.toLowerCase();
+            }
+            return k.toLocaleLowerCase() === code.toLowerCase();
+        });
+    };
+})(keys || (keys = {}));
 var quill;
 (function (quill) {
     var TreeNodeIcon = feather.ui.tree.TreeNodeIcon;
@@ -32,10 +75,10 @@ var quill;
                 return TreeNodeIcon.enum;
             case 'list':
                 return TreeNodeIcon.array;
-            case 'node':
-                return TreeNodeIcon.object;
             case 'boolean':
                 return TreeNodeIcon.boolean;
+            default:
+                return TreeNodeIcon.config;
         }
     };
     quill.flattenTree = function (node) {
@@ -93,6 +136,8 @@ var quill;
         var Widget = feather.core.Widget;
         var Bind = feather.observe.Bind;
         var On = feather.event.On;
+        var isKey = keys.isKey;
+        var Key = keys.Key;
         var ModalWidget = (function (_super) {
             __extends(ModalWidget, _super);
             function ModalWidget() {
@@ -102,7 +147,7 @@ var quill;
                 return _this;
             }
             ModalWidget.prototype.escKey = function (ev) {
-                if (/escape/i.test(ev.key)) {
+                if (isKey(ev, Key.Esc)) {
                     this.triggerUp('close-modal');
                 }
             };
@@ -149,6 +194,9 @@ var quill;
             ModalManager.prototype.closeButtons = function () {
                 this.close();
             };
+            ModalManager.prototype.okClicked = function () {
+                this.triggerDown('ok-clicked');
+            };
             ModalManager.prototype.markup = function () {
                 return "<div class=\"modal {{showing:toActive}}\">\n              <div class=\"modal-background\"/>\n              <div class=\"modal-card is-small\">\n                <header class=\"modal-card-head\">\n                  <p class=\"modal-card-title\">{{title:translate}}</p>\n                  <button class=\"delete\" aria-label=\"close\"/>\n                </header>\n                <section class=\"modal-card-body is-small\" {{modal}}/>\n                <footer class=\"modal-card-foot\">\n                  <button class=\"button is-inverted ok\">{{successButton:translate}}</button>\n                  <button class=\"button is-inverted cancel\">{{cancelButton:translate}}</button>\n                </footer>\n              </div>\n            </div>";
             };
@@ -174,11 +222,15 @@ var quill;
                 Subscribe('show-modal')
             ], ModalManager.prototype, "show", null);
             __decorate([
+                Subscribe('close-modal'),
                 On({ event: 'mousedown', selector: '.modal-background' })
             ], ModalManager.prototype, "close", null);
             __decorate([
                 On({ event: 'click', selector: 'button.cancel,button.delete' })
             ], ModalManager.prototype, "closeButtons", null);
+            __decorate([
+                On({ event: 'click', selector: 'button.ok' })
+            ], ModalManager.prototype, "okClicked", null);
             __decorate([
                 Template()
             ], ModalManager.prototype, "markup", null);
@@ -222,25 +274,128 @@ var quill;
     (function (modal) {
         var Template = feather.annotations.Template;
         var TreeNodeIcon = feather.ui.tree.TreeNodeIcon;
-        var NodeConfig = (function (_super) {
-            __extends(NodeConfig, _super);
-            function NodeConfig(node) {
+        var Subscribe = feather.hub.Subscribe;
+        var Rest = feather.xhr.Rest;
+        var Method = feather.xhr.Method;
+        var parentTabs = {
+            string: 'tab.string',
+            text: 'tab.string',
+            number: 'tab.number',
+            fraction: 'tab.number',
+            date: 'tab.date',
+            datetime: 'tab.date',
+            boolean: 'tab.boolean',
+            list: 'tab.list',
+            enum: 'tab.list',
+        };
+        var NodeConfigModal = (function (_super) {
+            __extends(NodeConfigModal, _super);
+            function NodeConfigModal(node, nodeConfig, configured) {
                 var _this = _super.call(this) || this;
+                _this.multilineRadioConfig = {
+                    label: 'ui.modal.node-config.multi-line.type',
+                    name: 'multiline-type',
+                    radios: [
+                        { key: 'ui.modal.node-config.multi-line.normal',
+                            value: quill.MultilineEditor.normal },
+                        { key: 'ui.modal.node-config.multi-line.richtext',
+                            value: quill.MultilineEditor.richtext },
+                        { key: 'ui.modal.node-config.multi-line.markdown',
+                            value: quill.MultilineEditor.markdown }
+                    ],
+                    onChange: function (value) {
+                        _this.nodeConfig.multiline.editor = value;
+                    }
+                };
                 _this.node = node;
+                _this.nodeConfig = nodeConfig;
+                _this.configured = configured;
                 return _this;
             }
-            NodeConfig.prototype.getTitle = function () {
+            NodeConfigModal.prototype.init = function (el) {
+                this.triggerDown('tab-key-activate', this.nodeConfig.nodeType);
+                var parentTab = parentTabs[this.nodeConfig.nodeType];
+                if (parentTab !== this.nodeConfig.nodeType) {
+                    this.triggerDown('tab-key-activate', parentTab);
+                }
+            };
+            NodeConfigModal.prototype.okClicked = function () {
+                this.saveConfig();
+            };
+            NodeConfigModal.prototype.saveConfig = function (conf) {
+                this.configured(conf);
+                this.triggerUp('close-modal');
+            };
+            NodeConfigModal.prototype.getTitle = function () {
                 return 'ui.modal.node-config.title';
             };
-            NodeConfig.prototype.markup = function () {
-                return "\n            <tabs tabs-class=\"is-boxed\">\n                <div title=\"ui.modal.node-config.tabs.text\"\n                     icon=" + TreeNodeIcon.text + " active>\n                    <tabs class=\"vertical\">\n                        <div title=\"ui.modal.node-config.text.single-line\" icon=\"font\" active>\n                            ABC\n                        </div>\n                        <div title=\"ui.modal.node-config.text.multi-line\" icon=\"align-justify\">\n                            <div class=\"field\">\n                                <input class=\"is-checkradio\" id=\"multiline-normal\" type=\"radio\" name=\"mutiline-format\" checked=\"checked\">\n                                <label for=\"multiline-normal\">Normal</label>\n                            </div>\n                            <div class=\"field\">\n                                <input class=\"is-checkradio\" id=\"multiline-rtf\" type=\"radio\" name=\"mutiline-format\">\n                                <label for=\" id=\"multiline-rtf\">Richtext</label>\n                            </div>\n                            <div class=\"field\">\n                                <input class=\"is-checkradio\" id=\"multiline-md\" type=\"radio\" name=\"mutiline-format\">\n                                <label for=\" id=\"multiline-md\"\">Markdown</label>\n                            </div>\n                        </div>\n                    </tabs>\n                </div>\n                <div title=\"ui.modal.node-config.tabs.number\"\n                     icon=" + TreeNodeIcon.number + "></div>\n                <div title=\"ui.modal.node-config.tabs.date\"\n                     icon=" + TreeNodeIcon.date + "></div>\n                <div title=\"ui.modal.node-config.tabs.boolean\"\n                     icon=" + TreeNodeIcon.boolean + "></div>\n                <div title=\"ui.modal.node-config.tabs.list\"\n                     icon=" + TreeNodeIcon.array + "></div>\n                <div title=\"ui.modal.node-config.tabs.file\"\n                     icon=" + TreeNodeIcon.file + "></div>\n            </tabs>";
+            NodeConfigModal.prototype.activateTab = function (tab) {
+                var tabKey = tab.getTabKey();
+                if (!/^tab\..*$/.test(tabKey)) {
+                    this.nodeConfig.nodeType = tabKey;
+                }
+                else {
+                    this.nodeConfig.nodeType =
+                        tab.container.querySelector('[tab-key]:not([hidden])').getAttribute('tab-key');
+                }
+            };
+            NodeConfigModal.prototype.markup = function () {
+                return "\n            <tabs tabs-class=\"is-boxed\">\n                " + this.textTab() + "\n                " + this.numberTab() + "\n                " + this.dateTab() + "\n                " + this.boolTab() + "\n                " + this.listTab() + "\n            </tabs>";
+            };
+            NodeConfigModal.prototype.listTab = function () {
+                return "\n            <div title=\"ui.modal.node-config.tabs.list\"\n                 tab-key=\"tab.list\"\n                 icon=" + TreeNodeIcon.array + ">\n                 <tabs class=\"vertical\">\n                    " + this.infiniteList() + "\n                    " + this.enumeration() + "\n                </tabs>\n            </div>";
+            };
+            NodeConfigModal.prototype.infiniteList = function () {
+                return "\n            <div title=\"ui.modal.node-config.list.title\"\n                 icon=\"database\"\n                 tab-key=\"list\" active>\n                ABC\n            </div>";
+            };
+            NodeConfigModal.prototype.enumeration = function () {
+                return "\n            <div title=\"ui.modal.node-config.enumeration.title\"\n                 tab-key=\"enum\"\n                 icon=\"list-alt\">\n                ABC\n            </div>";
+            };
+            NodeConfigModal.prototype.boolTab = function () {
+                return "\n            <div title=\"ui.modal.node-config.tabs.boolean\"\n                 tab-key=\"boolean\"\n                 icon=" + TreeNodeIcon.boolean + "></div>";
+            };
+            NodeConfigModal.prototype.dateTab = function () {
+                return "\n            <div title=\"ui.modal.node-config.tabs.date\"\n                 tab-key=\"tab.date\"\n                 icon=" + TreeNodeIcon.date + ">\n                <tabs class=\"vertical\">\n                    " + this.date() + "\n                    " + this.datetime() + "\n                </tabs>\n            </div>";
+            };
+            NodeConfigModal.prototype.date = function () {
+                return "\n            <div title=\"ui.modal.node-config.date.title\"\n                 tab-key=\"date\"\n                 icon=\"calendar\" active>\n                ABC\n            </div>";
+            };
+            NodeConfigModal.prototype.datetime = function () {
+                return "\n            <div title=\"ui.modal.node-config.datetime.title\"\n                  tab-key=\"datetime\"\n                 icon=\"clock-o\">\n                ABC\n            </div>";
+            };
+            NodeConfigModal.prototype.numberTab = function () {
+                return "\n                <div title=\"ui.modal.node-config.tabs.number\"\n                     tab-key=\"tab.number\"\n                     icon=" + TreeNodeIcon.number + ">\n                    <tabs class=\"vertical\">\n                        " + this.integer() + "\n                        " + this.fractions() + "\n                    </tabs>\n                </div>";
+            };
+            NodeConfigModal.prototype.integer = function () {
+                return "\n            <div title=\"ui.modal.node-config.integer.title\"\n                 tab-key=\"number\"\n                 icon=\"thermometer\" active>\n                ABC\n            </div>";
+            };
+            NodeConfigModal.prototype.fractions = function () {
+                return "\n            <div title=\"ui.modal.node-config.fraction.title\"\n                 tab-key=\"fraction\"\n                 icon=\"pie-chart\">\n                ABC\n            </div>";
+            };
+            NodeConfigModal.prototype.textTab = function () {
+                return "\n            <div title=\"ui.modal.node-config.tabs.text\"\n                 tab-key=\"tab.string\"\n                 icon=" + TreeNodeIcon.text + " active>\n                <tabs class=\"vertical\">\n                    " + this.singleLine() + "\n                    " + this.multiLine() + "\n                </tabs>\n            </div>";
+            };
+            NodeConfigModal.prototype.singleLine = function () {
+                return "\n            <div title=\"ui.modal.node-config.single-line.title\"\n                 tab-key=\"string\"\n                 icon=\"font\" active>\n                ABC\n            </div>";
+            };
+            NodeConfigModal.prototype.multiLine = function () {
+                return "\n            <div title=\"ui.modal.node-config.multi-line.title\"\n                 tab-key=\"text\"\n                 icon=\"align-justify\">\n                <RadioSet config={multilineRadioConfig}\n                          selected={nodeConfig.multiline.editor}/>\n            </div>";
             };
             __decorate([
+                Subscribe('ok-clicked')
+            ], NodeConfigModal.prototype, "okClicked", null);
+            __decorate([
+                Rest({ url: '/node/{{node.id}}/configure', method: Method.PUT, body: 'nodeConfig', headers: quill.headers })
+            ], NodeConfigModal.prototype, "saveConfig", null);
+            __decorate([
+                Subscribe('activate-tab')
+            ], NodeConfigModal.prototype, "activateTab", null);
+            __decorate([
                 Template()
-            ], NodeConfig.prototype, "markup", null);
-            return NodeConfig;
+            ], NodeConfigModal.prototype, "markup", null);
+            return NodeConfigModal;
         }(modal.ModalWidget));
-        modal.NodeConfig = NodeConfig;
+        modal.NodeConfigModal = NodeConfigModal;
     })(modal = quill.modal || (quill.modal = {}));
 })(quill || (quill = {}));
 var quill;
@@ -532,6 +687,7 @@ var quill;
     var Template = feather.annotations.Template;
     var Rest = feather.xhr.Rest;
     var Bind = feather.observe.Bind;
+    var Subscribe = feather.hub.Subscribe;
     var VersionValues = (function (_super) {
         __extends(VersionValues, _super);
         function VersionValues(version) {
@@ -539,10 +695,24 @@ var quill;
             _this.version = version;
             return _this;
         }
-        VersionValues.prototype.init = function (el) {
-            this.loadVersionValues();
+        VersionValues.prototype.nodesInitialized = function (nodes) {
+            return __awaiter(this, void 0, void 0, function () {
+                var version;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, this.loadVersionValue()];
+                        case 1:
+                            version = _a.sent();
+                            console.log(version);
+                            return [2];
+                    }
+                });
+            });
         };
-        VersionValues.prototype.loadVersionValues = function () {
+        VersionValues.prototype.loadVersionValue = function () {
+            return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+                return [2];
+            }); });
         };
         VersionValues.prototype.markup = function () {
             return "\n             <li class=\"v-flex\">\n                <div class=\"level version-header no-grow\">\n                    <div class=\"level-left\">\n                        <span class=\"level-item\">\n                            <span class=\"icon is-small\"><Icon name=\"book\"/></span>\n                            <span class=\"version-name\">{{version.name}}</span>\n                        </span>\n                    </div>\n                    <div class=\"level-right\">\n                        <a class=\"button is-small tooltip\"\n                           action=\"version-github\"\n                           tooltip=\"ui.tooltip.version.github\">\n                            <Icon name=\"github\" icon-class=\"is-small\"/>\n                        </a>\n                        <a class=\"button is-small tooltip\"\n                           action=\"version-download\"\n                           tooltip=\"ui.tooltip.version.json-download\">\n                            <Icon name=\"download\" icon-class=\"is-small\"/>\n                        </a>\n                        <a class=\"button is-small tooltip\"\n                           action=\"version-configure\"\n                           tooltip=\"ui.tooltip.version.configure\">\n                            <Icon name=\"cog\" icon-class=\"is-small\"/>\n                        </a>\n                    </div>\n                </div>\n                <scroll-receiver class=\"grow\">\n                    Nu Bass \u00A0<br>Nichol Cumbie \u00A0<br>Lenna Piercy \u00A0<br>See Aispuro \u00A0<br>\n                    Sophie Troyer \u00A0<br>Bryan Cool \u00A0<br>Sylvia Mabe \u00A0<br>Hue Keele \u00A0<br>\n                    Kaylee Speaks \u00A0<br>Milda Costin \u00A0<br>Jennie Dietrich \u00A0<br>Reanna Leanos \u00A0<br>\n                    Ruby Dehn \u00A0<br>Asa Estes \u00A0<br>Tennie Steverson \u00A0<br>Despina Schnur \u00A0<br>\n                    Lakeisha Getman \u00A0<br>Mara Heng \u00A0<br>Carroll Down \u00A0<br>Florencio Fazzino \u00A0<br>\n                    Hailey Causey \u00A0<br>Babara Friscia \u00A0<br>Chanell Stgermain \u00A0<br>Annette Deangelis \u00A0<br>\n                    Sulema Pulley \u00A0<br>Kylee Penman \u00A0<br>Ariel Pridgen \u00A0<br>Mitch Granado \u00A0<br>\n                    Vernia Dates \u00A0<br>Darnell Pablo \u00A0<br>Anneliese Alderman \u00A0<br>Brad Dahl \u00A0<br>\n                    Valentin Amburgey \u00A0<br>Kemberly Pelzer \u00A0<br>Ronald Boney \u00A0<br>Adah Boateng \u00A0<br>\n                    Marcelina Alls \u00A0<br>Felicia Guss \u00A0<br>Linn Mershon \u00A0<br>Chere Scioneaux \u00A0<br>\n                    Madalyn Glisson \u00A0<br>Kimberely Hagwood \u00A0<br>Roxanne Ouimet \u00A0<br>Annalisa Armagost \u00A0<br>\n                    Doris Troy \u00A0<br>Angeline Shelor \u00A0<br>Zada Manjarrez \u00A0<br>Marvella Ritch \u00A0<br>\n                    Larisa Burruel \u00A0<br>Margrett Canino \u00A0<br><br>\n                </scroll-receiver>\n            </li>";
@@ -551,8 +721,11 @@ var quill;
             Bind()
         ], VersionValues.prototype, "version", void 0);
         __decorate([
+            Subscribe('visible-nodes')
+        ], VersionValues.prototype, "nodesInitialized", null);
+        __decorate([
             Rest({ url: '/values/version/{{version.id}}', headers: quill.headers })
-        ], VersionValues.prototype, "loadVersionValues", null);
+        ], VersionValues.prototype, "loadVersionValue", null);
         __decorate([
             Template()
         ], VersionValues.prototype, "markup", null);
@@ -684,6 +857,18 @@ var quill;
         DropPostion["above"] = "above";
         DropPostion["below"] = "below";
     })(DropPostion = quill.DropPostion || (quill.DropPostion = {}));
+    var NodeIcon;
+    (function (NodeIcon) {
+        NodeIcon[NodeIcon["string"] = 'fa-font'] = "string";
+        NodeIcon[NodeIcon["text"] = 'fa-align-justify'] = "text";
+        NodeIcon[NodeIcon["number"] = 'fa-thermometer'] = "number";
+        NodeIcon[NodeIcon["fraction"] = 'fa-pie-chart'] = "fraction";
+        NodeIcon[NodeIcon["date"] = 'fa-calendar'] = "date";
+        NodeIcon[NodeIcon["datetime"] = 'fa-clock'] = "datetime";
+        NodeIcon[NodeIcon["boolean"] = 'fa-toggle-on'] = "boolean";
+        NodeIcon[NodeIcon["list"] = 'fa-database'] = "list";
+        NodeIcon[NodeIcon["enum"] = 'fa-list-alt'] = "enum";
+    })(NodeIcon = quill.NodeIcon || (quill.NodeIcon = {}));
     var NODE_DATA_TYPE = 'quill/node-id';
     var CustomTreeNode = (function (_super) {
         __extends(CustomTreeNode, _super);
@@ -755,7 +940,7 @@ var quill;
             return true;
         };
         CustomTreeNode.toTreeNode = function (n) {
-            var tn = new CustomTreeNode(n.name, n, quill.iconFor(n.type));
+            var tn = new CustomTreeNode(n.name, n, NodeIcon[n.type]);
             (_a = tn.children).push.apply(_a, n.children.map(function (n) {
                 var child = CustomTreeNode.toTreeNode(n);
                 child.parent = tn;
@@ -876,8 +1061,10 @@ var quill;
     var isDef = feather.functions.isDef;
     var removeFromArray = feather.arrays.removeFromArray;
     var AjaxWidget = quill.components.AjaxWidget;
-    var NodeConfig = quill.modal.NodeConfig;
+    var NodeConfigModal = quill.modal.NodeConfigModal;
     var ProjectConfig = quill.modal.ProjectConfig;
+    var isKey = keys.isKey;
+    var Key = keys.Key;
     var dummyProject = {
         id: 0,
         name: '',
@@ -909,6 +1096,7 @@ var quill;
             this.project = project;
             (_a = this.nodes).splice.apply(_a, [0, this.nodes.length].concat(project.structure.map(quill.CustomTreeNode.toTreeNode)));
             this.triggerDown('project-loaded', project);
+            this.triggerDown('visible-nodes', this.getVisibleNodes());
             this.loading = false;
             var _a;
         };
@@ -924,6 +1112,12 @@ var quill;
             this.currentTreeNode = node;
             this.currentTreeNode.selected = true;
             this.triggerDown('defocus-other-nodes', node);
+        };
+        ProjectPage.prototype.nodeOpened = function (node) {
+            console.log(node);
+        };
+        ProjectPage.prototype.nodeClosed = function (node) {
+            console.log(node);
         };
         ProjectPage.prototype.rootTypeSelected = function (type) {
             this.currentRootType = type;
@@ -983,27 +1177,31 @@ var quill;
             quill.Progress.stop();
             var mn = this.moveNode;
             var allNodes = this.allNodes(this.nodes);
-            var from = allNodes.find(function (n) { return n.id() === mn.from; });
-            var to = allNodes.find(function (n) { return n.id() === mn.to; });
+            var from = this.findNode(allNodes, mn.from);
+            var to = this.findNode(allNodes, mn.to);
             var nodes = isDef(from.parent) ? from.parent.children : this.nodes;
             var toNodes = isDef(to.parent) ? to.parent.children : this.nodes;
             removeFromArray(nodes, [from]);
             if (mn.position === quill.DropPostion.inside) {
                 var position = nodes.indexOf(to);
                 to.add(from, position + 1);
+                to.open = true;
             }
             else {
                 var index = toNodes.indexOf(to) + (mn.position === quill.DropPostion.below ? 1 : 0);
                 toNodes.splice(index, 0, from);
             }
         };
+        ProjectPage.prototype.nodeConfigured = function (conf) {
+            console.log(conf);
+        };
         ProjectPage.prototype.dragNode = function (drop) {
             quill.Progress.start();
             this.moveNode = __assign({}, drop);
             this.moveNodeCall();
         };
-        ProjectPage.prototype.configureNode = function () {
-            this.triggerSingleton('show-modal', new NodeConfig(this.currentTreeNode));
+        ProjectPage.prototype.configureNode = function (config) {
+            this.triggerSingleton('show-modal', new NodeConfigModal(this.currentTreeNode, config, this.nodeConfigured));
         };
         ProjectPage.prototype.addNode = function () {
             quill.Progress.start();
@@ -1016,43 +1214,50 @@ var quill;
         };
         ProjectPage.prototype.keyEvent = function (ev) {
             var _this = this;
-            if (/[+c]|(left|right|up|down|enter)$/i.test(ev.key) &&
+            if (isDef(this.currentTreeNode) &&
+                isKey(ev, Key.C, Key.Plus, Key.Left, Key.Right, Key.Up, Key.Down, Key.Enter) &&
                 matches(document.activeElement, 'li.tree-node')) {
                 ev.preventDefault();
-                if ('+' === ev.key) {
+                if (isKey(ev, Key.Plus)) {
                     this.addNode();
                 }
-                if ('c' === ev.key) {
+                if (isKey(ev, Key.C)) {
                     this.configureNode();
                 }
-                if (/left$/i.test(ev.key)) {
-                    this.currentTreeNode.open = false;
+                if (isKey(ev, Key.Left)) {
+                    this.currentTreeNode.openNode(false);
                 }
-                if (/right$/i.test(ev.key)) {
-                    this.currentTreeNode.open = true;
+                if (isKey(ev, Key.Right)) {
+                    this.currentTreeNode.openNode(true);
                 }
-                if (/(down|up)$/i.test(ev.key)) {
-                    var allNodes = this
-                        .allNodes(this.nodes)
-                        .filter(function (n) { return !n.parent || n.allParentsOpen(); });
-                    var dir = /down$/i.test(ev.key) ? 1 : -1;
-                    var nextNode = allNodes[allNodes.findIndex(function (v) { return v === _this.currentTreeNode; }) + dir];
+                if (isKey(ev, Key.Down, Key.Up)) {
+                    var visibleNodes = this.getVisibleNodes();
+                    var dir = isKey(ev, Key.Down) ? 1 : -1;
+                    var nextNode = visibleNodes[visibleNodes.findIndex(function (v) { return v === _this.currentTreeNode; }) + dir];
                     if (nextNode) {
                         this.nodeSelected(nextNode);
                         var el = this.element.querySelector('.tree-node > .selected');
                         quill.scrollElementIntoView(el);
                     }
                 }
-                if (/enter$/i.test(ev.key)) {
+                if (isKey(ev, Key.Enter)) {
                     this.currentTreeNode.focusAndEdit();
                 }
             }
         };
         ProjectPage.prototype.projectPage = function () {
-            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"></navigation>\n                    <horizontal-split class=\"grow\" id=\"app-split\">\n                      <sidebar class=\"v-flex\">\n                        <tree-actions></tree-actions>\n                        <scroll-spy class=\"grow\" {{loading}}>\n                          <aside class=\"menu\">\n                            <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"></selectable-tree-label>\n                            <ul class=\"tree-view is-marginless\" {{nodes}}></ul>\n                            <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"></selectable-tree-label>\n                            <ul class=\"tree-view is-marginless\" {{schemaNodes}}></ul>\n                          </aside>\n                        </scroll-spy>\n                      </sidebar>\n                      <section class=\"v-flex value-section\">\n                         <value-editor class=\"grow v-flex\"/>\n                      </section>\n                    </horizontal-split>\n                </scroll-pane>\n                <footer class=\"no-grow app-footer\"/>\n            </panel>";
+            return "\n            <panel class=\"fullscreen v-flex\">\n                <navigation class=\"no-grow\"/>\n                <horizontal-split class=\"grow\" id=\"app-split\">\n                  <sidebar class=\"v-flex\">\n                    <tree-actions/>\n                    <scroll-spy class=\"grow\" {{loading}}>\n                      <aside class=\"menu\">\n                        <selectable-tree-label label=\"Structure\" selected={true} type=\"structure\"/>\n                        <ul class=\"tree-view is-marginless\" {{nodes}}/>\n                        <selectable-tree-label label=\"Schemas\" selected={false} type=\"schema\"/>\n                        <ul class=\"tree-view is-marginless\" {{schemaNodes}}/>\n                      </aside>\n                    </scroll-spy>\n                  </sidebar>\n                  <section class=\"v-flex value-section\">\n                     <value-editor class=\"grow v-flex\"/>\n                  </section>\n                </horizontal-split>\n                <footer class=\"no-grow app-footer\"/>\n            </panel>";
+        };
+        ProjectPage.prototype.getVisibleNodes = function () {
+            return this
+                .allNodes(this.nodes)
+                .filter(function (n) { return !n.parent || n.allParentsOpen(); });
         };
         ProjectPage.prototype.allNodes = function (nodes) {
             return [].concat.apply([], nodes.map(quill.flattenTree));
+        };
+        ProjectPage.prototype.findNode = function (nodes, id) {
+            return nodes.find(function (n) { return parseInt(n.id(), 10) === id; });
         };
         __decorate([
             Bind()
@@ -1079,6 +1284,12 @@ var quill;
             Subscribe('node-focused')
         ], ProjectPage.prototype, "nodeSelected", null);
         __decorate([
+            Subscribe('node-opened')
+        ], ProjectPage.prototype, "nodeOpened", null);
+        __decorate([
+            Subscribe('node-closed')
+        ], ProjectPage.prototype, "nodeClosed", null);
+        __decorate([
             Subscribe('root-type-selected')
         ], ProjectPage.prototype, "rootTypeSelected", null);
         __decorate([
@@ -1103,8 +1314,14 @@ var quill;
             Rest({ url: '/node/{{moveNode.from}}/move', method: Method.PUT, body: 'moveNode', headers: quill.headers })
         ], ProjectPage.prototype, "moveNodeCall", null);
         __decorate([
+            Subscribe('node-configured')
+        ], ProjectPage.prototype, "nodeConfigured", null);
+        __decorate([
             Subscribe('node-drop')
         ], ProjectPage.prototype, "dragNode", null);
+        __decorate([
+            Rest({ url: '/node/{{currentTreeNode.id}}/configure', method: Method.GET, headers: quill.headers })
+        ], ProjectPage.prototype, "configureNode", null);
         __decorate([
             On({ event: 'keydown', selector: '.tree-view' })
         ], ProjectPage.prototype, "keyEvent", null);
@@ -1225,7 +1442,7 @@ var quill;
             this.route('/login');
         };
         LoginPage.prototype.loginPage = function () {
-            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config=\"{identifierConfig}\"/>\n                        <Text config=\"{passwordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                            <a class=\"button is-primary login-action\" key=\"ui.signin.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config=\"{firstnameConfig}\"/>\n                        <Text config=\"{lastnameConfig}\"/>\n                        <Text config=\"{emailConfig}\"/>\n                        <Text config=\"{signupPasswordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\" key=\"ui.signup.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <html-fragment html-key=\"ui.forgot-password.info\"></html-fragment>\n                        <Text config=\"{forgotPasswordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\" key=\"ui.forgot-password.button\"/>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
+            return "\n            <scroll-pane class=\"grow\">\n                <div class=\"login\">\n                    <tabs>\n                      <div class=\"form-components\" title=\"ui.login.tabs.login\" icon=\"key\" active>\n                        <Text config=\"{identifierConfig}\"/>\n                        <Text config=\"{passwordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                            <a class=\"button is-primary login-action\" key=\"ui.signin.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.signup\" icon=\"pencil-square-o\">\n                        <Text config=\"{firstnameConfig}\"/>\n                        <Text config=\"{lastnameConfig}\"/>\n                        <Text config=\"{emailConfig}\"/>\n                        <Text config=\"{signupPasswordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary signup-action\" key=\"ui.signup.button\"/>\n                        </div>\n                      </div>\n                      <div class=\"form-components\" title=\"ui.login.tabs.forgot-password\" icon=\"unlock\">\n                        <html-fragment html-key=\"ui.forgot-password.info\"/>\n                        <Text config=\"{forgotPasswordConfig}\"/>\n                        <div class=\"block has-text-right\">\n                             <a class=\"button is-primary forgot-password-action\" key=\"ui.forgot-password.button\"/>\n                        </div>\n                      </div>\n                  </tabs>\n                </div>\n            </scroll-pane>\n            ";
         };
         __decorate([
             Bind()
@@ -1478,7 +1695,7 @@ var quill;
             this.checkLogin();
         };
         QuillApplication.prototype.applicationHTML = function () {
-            return "<progress-bar></progress-bar>\n                    <panel class=\"fullscreen v-flex\" {{pages}}></panel>\n                    <localization translations={translations}/>\n                    <modal-manager/>\n            ";
+            return "<progress-bar></progress-bar>\n                    <panel class=\"fullscreen v-flex\" {{pages}}></panel>\n                    <localization translations={translations}/>\n                    <modal-manager/>";
         };
         __decorate([
             Bind()

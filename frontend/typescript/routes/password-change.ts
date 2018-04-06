@@ -46,7 +46,7 @@ module quill {
         }
 
         @Subscribe('xhr-failure-401')
-        unauthorized(err: Errors, xhr) {
+        unauthorized(err: Errors) {
             Progress.stop()
             ToastManager.showToast(
                 new Toast('ui.change-password.fail.title', 'ui.change-password.fail.message', Theme.Error)

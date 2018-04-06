@@ -63,7 +63,7 @@ module quill {
             this.nodes.splice(0, this.nodes.length,
                 ...project.structure.map(CustomTreeNode.toTreeNode))
             this.triggerDown('project-loaded', project)
-            this.triggerDown('visible-nodes', this.getVisibleNodes())
+            this.triggerDown('visible-nodes', this.allNodes(this.nodes))
             this.loading = false
         }
 

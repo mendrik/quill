@@ -9,7 +9,7 @@ module quill {
     export class VersionValues extends Widget {
 
         @Bind() version: Version
-        nodes: ValueNode[]
+        @Bind() nodes: ValueNode[] = []
 
         constructor(version: Version) {
             super()
@@ -18,8 +18,12 @@ module quill {
 
         @Subscribe('visible-nodes')
         async nodesInitialized(nodes: CustomTreeNode[]) {
-            const version = await this.loadVersionValue()
-            console.log(version)
+            const version: Version = await this.loadVersionValue() as any
+            const values = nodes.map(node => {
+                const value = version.values.find(v => v.nodeId === node.value.id)
+                return new ValueNode(node, value)
+            })
+            this.nodes.splice(0, this.nodes.length, ...values)
         }
 
         @Rest({url: '/values/version/{{version.id}}', headers: quill.headers})
@@ -54,22 +58,10 @@ module quill {
                         </a>
                     </div>
                 </div>
-                <scroll-receiver class="grow">
-                    Nu Bass  <br>Nichol Cumbie  <br>Lenna Piercy  <br>See Aispuro  <br>
-                    Sophie Troyer  <br>Bryan Cool  <br>Sylvia Mabe  <br>Hue Keele  <br>
-                    Kaylee Speaks  <br>Milda Costin  <br>Jennie Dietrich  <br>Reanna Leanos  <br>
-                    Ruby Dehn  <br>Asa Estes  <br>Tennie Steverson  <br>Despina Schnur  <br>
-                    Lakeisha Getman  <br>Mara Heng  <br>Carroll Down  <br>Florencio Fazzino  <br>
-                    Hailey Causey  <br>Babara Friscia  <br>Chanell Stgermain  <br>Annette Deangelis  <br>
-                    Sulema Pulley  <br>Kylee Penman  <br>Ariel Pridgen  <br>Mitch Granado  <br>
-                    Vernia Dates  <br>Darnell Pablo  <br>Anneliese Alderman  <br>Brad Dahl  <br>
-                    Valentin Amburgey  <br>Kemberly Pelzer  <br>Ronald Boney  <br>Adah Boateng  <br>
-                    Marcelina Alls  <br>Felicia Guss  <br>Linn Mershon  <br>Chere Scioneaux  <br>
-                    Madalyn Glisson  <br>Kimberely Hagwood  <br>Roxanne Ouimet  <br>Annalisa Armagost  <br>
-                    Doris Troy  <br>Angeline Shelor  <br>Zada Manjarrez  <br>Marvella Ritch  <br>
-                    Larisa Burruel  <br>Margrett Canino  <br><br>
-                </scroll-receiver>
+                <scroll-receiver class="grow" {{nodes:byNodeVisibility}}/>
             </li>`
         }
+
+        byNodeVisibility = () => (n: ValueNode) => !n.node.parent || n.node.allParentsOpen()
     }
 }
