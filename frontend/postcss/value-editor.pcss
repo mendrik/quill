@@ -44,4 +44,22 @@ value-editor {
             }
         }
     }
+
+    .value-line {
+        display: flex;
+        min-height: 24px;
+
+        > :first-child {
+            margin-right: auto;
+            overflow: hidden;
+        }
+
+        > :last-child {
+            flex: none;
+            min-width: 15px;
+            font-size: 14px;
+            color: gray;
+            cursor: pointer;
+        }
+    }
 }

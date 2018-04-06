@@ -1,6 +1,5 @@
 module quill {
 
-    import TreeNodeIcon      = feather.ui.tree.TreeNodeIcon
     import findClippedParent = feather.ui.findClippedParent
 
     const urlParams = {}
@@ -22,23 +21,6 @@ module quill {
     popstate()
 
     export const getQueryStringParam = (key: string) => urlParams[key]
-
-    export const iconFor = (type: NodeType): TreeNodeIcon => {
-        switch (type) {
-            case 'string':
-                return TreeNodeIcon.text
-            case 'number':
-                return TreeNodeIcon.number
-            case 'enum':
-                return TreeNodeIcon.enum
-            case 'list':
-                return TreeNodeIcon.array
-            case 'boolean':
-                return TreeNodeIcon.boolean
-            default:
-                return TreeNodeIcon.config
-        }
-    }
 
     export interface HasChildren<T> {
         children: HasChildren<T>[]

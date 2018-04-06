@@ -70,7 +70,11 @@ module quill {
         byNodeVisibility = () => (n: ValueNode) => !n.node.parent || n.node.allParentsOpen()
 
         valueNodeFactory(node: CustomTreeNode, value?: Value) {
-            return new ValueNode(node, value)
+            if (node.hasChildren()) {
+                return new EmptyValueNode(node, value)
+            } else {
+                return new DefaultValueNode(node, value)
+            }
         }
     }
 }

@@ -42,6 +42,8 @@
         "typescript/components/ajax-widget.ts",
         "typescript/components/ajax-form.ts",
         "typescript/components/values/value-node.ts",
+        "typescript/components/values/empty-value-node.ts",
+        "typescript/components/values/default-value-node.ts",
         "typescript/components/values/version-values.ts",
         "typescript/components/values/value-editor.ts",
         "typescript/components/selectable-tree-label.ts",

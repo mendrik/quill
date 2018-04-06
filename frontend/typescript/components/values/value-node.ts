@@ -1,6 +1,5 @@
 module quill {
 
-    import Template = feather.annotations.Template
     import Widget   = feather.core.Widget
     import Bind     = feather.observe.Bind
 
@@ -8,16 +7,13 @@ module quill {
 
         @Bind({}) node: CustomTreeNode
         @Bind({}) value: Value
+        @Bind({}) icon: string
 
         constructor(node: CustomTreeNode, value?: Value) {
             super()
             this.node = node
             this.value = value
-        }
-
-        @Template()
-        markup() {
-            return `<li>{{node.value.name}}</li>`
+            this.icon = NodeIcon[node.value.type] as any
         }
     }
 }
