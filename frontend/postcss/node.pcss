@@ -1,6 +1,10 @@
 .tree-node > div:first-child {
-
     position: relative;
+
+    > span {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 
     &:after,
     &:before {
