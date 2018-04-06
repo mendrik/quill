@@ -34,6 +34,10 @@ module quill {
             this.nodes.splice(0, 0)
         }
 
+        @Subscribe('node-changed')
+        nodeChanged(node: CustomTreeNode) {
+        }
+
         @Template()
         markup() {
             return `

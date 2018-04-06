@@ -153,7 +153,10 @@ module quill {
         }
 
         @Rest({url: '/node/{{currentTreeNode.id}}/rename', method: Method.PUT, body: 'renameNode', headers: quill.headers})
-        renameNodeCall() {
+        renameNodeCall(node?: Node) {
+            this.currentTreeNode.value = node
+            this.triggerDown('node-changed', this.currentTreeNode)
+            console.log(node)
             Progress.stop()
         }
 
@@ -186,7 +189,8 @@ module quill {
 
         @Subscribe('node-configured')
         nodeConfigured(conf: NodeConfig) {
-            console.log(conf)
+            this.currentTreeNode.icon = NodeIcon[conf.nodeType] as any
+            this.triggerDown('node-changed', this.currentTreeNode)
         }
 
         @Subscribe('node-drop')
@@ -199,7 +203,7 @@ module quill {
         @Rest({url: '/node/{{currentTreeNode.id}}/configure', method: Method.GET, headers: quill.headers})
         private configureNode(config?: NodeConfig) {
             this.triggerSingleton('show-modal',
-                new NodeConfigModal(this.currentTreeNode, config, this.nodeConfigured))
+                new NodeConfigModal(this.currentTreeNode, config, this.nodeConfigured.bind(this)))
         }
 
         private addNode() {

@@ -14,7 +14,8 @@ import scala.language.implicitConversions
 @Singleton
 class NodeRepo @Inject()(
     dcp: DatabaseConfigProvider,
-    projectRepo: ProjectRepo
+    projectRepo: ProjectRepo,
+    confRepo: NodeConfigRepo,
 ) {
 
     def pathToRoot(parent: Node): Future[Seq[Long]] = db.run {
@@ -33,8 +34,13 @@ class NodeRepo @Inject()(
     private val dbConfig = dcp.get[PostgresProfile]
     private val db = dbConfig.db
 
-    def findById(id: Long): Future[Option[Node]] = db.run {
-        Nodes.filter(_.id === id).result.headOption.map(_.map(toNode))
+    def findById(id: Long): Future[Option[Node]] = {
+        for {
+            node <- db.run(Nodes.filter(_.id === id).result.headOption.map(_.map(toNode)))
+            conf <- confRepo.findByNodeId(id)
+        } yield {
+            node.map(n => n.copy(nodeType = conf.map(c => c.nodeType).getOrElse(EmptyType)))
+        }
     }
 
     def findByProject(project: Long): Future[Seq[Node]] = {

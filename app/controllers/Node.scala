@@ -4,6 +4,7 @@ import com.mohiva.play.silhouette.api._
 import javax.inject.Inject
 import play.api.Configuration
 import play.api.i18n.Lang
+import play.api.libs.json.Json.toJson
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import security.rules.{NodeOwner, NotChildNode, ProjectOwner}
@@ -36,7 +37,7 @@ class Node @Inject()(
             newNode         <- successful(Node(0, projectId, node.name, StringType, Nil))
             Some(node)      <- nodeService.createNode(newNode, None)
         } yield {
-            Ok(Json.toJson(node))
+            Ok(toJson(node))
         }
     }
 
@@ -54,7 +55,7 @@ class Node @Inject()(
             _    <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
             conf <- nodeService.nodeConfigByNodeId(nodeId)
         } yield {
-            Ok(Json.toJson(conf))
+            Ok(toJson(conf))
         }
     }
 
@@ -63,7 +64,7 @@ class Node @Inject()(
             _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
             nodeConf <- nodeService.updateNodeConfig(nodeConfig)
         } yield {
-            Ok(Json.toJson(nodeConfig))
+            Ok(toJson(nodeConfig))
         }
     }
 
@@ -74,7 +75,7 @@ class Node @Inject()(
             newNode      <- successful(Node(0, target.project, node.name, StringType, Nil))
             Some(node)   <- nodeService.createNode(newNode, Some(parentNodeId))
         } yield {
-            Ok(Json.toJson(node))
+            Ok(toJson(node))
         }
     }
 
@@ -89,10 +90,11 @@ class Node @Inject()(
 
     def renameNode(nodeId: Long): Action[JsValue] = securedJson[RenameNode] { (node, request) =>
         for {
-            _ <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
-            _ <- nodeService.renameNode(nodeId, node.name)
+            _    <- securityRules.checkRules(request.identity, NodeOwner(nodeId))
+            _    <- nodeService.renameNode(nodeId, node.name)
+            node <- nodeService.byId(nodeId)
         } yield {
-            Ok("")
+            Ok(toJson(node))
         }
     }
 }
