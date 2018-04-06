@@ -38,7 +38,7 @@ module quill {
         nodeChanged(node: CustomTreeNode) {
             const index = this.findNodeValueIndex(node)
             const value = this.findNodeValue(node)
-            this.nodes.splice(index, 1, this.valueNodeFactory(node, value.value))
+            this.nodes.splice(index, 1, this.valueNodeFactory(node, value ? value.value : undefined))
         }
 
         @Template()
@@ -77,10 +77,15 @@ module quill {
         byNodeVisibility = () => (n: ValueNode) => !n.node.parent || n.node.allParentsOpen()
 
         valueNodeFactory(node: CustomTreeNode, value?: Value) {
+            const version = this.version.name
             if (node.hasChildren()) {
-                return new EmptyValueNode(node, value)
+                return new EmptyValueNode(node, version, value)
             } else {
-                return new DefaultValueNode(node, value)
+                if (node.value.type === 'boolean') {
+                    return new BooleanValueNode(node, version, value)
+                } else {
+                    return new DefaultValueNode(node, version, value)
+                }
             }
         }
 

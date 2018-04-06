@@ -9,7 +9,7 @@ module quill {
         number = undefined,
         fraction = undefined,
         date = 'fa-calendar' as any,
-        datetime = 'fa-clock' as any,
+        datetime = 'fa-clock-o' as any,
         boolean = undefined,
         list = 'fa-search' as any,
         enum = undefined
@@ -17,15 +17,19 @@ module quill {
 
     export class ValueNode extends Widget {
 
+        @Bind({}) version: string
         @Bind({}) node: CustomTreeNode
         @Bind({}) value: Value
         @Bind({}) icon: string
+        @Bind({}) id: string
 
-        constructor(node: CustomTreeNode, value?: Value) {
+        constructor(node: CustomTreeNode, version: string, value?: Value) {
             super()
             this.node = node
             this.value = value
+            this.version = version
             this.icon = NodeValueIcon[node.value.type] as any
+            this.id = `${version}-${node.value.id}`
         }
     }
 }

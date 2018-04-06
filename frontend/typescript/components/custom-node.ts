@@ -25,7 +25,7 @@ module quill {
         number = 'fa-thermometer' as any,
         fraction = 'fa-pie-chart' as any,
         date = 'fa-calendar' as any,
-        datetime = 'fa-clock' as any,
+        datetime = 'fa-clock-o' as any,
         boolean = 'fa-toggle-on' as any,
         list = 'fa-database' as any,
         enum = 'fa-list-alt' as any

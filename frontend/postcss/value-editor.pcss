@@ -59,9 +59,16 @@ value-editor {
         &.default {
             cursor: pointer;
 
-            &:hover,
-            &.selected {
+            &:hover {
                 background-color: #fbfbfb;
+
+                > :last-child {
+                    color: black;
+                }
+            }
+
+            &.selected {
+                background-color: var(--node-selected);
             }
         }
 
@@ -70,13 +77,20 @@ value-editor {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+
+            .field {
+                line-height: 21px;
+                padding: 3px 0 0 0;
+            }
         }
 
         > :last-child {
             flex: none;
             min-width: 15px;
             font-size: 14px;
-            color: gray;
+            color: #8f8f8f;
             cursor: pointer;
             height: 24px;
         }
