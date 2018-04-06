@@ -108,6 +108,7 @@ ui.modal.node-config.fraction.title=Fractions
 ui.modal.node-config.date.title=Date
 ui.modal.node-config.datetime.title=Datetime
 
+ui.modal.node-config.boolean.label=Label
 ui.modal.node-config.list.title=List
 ui.modal.node-config.enumeration.title=Enumeration
 

@@ -59,8 +59,14 @@ value-editor {
         &.default {
             cursor: pointer;
 
+            .node-value-editor {
+                display: none;
+            }
+
             &.boolean {
                 padding-left: 6px;
+                padding-top: 1.5px;
+                height: 20px;
             }
 
             &:hover {
@@ -76,7 +82,22 @@ value-editor {
             }
         }
 
-        > :first-child {
+        &[editing] {
+            .node-value-editor {
+                display: block;
+                margin-right: 5px;
+            }
+            .node-value {
+                display: none;
+            }
+        }
+
+        .node-value-editor {
+            display: none;
+        }
+
+        .node-value,
+        .node-value-editor {
             flex: 1;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -90,7 +111,7 @@ value-editor {
             }
         }
 
-        > :last-child {
+        .icon {
             flex: none;
             min-width: 15px;
             font-size: 14px;

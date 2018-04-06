@@ -114,7 +114,9 @@ module quill.modal {
             return `
             <div title="ui.modal.node-config.tabs.boolean"
                  tab-key="boolean"
-                 icon=${TreeNodeIcon.boolean}></div>`
+                 icon=${TreeNodeIcon.boolean}>
+                <Text config={booleanLabelConfig}/>
+            </div>`
         }
 
         dateTab() {
@@ -207,6 +209,14 @@ module quill.modal {
                           selected={nodeConfig.multiline.editor}/>
             </div>`
         }
+
+        booleanLabelConfig = {
+            label: 'ui.modal.node-config.boolean.label',
+            name: 'boolean.label',
+            icon: 'edit',
+            onChange: (p: string) => this.nodeConfig.boolean.label = p
+        }
+
 
         multilineRadioConfig: RadioSetConfig<MultilineEditor> = {
             label: 'ui.modal.node-config.multi-line.type',

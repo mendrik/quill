@@ -26,7 +26,7 @@ module quill {
         constructor(node: CustomTreeNode, version: string, value?: Value) {
             super()
             this.node = node
-            this.value = value
+            this.value = value || {} as Value
             this.version = version
             this.icon = NodeValueIcon[node.value.type] as any
             this.id = `${version}-${node.value.id}`

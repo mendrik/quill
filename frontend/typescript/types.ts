@@ -131,7 +131,8 @@ module quill {
             format: string
         },
         boolean: {
-            editor: BooleanEditor
+            editor: BooleanEditor,
+            label: string
         },
         list: {
             filter: string
