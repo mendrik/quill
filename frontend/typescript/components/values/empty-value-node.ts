@@ -10,7 +10,7 @@ module quill {
 
         @Template()
         markup() {
-            return `<li class="value-line"/>`
+            return `<li class="value-line empty"/>`
         }
     }
 }

@@ -50,16 +50,23 @@ value-editor {
         min-height: 24px;
         box-sizing: border-box;
         padding: 0 10px;
-        box-shadow: inset 0 -.5px 0 0 whitesmoke;
 
-        &.default:hover {
+        &.default {
+            box-shadow: inset 0 -.5px 0 0 whitesmoke;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #fbfbfb;
+            }
+        }
+
+        &.empty {
             background-color: whitesmoke;
         }
 
         > :first-child {
             flex: 1;
             overflow: hidden;
-            cursor: pointer;
         }
 
         > :last-child {
