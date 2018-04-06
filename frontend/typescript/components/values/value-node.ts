@@ -2,11 +2,12 @@ module quill {
 
     import Template = feather.annotations.Template
     import Widget   = feather.core.Widget
+    import Bind     = feather.observe.Bind
 
     export class ValueNode extends Widget {
 
-        node: CustomTreeNode
-        value: Value
+        @Bind({}) node: CustomTreeNode
+        @Bind({}) value: Value
 
         constructor(node: CustomTreeNode, value?: Value) {
             super()
@@ -16,7 +17,7 @@ module quill {
 
         @Template()
         markup() {
-            return '<li>Value stuff</li>'
+            return `<li>{{node.value.name}}</li>`
         }
     }
 }

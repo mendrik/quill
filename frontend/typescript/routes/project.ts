@@ -88,12 +88,12 @@ module quill {
 
         @Subscribe('node-opened')
         nodeOpened(node: CustomTreeNode) {
-            console.log(node)
+            this.triggerDown('update-node-values', node)
         }
 
         @Subscribe('node-closed')
         nodeClosed(node: CustomTreeNode) {
-            console.log(node)
+            this.triggerDown('update-node-values', node)
         }
 
         @Subscribe('root-type-selected')

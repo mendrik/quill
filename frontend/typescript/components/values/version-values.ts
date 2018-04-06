@@ -21,13 +21,18 @@ module quill {
             const version: Version = await this.loadVersionValue() as any
             const values = nodes.map(node => {
                 const value = version.values.find(v => v.nodeId === node.value.id)
-                return new ValueNode(node, value)
+                return this.valueNodeFactory(node, value)
             })
             this.nodes.splice(0, this.nodes.length, ...values)
         }
 
         @Rest({url: '/values/version/{{version.id}}', headers: quill.headers})
         async loadVersionValue() {}
+
+        @Subscribe('update-node-values')
+        updateNodeValues() {
+            this.nodes.splice(0, 0)
+        }
 
         @Template()
         markup() {
@@ -63,5 +68,9 @@ module quill {
         }
 
         byNodeVisibility = () => (n: ValueNode) => !n.node.parent || n.node.allParentsOpen()
+
+        valueNodeFactory(node: CustomTreeNode, value?: Value) {
+            return new ValueNode(node, value)
+        }
     }
 }
