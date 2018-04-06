@@ -37,7 +37,7 @@ value-editor {
             }
 
             scroll-receiver {
-                padding: var(--scroll-top) 10px 100px 10px;
+                padding: var(--scroll-top) 0 100px 0;
                 line-height: 24px;
                 overflow: hidden;
                 max-height: calc(100vh - 20px - 50px - 1.5rem - 10px);
@@ -48,10 +48,18 @@ value-editor {
     .value-line {
         display: flex;
         min-height: 24px;
+        box-sizing: border-box;
+        padding: 0 10px;
+        box-shadow: inset 0 -.5px 0 0 whitesmoke;
+
+        &.default:hover {
+            background-color: whitesmoke;
+        }
 
         > :first-child {
-            margin-right: auto;
+            flex: 1;
             overflow: hidden;
+            cursor: pointer;
         }
 
         > :last-child {
@@ -60,6 +68,7 @@ value-editor {
             font-size: 14px;
             color: gray;
             cursor: pointer;
+            height: 24px;
         }
     }
 }

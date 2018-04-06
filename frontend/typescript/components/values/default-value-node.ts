@@ -11,7 +11,7 @@ module quill {
         @Template()
         markup() {
             return `
-            <li class="value-line">
+            <li class="value-line default">
                 <span>{{node.value.name}}</span>
                 <span class="icon is-small">
                     <i class="fa {{icon}}"></i>
