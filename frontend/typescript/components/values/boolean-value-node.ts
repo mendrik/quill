@@ -11,7 +11,7 @@ module quill {
         @Template()
         markup() {
             return `
-            <li class="value-line default {{selected:selectedClass}}">
+            <li class="value-line default boolean {{selected:selectedClass}}">
                 <div>
                     <div class="field">
                         <input id={{id}}
