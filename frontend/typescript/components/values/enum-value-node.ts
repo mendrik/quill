@@ -21,16 +21,21 @@ module quill {
             <li class="value-line default toggler enum {{selected:selectedClass}}">
                 <span class="node-value">{{text}}</span>
                 <ul class="toggle open-in-view">
-                    <li>Value 1</li>
-                    <li>Value 2</li>
-                    <li>Value 3</li>
-                    <li>Value 4</li>
-                    <li>Value 5</li>
+                    <li data-value="Value 1">Value 1</li>
+                    <li data-value="Value 2">Value 2</li>
+                    <li data-value="Value 3">Value 3</li>
+                    <li data-value="Value 4">Value 4</li>
+                    <li data-value="Value 5">Value 5</li>
                 </ul>
                 <span class="icon is-small">
                     <i class="fa {{icon}}"></i>
                 </span>
             </li>`
+        }
+
+        @On({event: 'click', selector: '.toggle > li'})
+        valueClicked(ev: MouseEvent, el: HTMLLIElement) {
+            this.text = el.getAttribute('data-value')
         }
 
         @Subscribe('defocus-other-nodes')
