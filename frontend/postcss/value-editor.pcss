@@ -69,6 +69,44 @@ value-editor {
                 height: 20px;
             }
 
+            &.enum {
+                position: relative;
+
+                &[open] {
+                    background-color: whitesmoke;
+                }
+
+                ul {
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    width: auto;
+                    margin-top: 0;
+                    padding: 0;
+
+                    > li {
+                        padding: 5px 10px;
+
+                        &:first-child {
+                            padding-top: 10px;
+                        }
+
+                        &:last-child {
+                            padding-bottom: 10px;
+                        }
+
+                        &:hover {
+                            background-color: whitesmoke;
+                        }
+                    }
+
+                    &:after {
+                        content: normal;
+                    }
+                }
+            }
+
             &:hover {
                 background-color: #fbfbfb;
 

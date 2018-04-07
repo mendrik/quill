@@ -12,8 +12,18 @@ module quill {
         datetime = 'fa-clock-o' as any,
         boolean = undefined,
         list = 'fa-search' as any,
-        enum = undefined
+        enum = 'fa-caret-down' as any
     }
+
+    const dummyValue = (nodeId: number): Value => ({
+        arrVal: false,
+        boolVal: false,
+        dateVal: '',
+        decVal: 0,
+        nodeId: nodeId,
+        numVal: 0,
+        strVal: ''
+    })
 
     export class ValueNode extends Widget {
 
@@ -26,7 +36,7 @@ module quill {
         constructor(node: CustomTreeNode, version: string, value?: Value) {
             super()
             this.node = node
-            this.value = value || {} as Value
+            this.value = value || dummyValue(node.value.id) as Value
             this.version = version
             this.icon = NodeValueIcon[node.value.type] as any
             this.id = `${version}-${node.value.id}`

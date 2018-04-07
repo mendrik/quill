@@ -83,6 +83,8 @@ module quill {
             } else {
                 if (node.value.type === 'boolean') {
                     return new BooleanValueNode(node, version, value)
+                } else if (node.value.type === 'enum') {
+                    return new EnumValueNode(node, version, value)
                 } else {
                     return new DefaultValueNode(node, version, value)
                 }

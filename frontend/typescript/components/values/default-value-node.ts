@@ -62,10 +62,10 @@ module quill {
 
         getValue(): string {
             switch (this.node.value.type) {
-                case 'string': return this.value.strVal || ''
-                case 'text': return this.value.strVal || ''
-                case 'number': return `${this.value.numVal || ''}`
-                case 'fraction': return `${this.value.decVal || ''}`
+                case 'string': return this.value.strVal
+                case 'text': return this.value.strVal
+                case 'number': return `${this.value.numVal}`
+                case 'fraction': return `${this.value.decVal}`
             }
         }
 
