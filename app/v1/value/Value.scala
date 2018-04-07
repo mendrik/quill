@@ -2,7 +2,7 @@ package v1.value
 
 import org.joda.time.DateTime
 import v1.generic.Entity
-import v1.node.Node
+import v1.node.{Node, NodeConfig}
 
 case class Value(
   id: Long,
@@ -13,7 +13,8 @@ case class Value(
   numVal: Option[Long],
   decVal: Option[BigDecimal],
   dateVal: Option[DateTime],
-  boolVal: Option[Boolean]
+  boolVal: Option[Boolean],
+  config: NodeConfig
 ) extends Entity
 
 case class ValueNode(

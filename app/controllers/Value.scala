@@ -12,7 +12,6 @@ import v1.version.VersionService
 import v1.VersionIO._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future.successful
 
 class Value @Inject()(
   val valueService: ValueService,
@@ -23,12 +22,11 @@ class Value @Inject()(
 ) extends AbstractController(cc) {
 
     def valuesForVersion(versionId: Long): Action[AnyContent] = secured { implicit request =>
-        (for {
-            _             <- securityRules.checkRules(request.identity, VersionOwner(versionId))
+        for {
+            _       <- securityRules.checkRules(request.identity, VersionOwner(versionId))
             version <- versionService.getById(versionId)
         } yield {
             Ok(Json.toJson(version))
-        })
-        .fallbackTo(successful(Unauthorized))
+        }
     }
 }

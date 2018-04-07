@@ -5,9 +5,10 @@ import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
-import v1.node.Node
+import v1.node.{Node, NodeConfig, StringType}
 import v1.version.Version
 import utils.Implicits._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -45,7 +46,8 @@ class ValueRepo @Inject()(dcp: DatabaseConfigProvider) {
             row.numValue,
             row.decimalValue,
             row.dateValue,
-            row.boolValue
+            row.boolValue,
+            NodeConfig(0, row.node, StringType)
         )
 
     def toNodeValuesRow(value: Value, node: Node, version: Version): NodeValuesRow =

@@ -35,6 +35,7 @@ class NodeService @Inject()(
                 nodeId,
                 NodeConfig(
                     0,
+                    nodeId,
                     StringType,
                     NodeConfigString(None),
                     NodeConfigMultiline(Normal),
@@ -74,7 +75,6 @@ class NodeService @Inject()(
 
     def isChildNode(nodeId: Long, parentId: Long): Future[Boolean] = {
         for {
-            Some(node: Node)   <- repo.findById(nodeId)
             Some(parent: Node) <- repo.findById(parentId)
             nodes              <- repo.pathToRoot(parent)
         } yield nodes.contains(nodeId)

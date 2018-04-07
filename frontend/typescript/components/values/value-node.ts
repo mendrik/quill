@@ -22,7 +22,8 @@ module quill {
         decVal: 0,
         nodeId: nodeId,
         numVal: 0,
-        strVal: ''
+        strVal: '',
+        config: dummyNodeConfig
     })
 
     export class ValueNode extends Widget {

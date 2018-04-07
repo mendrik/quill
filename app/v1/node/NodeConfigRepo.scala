@@ -27,6 +27,15 @@ class NodeConfigRepo @Inject()(
             .headOption.map(_.map(toNodeConfig))
     }
 
+    def findByVersionId(versionId: Long): Future[Seq[NodeConfig]] = db.run {
+        (for {
+            nc <- NodeConfigs
+            nv <- NodeValues if nc.node === nv.node
+        } yield {
+            nc
+        }).result.map(_.map(toNodeConfig))
+    }
+
     def createNodeConfig(nodeId: Long, conf: NodeConfig): Future[Option[NodeConfig]] =
         db.run(NodeConfigs returning NodeConfigs.map(_.id) += toNodeConfigRow(nodeId, conf))
             .flatMap(findById)
@@ -66,6 +75,7 @@ class NodeConfigRepo @Inject()(
     def toNodeConfig(row: NodeConfigsRow): NodeConfig = {
         NodeConfig(
             row.id,
+            row.node,
             row.nodeType,
             NodeConfigString(row.stringValidation),
             NodeConfigMultiline(row.multilineEditor),

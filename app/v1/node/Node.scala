@@ -110,6 +110,7 @@ case class RenameNode(
 
 case class NodeConfig(
    id: Long,
+   nodeId: Long,
    nodeType: NodeType,
    string: NodeConfigString,
    multiline: NodeConfigMultiline,
@@ -122,32 +123,50 @@ case class NodeConfig(
    list: NodeConfigList
 ) extends Entity
 
+object NodeConfig {
+    def apply(id: Long, nodeId: Long, nodeType: NodeType) =
+        new NodeConfig(
+            id,
+            nodeId,
+            nodeType,
+            NodeConfigString(),
+            NodeConfigMultiline(),
+            NodeConfigNumber(),
+            NodeConfigFraction(),
+            NodeConfigDate(),
+            NodeConfigDatetime(),
+            NodeConfigBoolean(),
+            NodeConfigEnum(),
+            NodeConfigList()
+        )
+}
+
 case class NodeConfigString(
-    validation: Option[String]
+    validation: Option[String] = None
 )
 case class NodeConfigMultiline(
-    editor: MultilineEditor
+    editor: MultilineEditor = Normal
 )
 case class NodeConfigNumber(
-    min: Option[Long],
-    max: Option[Long],
-    editor: NumberEditor
+    min: Option[Long] = None,
+    max: Option[Long] = None,
+    editor: NumberEditor = NumberInput
 )
 case class NodeConfigBoolean(
-    editor: BooleanEditor
+    editor: BooleanEditor = Switch
 )
 case class NodeConfigEnum(
-    values: Seq[String]
+    values: Seq[String] = Nil
 )
 case class NodeConfigFraction(
-    format: Option[String]
+    format: Option[String] = None
 )
 case class NodeConfigDate(
-    format: Option[String]
+    format: Option[String] = None
 )
 case class NodeConfigDatetime(
-    format: Option[String]
+    format: Option[String] = None
 )
 case class NodeConfigList(
-    filter: Option[String]
+    filter: Option[String] = None
 )

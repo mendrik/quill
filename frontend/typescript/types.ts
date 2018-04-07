@@ -63,7 +63,8 @@ module quill {
         numVal: number,
         decVal: number,
         dateVal: string,
-        boolVal: boolean
+        boolVal: boolean,
+        config: NodeConfig
     }
 
     export interface Version {
@@ -137,5 +138,18 @@ module quill {
         list: {
             filter: string
         }
+    }
+
+    export const dummyNodeConfig: NodeConfig = {
+        nodeType: 'string',
+        string: {validation: ''},
+        multiline: {editor: MultilineEditor.normal},
+        enum: {values: []},
+        number: {editor: NumberEditor.input, min: null, max: null},
+        fraction: {format: ''},
+        date: {format: ''},
+        datetime: {format: ''},
+        boolean: {editor: BooleanEditor.switch, label: ''},
+        list: {filter: ''},
     }
 }
