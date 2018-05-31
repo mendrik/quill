@@ -13,6 +13,7 @@
             "dom",
             "esnext"
         ],
+        "types": ["navigo"],
         "jsx": "react",
         "jsxFactory": "h"
     },
