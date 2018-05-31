@@ -16,9 +16,6 @@
         "preact-compat": "3.18.0",
         "preact-quill": "1.0.0"
     },
-    "peerDependencies": {
-        "navigo": "7.1.2"
-    },
     "devDependencies": {
         "@types/node": "10.1.2",
         "autoprefixer": "8.5.0",
