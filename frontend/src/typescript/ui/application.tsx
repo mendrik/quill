@@ -1,8 +1,8 @@
 import {h} from 'preact'
-import {Get, QuillComponent, Route, View, router} from 'preact-quill'
-import './application.pcss'
+import {Get, QuillComponent, Route, View, navigate, FetchFailure} from 'preact-quill'
 import {header} from '../rest/header'
 import {User} from '../model/domain'
+import './application.pcss'
 
 @View
 export class Application extends QuillComponent {
@@ -11,18 +11,25 @@ export class Application extends QuillComponent {
     fetchUser: () => Promise<User>
 
     checkUser = async () => {
-        try {
-            const user = await this.fetchUser()
-            router.navigate(`/project/${user.lastProject}`)
-        } catch (e) {
-            console.log('not logged in')
+        const user = await this.fetchUser()
+        if (user) {
+            navigate(`/project/${user.lastProject}`)
         }
+    }
+
+    @FetchFailure(401)
+    unauthorized() {
+        navigate(`/login`)
     }
 
     @Route('/')
     async mainPage() {
         await this.checkUser()
-        return import('../pages/main-page')
+    }
+
+    @Route('/login')
+    async loginPage() {
+        return import('../pages/login')
     }
 
 }
