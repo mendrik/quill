@@ -1,63 +1,23 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "pretty": true,
-        "sourceMap": true,
-        "inlineSources": true,
-        "noImplicitAny": false,
-        "declaration": false,
-        "noEmitOnError": false,
-        "noEmitHelpers": true,
+        "module": "commonjs",
         "moduleResolution": "node",
-        "removeComments": true,
-        "experimentalDecorators": true,
         "target": "es5",
-        "sourceRoot": "./typescript",
-        "rootDir": "./",
-        "lib": ["es2015", "dom"],
-        "types": [
-            "node",
-            "feather-ts",
-            "feather-components"
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "traceResolution": true,
+        "outDir": "./dist",
+        "lib": [
+            "dom",
+            "esnext"
         ],
-        "typeRoots": [
-            "node_modules/@types",
-            "node_modules"
-        ]
+        "jsx": "react",
+        "jsxFactory": "h"
     },
-    "files": [
-        "typescript/types.ts",
-        "typescript/common/keys.ts",
-        "typescript/common/utils.ts",
-        "typescript/common/headers.ts",
-        "typescript/common/polyfill.ts",
-        "typescript/modals/modal-manager.ts",
-        "typescript/modals/project-config.ts",
-        "typescript/modals/node-config.ts",
-        "typescript/components/translate.ts",
-        "typescript/components/progress.ts",
-        "typescript/components/scroll-spy.ts",
-        "typescript/components/scroll-receiver.ts",
-        "typescript/components/html-fragment.ts",
-        "typescript/components/ajax-widget.ts",
-        "typescript/components/ajax-form.ts",
-        "typescript/components/values/value-node.ts",
-        "typescript/components/values/empty-value-node.ts",
-        "typescript/components/values/default-value-node.ts",
-        "typescript/components/values/boolean-value-node.ts",
-        "typescript/components/values/enum-value-node.ts",
-        "typescript/components/values/version-values.ts",
-        "typescript/components/values/value-editor.ts",
-        "typescript/components/selectable-tree-label.ts",
-        "typescript/components/custom-node.ts",
-        "typescript/routes/notfound.ts",
-        "typescript/modules/navigation.ts",
-        "typescript/routes/project.ts",
-        "typescript/routes/login.ts",
-        "typescript/routes/password-change.ts",
-        "typescript/modules/tree-actions.ts",
-        "typescript/modules/content.ts",
-        "typescript/quill-app.ts",
-        "typescript/start.ts"
+    "exclude": [
+        "dist",
+        "node_modules"
     ]
 }

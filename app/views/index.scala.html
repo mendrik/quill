@@ -7,29 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Quill</title>
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="@assetsFinder.path("bulma.css")">
-    <link rel="icon" href="@assetsFinder.path("favicon.ico")">
-
-    @if(conf.get[String]("mode") == "feather") {
-      <link rel="stylesheet" type="text/css" href="@assetsFinder.path("dev/feather-components/feather-components.css")">
-      <link rel="stylesheet" type="text/css" href="@assetsFinder.path("styles.css")">
-    } else {
-      <link rel="stylesheet" type="text/css" href="@assetsFinder.path("feather-components.css")">
-      <link rel="stylesheet" type="text/css" href="@assetsFinder.path("styles.css")">
-    }
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=PT+Serif|Yantramanav" rel="stylesheet">
   </head>
-  <body class="toast-manager quill-app">
-    @if(conf.get[String]("mode") == "feather") {
-      <script src="@assetsFinder.path("dev/feather/libs.min.js")"></script>
-      <script src="@assetsFinder.path("dev/feather/feather.js")"></script>
-      <script src="@assetsFinder.path("dev/feather-components/feather-components.js")"></script>
-      <script src="@assetsFinder.path("quill.js")"></script>
-    } else {
-      <script src="@assetsFinder.path("quill.min.js")"></script>
-    }
-  </body>
+  <body></body>
 </html>

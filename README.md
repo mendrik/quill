@@ -10,7 +10,7 @@
 * Improve logging
 * add flyway db migrations  or use evolutions
 * Continuous integration
-* Prod/Dev/Feather build
+* Prod/Dev build
 * Mocha tests
 * App tests
 
