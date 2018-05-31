@@ -15,12 +15,13 @@ export class Application extends QuillComponent {
             const user = await this.fetchUser()
             router.navigate(`/project/${user.lastProject}`)
         } catch (e) {
+            console.log('not logged in')
         }
     }
 
     @Route('/')
     async mainPage() {
-
+        await this.checkUser()
         return import('../pages/main-page')
     }
 
