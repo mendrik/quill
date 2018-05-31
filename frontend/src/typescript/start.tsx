@@ -1,3 +1,5 @@
+import 'bulma/css/bulma.css'
+import '@mdi/font/css/materialdesignicons.css'
 import {h, render} from 'preact'
 import {domReady, initTranslations, fetchJson} from 'preact-quill'
 import {Application} from './ui/application'

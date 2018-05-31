@@ -70,9 +70,9 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
-/public/dev
-/public/*.js
-/public/*.css
+/public/*
+!/public/*.ico
+!/public/*.json
 
 # general
 *~

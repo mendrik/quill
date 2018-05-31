@@ -1,6 +1,5 @@
 import {h} from 'preact'
-import {View} from 'preact-quill/lib/decorators/view'
-import {QuillComponent} from 'preact-quill/lib/util/quill-component'
+import {View, QuillComponent} from 'preact-quill'
 
 @View
 export class MainPage extends QuillComponent {

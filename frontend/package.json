@@ -4,19 +4,19 @@
     "description": "Frontend module for Quill",
     "main": "index.js",
     "scripts": {
-        "start": "parcel src/typescript/start.tsx -d ../target/web/public/main -o quill.js",
-        "build": "parcel build src/typescript/start.tsx  -d ../public"
+        "start": "parcel src/typescript/start.tsx -d ../target/web/public/main -o quill.js --no-hmr --no-autoinstall",
+        "build": "parcel build src/typescript/start.tsx  -d ../public -o quill.js"
     },
     "author": "Andreas Herd",
     "license": "ISC",
     "dependencies": {
+        "@mdi/font": "2.4.85",
         "bulma": "0.7.1",
         "preact": "8.2.9",
-        "preact-compat": "3.18.0"
+        "preact-compat": "3.18.0",
+        "preact-quill": "1.0.0"
     },
     "devDependencies": {
-        "@types/react": "16.3.14",
-        "@types/react-dom": "16.0.5",
         "@types/node": "10.1.2",
         "autoprefixer": "8.5.0",
         "cross-env": "5.1.6",
