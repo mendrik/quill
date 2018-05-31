@@ -16,7 +16,7 @@ export class Login extends QuillComponent {
                     </WithLabel>
                 </Form>
                 <div class="buttons is-pulled-right">
-                    <button class="button is-primary">Login</button>
+                    <button class="button is-primary" data-locale="ui.signin.button"/>
                 </div>
             </div>
         )
