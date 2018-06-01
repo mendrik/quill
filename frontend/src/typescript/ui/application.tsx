@@ -1,8 +1,11 @@
 import {h} from 'preact'
-import {Get, QuillComponent, Route, View, navigate, FetchFailure} from 'preact-quill'
 import {header} from '../rest/header'
 import {User} from '../model/domain'
 import './application.pcss'
+import {View} from 'preact-quill/cjs/decorators/view'
+import {QuillComponent} from 'preact-quill/cjs/util/quill-component'
+import {FetchFailure, Get} from 'preact-quill/cjs/decorators/fetch'
+import {navigate, Route} from 'preact-quill/cjs/decorators/router'
 
 @View
 export class Application extends QuillComponent {
